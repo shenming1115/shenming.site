@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to MyWebsite</title>
+  <style>
+    :root {
+      --primary: #6B597F;
+      --secondary: #BD6C73;
+      --accent: #A2869C;
+      --bg-light: linear-gradient(135deg, #92A1C2, #6B597F, #A2869C, #BD6C73, #3F5B8D, #2265AA);
+      --text-light: #ffffff;
+      --bg-dark: #121212;
+      --text-dark: #eeeeee;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg-light);
+      background-size: 600% 600%;
+      animation: gradientFlow 15s ease infinite;
+      color: var(--text-light);
+      scroll-behavior: smooth;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .navbar {
+      background-color: rgba(107, 89, 127, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .navbar a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      background: var(--secondary);
+      border-radius: 6px;
+      padding: 8px 12px;
+    }
+
+    .toggle-mode {
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-light);
+      padding: 8px;
+    }
+
+    .content {
+      margin-top: 100px;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      font-weight: 800;
+      color: var(--secondary);
+    }
+
+    p {
+      font-size: 1.2em;
+    }
+
+    button {
+      margin-top: 24px;
+      padding: 14px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: var(--secondary);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: var(--accent);
+    }
+
+    .character-wrapper {
+      position: relative;
+      width: 300px;
+      margin: 40px auto;
+    }
+
+    .character-wrapper img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    .eyes-container {
+      position: absolute;
+      top: 17%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+    }
+
+    .eye {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border: 3px solid #333;
+      border-radius: 50%;
+      margin: 0 3px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pupil {
+      width: 16px;
+      height: 16px;
+      background: #333;
+      border-radius: 50%;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      transition: all 0.05s ease;
+    }
+
+    .eye.blinking {
+      animation: blink-eye 0.25s ease-in-out;
+    }
+
+    .pupil.blinking {
+      animation: blink-pupil 0.25s ease-in-out;
+    }
+
+    @keyframes blink-eye {
+      0% { height: 40px; }
+      50% { height: 4px; }
+      100% { height: 40px; }
+    }
+
+    @keyframes blink-pupil {
+      0% { transform: scaleY(1); }
+      50% { transform: scaleY(0.1); }
+      100% { transform: scaleY(1); }
+    }
+
+    .section {
+      padding: 80px 20px;
+    }
+
+    #about { background: #6B597F; }
+    #contact { background: #3F5B8D; }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="navbar-links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="toggle-mode" id="toggleMode">🌙</div>
+  </div>
+
+  <div class="content" id="home">
+    <h1>Welcome to MyWebsite</h1>
+    <p>Click below to play an awesome sound!</p>
+    <div class="character-wrapper">
+      <img src="https://raw.githubusercontent.com/shenming1115/shenming.site/main/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
+      <div class="eyes-container">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
+      </div>
+    </div>
+    <audio id="audioPlayer" src="https://raw.githubusercontent.com/shenming1115/shenming.site/main/burp-1.mp3" preload="auto"></audio>
+    <button id="playButton">Play Sound</button>
+  </div>
+
+  <div class="section" id="about">
+    <h2>About</h2>
+    <p>This is an awesome page designed with an elegant style.</p>
+  </div>
+
+  <div class="section" id="contact">
+    <h2>Contact</h2>
+    <p>Feel free to reach out through the following platforms:</p>
+    <div class="social-icons">
+      <a href="https://wa.me/your-phone-number" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
+      </a>
+      <a href="https://www.instagram.com/your-profile/" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('playButton').onclick = function () {
+      const audioPlayer = document.getElementById('audioPlayer');
+      audioPlayer.play();
+    };
+
+    // Eye tracking
+    document.addEventListener("mousemove", (e) => {
+      document.querySelectorAll('.eye').forEach(eye => {
+        const pupil = eye.querySelector('.pupil');
+        const rect = eye.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+        const radius = 10;
+        pupil.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px)`;
+      });
+    });
+
+    // Blinking effect
+    setInterval(() => {
+      document.querySelectorAll('.eye').forEach(eye => {
+        const pupil = eye.querySelector('.pupil');
+        eye.classList.add('blinking');
+        pupil.classList.add('blinking');
+        setTimeout(() => {
+          eye.classList.remove('blinking');
+          pupil.classList.remove('blinking');
+        }, 250);
+      });
+    }, 4000);
+
+    // Toggle night mode
+    const modeBtn = document.getElementById('toggleMode');
+    modeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    });
+  </script>
+</body>
+</html>
