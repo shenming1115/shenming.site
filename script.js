@@ -48,7 +48,8 @@ async function fetchMalaysiaTimeAndIP() {
   }
   // 获取IP
   try {
-    const ipRes = await fetch('https://api.ipify.org?format=json');
+    // 兼容性更好的IP API
+    const ipRes = await fetch('https://api.myip.com/');
     const ipData = await ipRes.json();
     userIP = ipData.ip;
     document.getElementById('ipInfo').innerHTML = 'IP: ' + userIP;
