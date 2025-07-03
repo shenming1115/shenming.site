@@ -428,6 +428,9 @@ button:hover {
   width: 100vw;
   height: 100vh;
   z-index: 99;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .content-sky-message {
@@ -437,29 +440,27 @@ button:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 80vh;
-  margin-top: 80px;
+  height: auto;
+  margin-top: 120px;
 }
 
-.content-title {
-  font-size: 2.5em;
-  color: #3a5a8c;
-  font-weight: 800;
-  margin-bottom: 0.5em;
-  text-shadow: 0 2px 12px rgba(255,255,255,0.5);
-}
-
-.content-description {
-  font-size: 1.3em;
-  color: #1e3c72;
-  background: rgba(255,255,255,0.7);
-  border-radius: 16px;
-  padding: 1.5em 2em;
-  box-shadow: 0 4px 24px rgba(224,234,252,0.5);
-  font-weight: 600;
+.content-rect {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.95);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(100,150,200,0.18);
+  padding: 2.5em 2em;
   max-width: 600px;
-  text-align: center;
-  line-height: 1.6;
+  min-width: 320px;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-weight: 600;
+  font-size: 1.15em;
+  color: #2d3a4a;
+  text-align: left;
+  margin-top: 0;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.10);
 }
 
 /* 优化content模式下的导航栏 */
