@@ -1,3 +1,18 @@
+/* Content Page Sky/Cloud Flowing Background */
+.content-bg-sky {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 50%, #f5fafd 100%);
+  background-size: 200% 200%;
+  animation: skyCloudFlow 18s linear infinite;
+  opacity: 1;
+}
+@keyframes skyCloudFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
 /* Content section sky/cloud flowing background */
 .content-bg {
   position: fixed;

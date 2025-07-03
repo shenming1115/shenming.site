@@ -69,15 +69,19 @@
     </div>
 
     <!-- Content Section (hidden by default, full screen, sky/cloud flowing bg) -->
-    <div class="content" id="contentPage" style="display:none; min-height:100vh; align-items:center; justify-content:center;">
-      <div class="content-bg"></div>
-      <div class="content-rect">
-        <h2>我们做这个网站的过程<br><span style="font-size:0.7em; font-weight:normal;">Our Website Creation Process</span></h2>
-        <p>
-          <b>中文：</b>本网站从设计到实现，经历了需求分析、界面设计、安全验证、前端开发、自动化混淆、用户体验优化等多个阶段。我们注重安全与美观，采用了高级渐变动画和人机验证，确保每一位用户的访问安全且体验优雅。<br><br>
-          <b>English:</b> From design to implementation, this website went through requirements analysis, UI design, security verification, frontend development, automated obfuscation, and user experience optimization. We focus on both security and aesthetics, using advanced gradient animation and human verification to ensure every visitor enjoys a safe and elegant experience.
-        </p>
+    <!-- Content Page: Only visible when clicking Content, full screen, only navbar and flowing sky background -->
+    <div id="contentPage" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1000;">
+      <div class="content-bg-sky"></div>
+      <div class="navbar" style="position:relative; z-index:2;">
+        <div class="navbar-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+          <a href="#" id="contentNav">Content</a>
+        </div>
+        <div class="toggle-mode" id="toggleMode">🌙</div>
       </div>
+      <!-- 可在此处添加内容区块，如需展示内容 -->
     </div>
 
     <div class="section" id="about">
@@ -104,22 +108,25 @@
   <script>
     // Content section show/hide logic
     document.addEventListener('DOMContentLoaded', function() {
-      const contentNav = document.getElementById('contentNav');
+      const contentNavs = document.querySelectorAll('#contentNav');
       const contentPage = document.getElementById('contentPage');
-      const mainSections = [document.getElementById('home'), document.getElementById('about'), document.getElementById('contact')];
-      contentNav.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Hide all main sections
-        mainSections.forEach(sec => sec.style.display = 'none');
-        // Show content page
-        contentPage.style.display = 'flex';
-      });
-      // Optional: When clicking Home/About/Contact, hide contentPage
-      document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-        link.addEventListener('click', function() {
-          contentPage.style.display = 'none';
-          mainSections.forEach(sec => sec.style.display = '');
+      const mainContent = document.getElementById('mainContent');
+      contentNavs.forEach(contentNav => {
+        contentNav.addEventListener('click', function(e) {
+          e.preventDefault();
+          // 隐藏主内容，显示contentPage
+          mainContent.style.display = 'none';
+          contentPage.style.display = 'block';
         });
+      });
+      // 点击 Home/About/Contact 时返回主内容
+      document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
+        if(link.id !== 'contentNav') {
+          link.addEventListener('click', function() {
+            contentPage.style.display = 'none';
+            mainContent.style.display = 'block';
+          });
+        }
       });
     });
 
