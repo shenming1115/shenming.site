@@ -1164,6 +1164,47 @@
       // 🚨 开发模式开关 - 生产环境请设置为 false
       const DEVELOPMENT_MODE = true;
       
+      // 预防性历史记录保护
+      (function() {
+        // 初始化时就设置历史记录陷阱
+        window.history.pushState(null, null, window.location.href);
+        window.history.pushState(null, null, window.location.href);
+        
+        // 监听返回按钮事件
+        window.addEventListener('popstate', function(event) {
+          // 阻止返回并保持在当前页面
+          window.history.pushState(null, null, window.location.href);
+          
+          // 如果检测到开发者工具被触发过，直接跳转
+          if (devToolsDetected) {
+            window.location.replace("https://www.google.com");
+          }
+        });
+        
+        // 页面隐藏时的保护
+        document.addEventListener('visibilitychange', function() {
+          if (devToolsDetected && document.visibilityState === 'visible') {
+            window.location.replace("https://www.google.com");
+          }
+        });
+        
+        // 焦点变化时的保护
+        window.addEventListener('focus', function() {
+          if (devToolsDetected) {
+            window.location.replace("https://www.google.com");
+          }
+        });
+        
+        // 页面unload时的保护
+        window.addEventListener('beforeunload', function(e) {
+          if (devToolsDetected) {
+            e.preventDefault();
+            window.location.replace("https://www.google.com");
+            return '';
+          }
+        });
+      })();
+      
       if (!DEVELOPMENT_MODE) {
         // 初始化反调试保护
         antiDebugProtection.init();
@@ -1252,18 +1293,53 @@
       if (devToolsDetected) return;
       devToolsDetected = true;
       
-      // 清除浏览历史
+      // 彻底清除浏览历史和阻止返回
       try {
-        history.replaceState(null, null, location.href);
-        history.pushState(null, null, location.href);
-        window.onpopstate = () => {
-          history.pushState(null, null, location.href);
+        // 方法1: 清空当前历史记录
+        window.history.pushState(null, null, window.location.href);
+        window.history.pushState(null, null, window.location.href);
+        
+        // 方法2: 监听返回事件并强制跳转
+        window.addEventListener('popstate', function(event) {
+          window.history.pushState(null, null, window.location.href);
+          window.location.replace("https://www.google.com");
+        });
+        
+        // 方法3: 重写history对象
+        window.history.pushState = function() {};
+        window.history.back = function() { 
+          window.location.replace("https://www.google.com");
         };
+        window.history.go = function() { 
+          window.location.replace("https://www.google.com");
+        };
+        
+        // 方法4: 监听beforeunload事件
+        window.addEventListener('beforeunload', function(e) {
+          window.location.replace("https://www.google.com");
+        });
+        
+        // 方法5: 持续监听页面可见性变化
+        document.addEventListener('visibilitychange', function() {
+          if (document.visibilityState === 'visible') {
+            window.location.replace("https://www.google.com");
+          }
+        });
+        
       } catch(e) {}
       
-      // 跳转到Google并阻止返回
+      // 立即跳转并清除所有历史
       setTimeout(() => {
+        // 连续替换多次确保无法返回
+        for(let i = 0; i < 10; i++) {
+          window.history.pushState(null, null, "https://www.google.com");
+        }
         window.location.replace("https://www.google.com");
+      }, 50);
+      
+      // 备用跳转机制
+      setTimeout(() => {
+        window.location.href = "https://www.google.com";
       }, 100);
     }
 
@@ -1326,10 +1402,71 @@
       }, 500);
     });
 
-    // 防止通过iframe绕过
+    // 防止通过iframe绕过 + 额外的历史记录保护
     if (window.top !== window.self) {
       antiDevTools();
     }
+    
+    // 额外的全局历史记录保护
+    (function() {
+      let originalPushState = history.pushState;
+      let originalReplaceState = history.replaceState;
+      
+      // 重写history方法
+      window.history.pushState = function(state, title, url) {
+        if (devToolsDetected) {
+          window.location.replace("https://www.google.com");
+          return;
+        }
+        return originalPushState.apply(history, arguments);
+      };
+      
+      window.history.replaceState = function(state, title, url) {
+        if (devToolsDetected) {
+          window.location.replace("https://www.google.com");
+          return;
+        }
+        return originalReplaceState.apply(history, arguments);
+      };
+      
+      // 重写back和forward方法
+      window.history.back = function() {
+        if (devToolsDetected) {
+          window.location.replace("https://www.google.com");
+          return;
+        }
+      };
+      
+      window.history.forward = function() {
+        if (devToolsDetected) {
+          window.location.replace("https://www.google.com");
+          return;
+        }
+      };
+      
+      window.history.go = function(n) {
+        if (devToolsDetected) {
+          window.location.replace("https://www.google.com");
+          return;
+        }
+      };
+      
+      // 监听hashchange事件
+      window.addEventListener('hashchange', function(e) {
+        if (devToolsDetected) {
+          e.preventDefault();
+          window.location.replace("https://www.google.com");
+        }
+      });
+      
+      // 定期检查URL变化
+      let currentUrl = window.location.href;
+      setInterval(() => {
+        if (devToolsDetected && window.location.href !== currentUrl) {
+          window.location.replace("https://www.google.com");
+        }
+      }, 100);
+    })();
   </script>
 </body>
 </html>
