@@ -1,3 +1,21 @@
+.navbar.content-mode {
+  background: rgba(207, 222, 243, 0.95) !important;
+  box-shadow: 0 2px 16px rgba(180,200,230,0.10);
+}
+.navbar.content-mode .navbar-links a {
+  color: #3a5a8c !important;
+  background: rgba(255,255,255,0.0);
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+}
+.navbar.content-mode .navbar-links a.active, .navbar.content-mode .navbar-links a:hover {
+  background: rgba(224,234,252,0.7);
+  color: #1e3c72 !important;
+  border-radius: 6px;
+}
+.navbar.content-mode .toggle-mode {
+  color: #3a5a8c !important;
+}
 /* Content Page Sky/Cloud Flowing Background */
 .content-bg-sky {
   position: fixed;

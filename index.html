@@ -72,7 +72,7 @@
     <!-- Content Page: Only visible when clicking Content, full screen, only navbar and flowing sky background -->
     <div id="contentPage" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:1000;">
       <div class="content-bg-sky"></div>
-      <div class="navbar" style="position:relative; z-index:2;">
+      <div class="navbar content-mode" style="position:relative; z-index:2;">
         <div class="navbar-links">
           <a href="#home">Home</a>
           <a href="#about">About</a>
@@ -81,7 +81,6 @@
         </div>
         <div class="toggle-mode" id="toggleMode">🌙</div>
       </div>
-      <!-- 可在此处添加内容区块，如需展示内容 -->
     </div>
 
     <div class="section" id="about">
@@ -111,20 +110,29 @@
       const contentNavs = document.querySelectorAll('#contentNav');
       const contentPage = document.getElementById('contentPage');
       const mainContent = document.getElementById('mainContent');
+      // 进入content模式
       contentNavs.forEach(contentNav => {
         contentNav.addEventListener('click', function(e) {
           e.preventDefault();
-          // 隐藏主内容，显示contentPage
           mainContent.style.display = 'none';
           contentPage.style.display = 'block';
+          // 激活content模式navbar
+          document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.add('content-mode'));
+          // 高亮Content按钮
+          document.querySelectorAll('#contentPage .navbar-links a').forEach(a => {
+            if(a.id === 'contentNav') a.classList.add('active');
+            else a.classList.remove('active');
+          });
         });
       });
-      // 点击 Home/About/Contact 时返回主内容
+      // 离开content模式
       document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
         if(link.id !== 'contentNav') {
           link.addEventListener('click', function() {
             contentPage.style.display = 'none';
             mainContent.style.display = 'block';
+            document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.remove('content-mode'));
+            document.querySelectorAll('#contentPage .navbar-links a').forEach(a => a.classList.remove('active'));
           });
         }
       });
