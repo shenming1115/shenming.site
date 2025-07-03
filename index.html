@@ -14,7 +14,7 @@
       <h2>🔒 进入前安全验证</h2>
       <form action="/validate" method="POST" id="captchaForm">
         <div id="securityStatus" style="margin-bottom: 20px; text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-          <p>请先通过人机验证以进入网站</p>
+          <p id="preVerifyDatetime">Loading Malaysia time...</p>
           <div id="ipInfo" style="font-size: 14px; color: #ccc;"></div>
           <div id="riskLevel" style="margin: 10px 0; font-weight: bold;"></div>
         </div>
@@ -52,7 +52,9 @@
     </div>
 
     <div class="content" id="home">
-      <h1>Welcome to MyWebsite</h1>
+      <h1 id="mainWelcome">Welcome to MyWebsite</h1>
+      <div id="mainDatetime" style="margin: 10px 0; font-size: 1.1em;"></div>
+      <div id="mainIP" style="margin: 10px 0; font-size: 1.1em;"></div>
       <p>Click below to play an awesome sound!</p>
       <div class="character-wrapper">
         <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
@@ -85,7 +87,66 @@
   </div>
 
   <script src="script.js"></script>
+
   <script>
+    // 获取马来西亚时间和IP
+    async function fetchMalaysiaTimeAndIP() {
+      // 获取马来西亚时间
+      try {
+        const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kuala_Lumpur');
+        const data = await res.json();
+        const dt = new Date(data.datetime);
+        const dateStr = dt.toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById('preVerifyDatetime').textContent = dateStr + ' (MY)';
+      } catch (e) {
+        document.getElementById('preVerifyDatetime').textContent = '无法获取马来西亚时间';
+      }
+      // 获取IP
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        document.getElementById('ipInfo').innerHTML = 'IP: ' + ipData.ip;
+        window._userIP = ipData.ip;
+      } catch (e) {
+        document.getElementById('ipInfo').innerHTML = 'IP: 获取失败';
+      }
+    }
+    fetchMalaysiaTimeAndIP();
+
+    // 验证成功后切换到主内容和紫色渐变背景，并显示时间/IP
+    window.onTurnstileSuccess = (function(orig){
+      return function(token) {
+        orig(token);
+        // 切换内容
+        document.getElementById('preVerifyMask').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        document.body.classList.add('after-verify-bg');
+        // 获取并显示主界面时间和IP
+        (async function(){
+          try {
+            const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kuala_Lumpur');
+            const data = await res.json();
+            const dt = new Date(data.datetime);
+            const dateStr = dt.toLocaleString('en-MY', { timeZone: 'Asia/Kuala_Lumpur', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('mainWelcome').textContent = dateStr + ' (MY)';
+            document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + dateStr;
+          } catch (e) {
+            document.getElementById('mainWelcome').textContent = '无法获取马来西亚时间';
+          }
+          try {
+            let ip = window._userIP;
+            if (!ip) {
+              const ipRes = await fetch('https://api.ipify.org?format=json');
+              const ipData = await ipRes.json();
+              ip = ipData.ip;
+            }
+            document.getElementById('mainIP').textContent = 'Your IP: ' + ip;
+          } catch (e) {
+            document.getElementById('mainIP').textContent = 'IP: 获取失败';
+          }
+        })();
+      }
+    })(window.onTurnstileSuccess);
 
     // 更顺滑的水流渐变动画
     const preVerifyColors = [
