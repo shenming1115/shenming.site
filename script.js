@@ -1,3 +1,121 @@
+// Content section show/hide logic
+document.addEventListener('DOMContentLoaded', function() {
+  const contentNavs = document.querySelectorAll('#contentNav');
+  const contentPage = document.getElementById('contentPage');
+  const mainContent = document.getElementById('mainContent');
+  // 进入content模式
+  contentNavs.forEach(contentNav => {
+    contentNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      mainContent.style.display = 'none';
+      contentPage.style.display = 'block';
+      // 激活content模式navbar
+      document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.add('content-mode'));
+      // 高亮Content按钮
+      document.querySelectorAll('#contentPage .navbar-links a').forEach(a => {
+        if(a.id === 'contentNav') a.classList.add('active');
+        else a.classList.remove('active');
+      });
+    });
+  });
+  // 离开content模式
+  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
+    if(link.id !== 'contentNav') {
+      link.addEventListener('click', function() {
+        contentPage.style.display = 'none';
+        mainContent.style.display = 'block';
+        document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.remove('content-mode'));
+        document.querySelectorAll('#contentPage .navbar-links a').forEach(a => a.classList.remove('active'));
+      });
+    }
+  });
+});
+
+// 获取马来西亚时间和IP，分别用于验证前和主界面
+async function fetchMalaysiaTimeAndIP() {
+  // 获取马来西亚时间（使用 timeapi.io，支持CORS）
+  try {
+    const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kuala_Lumpur');
+    const data = await res.json();
+    // 组装格式：2025-07-03 19:13:02 (MY)
+    const dateStr = `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')} ${String(data.hour).padStart(2,'0')}:${String(data.minute).padStart(2,'0')}:${String(data.seconds).padStart(2,'0')} (MY)`;
+    document.getElementById('preVerifyDatetime').textContent = dateStr;
+    window._malaysiaTime = dateStr;
+  } catch (e) {
+    document.getElementById('preVerifyDatetime').textContent = '无法获取马来西亚时间';
+    window._malaysiaTime = '';
+  }
+  // 获取IP
+  try {
+    const ipRes = await fetch('https://api.ipify.org?format=json');
+    const ipData = await ipRes.json();
+    document.getElementById('ipInfo').innerHTML = 'IP: ' + ipData.ip;
+    window._userIP = ipData.ip;
+  } catch (e) {
+    document.getElementById('ipInfo').innerHTML = 'IP: 获取失败';
+    window._userIP = '';
+  }
+}
+fetchMalaysiaTimeAndIP();
+
+// 验证成功后切换到主内容和紫色渐变背景，并显示时间/IP
+window.onTurnstileSuccess = (function(orig){
+  return function(token) {
+    orig(token);
+    // 切换内容
+    document.getElementById('preVerifyMask').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    document.body.classList.add('after-verify-bg');
+    // 显示主界面时间和IP（优先用已获取的window._malaysiaTime和window._userIP）
+    if (window._malaysiaTime) {
+      document.getElementById('mainWelcome').textContent = window._malaysiaTime;
+      document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
+    } else {
+      document.getElementById('mainWelcome').textContent = '无法获取马来西亚时间';
+    }
+    if (window._userIP) {
+      document.getElementById('mainIP').textContent = 'Your IP: ' + window._userIP;
+    } else {
+      document.getElementById('mainIP').textContent = 'IP: 获取失败';
+    }
+    document.getElementById('mainIP').style.display = 'block';
+  }
+})(window.onTurnstileSuccess);
+
+// 更顺滑的水流渐变动画
+const preVerifyColors = [
+  [30,60,114], [42,82,152], [106,17,203], [37,117,252], [67,206,162], [24,90,157], [247,151,30], [255,210,0], [253,29,29], [131,58,180], [252,176,69]
+];
+let t = 0;
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+function rgbArrToStr(arr) {
+  return `rgb(${arr[0]},${arr[1]},${arr[2]})`;
+}
+function animatePreVerifyBg() {
+  const mask = document.getElementById('preVerifyMask');
+  if (!mask) return;
+  // 计算当前渐变的两个颜色
+  const idx1 = Math.floor(t) % preVerifyColors.length;
+  const idx2 = (idx1 + 1) % preVerifyColors.length;
+  const frac = t - Math.floor(t);
+  const color1 = [
+    lerp(preVerifyColors[idx1][0], preVerifyColors[idx2][0], frac),
+    lerp(preVerifyColors[idx1][1], preVerifyColors[idx2][1], frac),
+    lerp(preVerifyColors[idx1][2], preVerifyColors[idx2][2], frac)
+  ];
+  const idx3 = (idx1 + 2) % preVerifyColors.length;
+  const color2 = [
+    lerp(preVerifyColors[idx2][0], preVerifyColors[idx3][0], frac),
+    lerp(preVerifyColors[idx2][1], preVerifyColors[idx3][1], frac),
+    lerp(preVerifyColors[idx2][2], preVerifyColors[idx3][2], frac)
+  ];
+  mask.style.background = `linear-gradient(135deg, ${rgbArrToStr(color1)}, ${rgbArrToStr(color2)})`;
+  t += 0.015; // 控制流动速度
+  requestAnimationFrame(animatePreVerifyBg);
+}
+animatePreVerifyBg();
 // 🚫 增强的DevTools检测和防护
 let devToolsDetected = false;
 
