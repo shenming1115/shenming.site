@@ -1,3 +1,70 @@
+/* Content section sky/cloud flowing background */
+.content-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+  animation: skyFlow 12s linear infinite;
+  opacity: 0.95;
+}
+@keyframes skyFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.content-rect {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(100,150,200,0.18);
+  padding: 2.5em 2em;
+  max-width: 520px;
+  min-width: 320px;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  font-weight: 600;
+  font-size: 1.15em;
+  color: #2d3a4a;
+  text-align: left;
+  margin-top: 8vh;
+}
+.content#contentPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+}
+/* 验证界面马来西亚时间字体 Apple 风格加粗 */
+#preVerifyDatetime,
+#mainWelcome,
+#mainDatetime {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  font-size: 1.25em;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.10);
+}
+
+#mainIP {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-weight: 500;
+  font-size: 1.1em;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.10);
+}
+/* 验证界面马来西亚时间字体 Apple 风格加粗 */
+#preVerifyDatetime {
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  font-size: 1.25em;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.10);
+}
  :root {
   --primary: #6B597F;
   --secondary: #BD6C73;
