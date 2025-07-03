@@ -6,12 +6,16 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "obfuscate": "node obfuscate.js",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": ["security", "anti-debug", "website", "protection"],
   "author": "Shenming",
   "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "terser": "^5.30.3",
+    "clean-css": "^5.3.3",
+    "html-minifier-terser": "^7.2.0"
   }
 }
