@@ -286,7 +286,7 @@
       // 劫持控制台
       console.log = console.warn = console.error = console.info = function() {
         _0x3c4d++;
-        if (_0x3c4d > 5) {
+        if (_0x3c4d > 10) { // 提高阈值，避免误判
           antiDevTools();
         }
         return false;
@@ -297,7 +297,7 @@
         const start = performance.now();
         debugger;
         const end = performance.now();
-        if (end - start > 50) {
+        if (end - start > 100) { // 提高阈值
           antiDevTools();
         }
       };
@@ -317,13 +317,13 @@
           const before = Date.now();
           trap();
           const after = Date.now();
-          if (after - before > 100) {
+          if (after - before > 200) { // 提高阈值
             antiDevTools();
           }
         } catch(e) {
-          antiDevTools();
+          // 移除自动触发antiDevTools，避免误判
         }
-      }, 3000 + Math.random() * 2000);
+      }, 10000 + Math.random() * 10000); // 降低检测频率
       
       // 检测开发者工具特征
       const detectDevTools = () => {
@@ -345,7 +345,8 @@
         detectDevTools,
         init: function() {
           detectDevTools();
-          setInterval(timeCheck, 1000);
+          // 降低检测频率，避免影响正常使用
+          setInterval(timeCheck, 5000);
         }
       };
     })();
@@ -405,8 +406,8 @@
         }
         
         // 更新可疑活动分数
-        if (straightLines > 5 || unnaturalSpeed > 5) {
-          securityState.behaviorAnalysis.suspiciousActivity += 2;
+        if (straightLines > 8 || unnaturalSpeed > 8) { // 提高阈值
+          securityState.behaviorAnalysis.suspiciousActivity += 1; // 降低分数增加
           this.logSuspiciousActivity('unnatural_mouse_movement', {
             straightLines,
             unnaturalSpeed
@@ -430,8 +431,8 @@
           const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
           const variance = intervals.reduce((acc, val) => acc + Math.pow(val - avgInterval, 2), 0) / intervals.length;
           
-          if (variance < 100 && avgInterval < 2000) { // 方差太小表示过于规律
-            securityState.behaviorAnalysis.suspiciousActivity += 3;
+          if (variance < 50 && avgInterval < 1000) { // 调整阈值，避免误判正常点击
+            securityState.behaviorAnalysis.suspiciousActivity += 2;
             this.logSuspiciousActivity('robotic_clicking', {
               variance,
               avgInterval
@@ -556,7 +557,7 @@
         });
         
         // 如果可疑分数过高，提高风险等级
-        if (securityState.behaviorAnalysis.suspiciousActivity > 10) {
+        if (securityState.behaviorAnalysis.suspiciousActivity > 20) { // 提高阈值
           securityState.riskLevel = 'high';
           updateRiskDisplay(['机器人行为']);
         }
@@ -881,10 +882,8 @@
       // 检测Puppeteer
       detectPuppeteer: function() {
         return !!(
-          window.navigator.plugins.length === 0 ||
-          window.navigator.languages === '' ||
           window.navigator.webdriver ||
-          window.chrome && window.chrome.runtime && window.chrome.runtime.onConnect
+          (window.navigator.plugins.length === 0 && window.navigator.languages.length === 0)
         );
       },
       
@@ -900,10 +899,8 @@
       // 检测Chrome headless
       detectHeadless: function() {
         return !!(
-          window.navigator.plugins.length === 0 ||
-          window.navigator.languages.length === 0 ||
-          !window.chrome ||
-          window.chrome.runtime === undefined
+          (window.navigator.plugins.length === 0 && window.navigator.languages.length === 0) ||
+          (window.outerWidth === 0 && window.outerHeight === 0)
         );
       },
       
@@ -928,10 +925,10 @@
             languages: navigator.languages.length
           });
           
-          // 自动化工具直接跳转
+          // 自动化工具检测到后延迟跳转，给用户更多时间
           setTimeout(() => {
             antiDevTools();
-          }, 1000);
+          }, 5000); // 延长到5秒
           
           return true;
         }
@@ -1164,8 +1161,13 @@
     
     // 页面加载时初始化安全检测
     document.addEventListener('DOMContentLoaded', function() {
-      // 初始化反调试保护
-      antiDebugProtection.init();
+      // 🚨 开发模式开关 - 生产环境请设置为 false
+      const DEVELOPMENT_MODE = true;
+      
+      if (!DEVELOPMENT_MODE) {
+        // 初始化反调试保护
+        antiDebugProtection.init();
+      }
       
       // 初始化行为分析
       behaviorAnalyzer.init();
@@ -1174,7 +1176,9 @@
       automationDetector.detect();
       
       // 创建安全仪表板（开发时可见，生产环境建议移除）
-      // createSecurityDashboard();
+      if (DEVELOPMENT_MODE) {
+        createSecurityDashboard();
+      }
       
       // 获取IP信息
       getUserIPInfo();
@@ -1285,24 +1289,24 @@
 
     // 窗口大小检测 (更敏感的检测)
     let windowSizeCheck = setInterval(() => {
-      const threshold = 160;
+      const threshold = 200; // 提高阈值，避免误判
       if (window.outerWidth - window.innerWidth > threshold || 
           window.outerHeight - window.innerHeight > threshold) {
         clearInterval(windowSizeCheck);
         antiDevTools();
       }
-    }, 500);
+    }, 2000); // 降低检测频率
 
     // 控制台检测
     let consoleCheck = setInterval(() => {
       const before = new Date();
       debugger;
       const after = new Date();
-      if (after - before > 100) {
+      if (after - before > 200) { // 提高阈值
         clearInterval(consoleCheck);
         antiDevTools();
       }
-    }, 1000);
+    }, 5000); // 降低检测频率
 
     // 开发者工具打开检测
     setInterval(() => {
