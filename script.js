@@ -4,7 +4,7 @@ let devToolsDetected = false;
 function antiDevTools() {
   if (devToolsDetected) return;
   devToolsDetected = true;
-  // 清除缓存和历史记录，并强制跳转到google.com，禁止返回
+  // 清除缓存和历史记录，不再跳转google
   try {
     // 清除本地存储和session
     localStorage.clear();
@@ -17,34 +17,29 @@ function antiDevTools() {
     for (let i = 0; i < 20; i++) {
       window.history.pushState(null, null, window.location.href + '#block' + Math.random());
     }
-    // 阻止返回
+    // 阻止返回（不再跳转）
     window.onpopstate = function() {
-      window.location.replace('https://www.google.com');
+      // no-op
     };
     window.history.pushState = function() {
-      window.location.replace('https://www.google.com');
+      // no-op
     };
     window.history.back = function() {
-      window.location.replace('https://www.google.com');
+      // no-op
     };
     window.history.go = function() {
-      window.location.replace('https://www.google.com');
+      // no-op
     };
-    // beforeunload 也跳转
+    // beforeunload 不再跳转
     window.addEventListener('beforeunload', function(e) {
-      window.location.replace('https://www.google.com');
+      // no-op
     });
-    // 可见性变化也跳转
+    // 可见性变化不再跳转
     document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
-        window.location.replace('https://www.google.com');
-      }
+      // no-op
     });
   } catch(e) {}
-  // 立即跳转
-  setTimeout(function() {
-    window.location.replace('https://www.google.com');
-  }, 50);
+  // 不再立即跳转
 }
 
 // 全局安全状态
