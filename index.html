@@ -86,17 +86,39 @@
 
   <script src="script.js"></script>
   <script>
-    // 变换色背景（首次验证时）
+
+    // 更顺滑的水流渐变动画
     const preVerifyColors = [
-      '#1e3c72', '#2a5298', '#6a11cb', '#2575fc', '#43cea2', '#185a9d', '#f7971e', '#ffd200', '#f7971e', '#fd1d1d', '#833ab4', '#fcb045'
+      [30,60,114], [42,82,152], [106,17,203], [37,117,252], [67,206,162], [24,90,157], [247,151,30], [255,210,0], [253,29,29], [131,58,180], [252,176,69]
     ];
-    let colorIndex = 0;
+    let t = 0;
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+    function rgbArrToStr(arr) {
+      return `rgb(${arr[0]},${arr[1]},${arr[2]})`;
+    }
     function animatePreVerifyBg() {
       const mask = document.getElementById('preVerifyMask');
       if (!mask) return;
-      mask.style.background = `linear-gradient(135deg, ${preVerifyColors[colorIndex]}, ${preVerifyColors[(colorIndex+1)%preVerifyColors.length]})`;
-      colorIndex = (colorIndex + 1) % preVerifyColors.length;
-      setTimeout(animatePreVerifyBg, 1800);
+      // 计算当前渐变的两个颜色
+      const idx1 = Math.floor(t) % preVerifyColors.length;
+      const idx2 = (idx1 + 1) % preVerifyColors.length;
+      const frac = t - Math.floor(t);
+      const color1 = [
+        lerp(preVerifyColors[idx1][0], preVerifyColors[idx2][0], frac),
+        lerp(preVerifyColors[idx1][1], preVerifyColors[idx2][1], frac),
+        lerp(preVerifyColors[idx1][2], preVerifyColors[idx2][2], frac)
+      ];
+      const idx3 = (idx1 + 2) % preVerifyColors.length;
+      const color2 = [
+        lerp(preVerifyColors[idx2][0], preVerifyColors[idx3][0], frac),
+        lerp(preVerifyColors[idx2][1], preVerifyColors[idx3][1], frac),
+        lerp(preVerifyColors[idx2][2], preVerifyColors[idx3][2], frac)
+      ];
+      mask.style.background = `linear-gradient(135deg, ${rgbArrToStr(color1)}, ${rgbArrToStr(color2)})`;
+      t += 0.015; // 控制流动速度
+      requestAnimationFrame(animatePreVerifyBg);
     }
     animatePreVerifyBg();
 
