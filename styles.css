@@ -419,19 +419,69 @@ button:hover {
   background: #555;
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  #captchaForm {
-    margin: 20px 10px;
-    padding: 15px;
-  }
-  
-  #securityDashboard {
-    width: 250px;
-    font-size: 11px;
-  }
-  
-  .cf-turnstile {
-    transform: scale(0.8);
-  }
+/* Content Page 全屏样式 */
+.content-page {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+}
+
+.content-sky-message {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  margin-top: 80px;
+}
+
+.content-title {
+  font-size: 2.5em;
+  color: #3a5a8c;
+  font-weight: 800;
+  margin-bottom: 0.5em;
+  text-shadow: 0 2px 12px rgba(255,255,255,0.5);
+}
+
+.content-description {
+  font-size: 1.3em;
+  color: #1e3c72;
+  background: rgba(255,255,255,0.7);
+  border-radius: 16px;
+  padding: 1.5em 2em;
+  box-shadow: 0 4px 24px rgba(224,234,252,0.5);
+  font-weight: 600;
+  max-width: 600px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* 优化content模式下的导航栏 */
+body.content-mode .navbar {
+  background: rgba(207, 222, 243, 0.95);
+  box-shadow: 0 2px 16px rgba(180,200,230,0.10);
+}
+
+body.content-mode .navbar-links a {
+  color: #3a5a8c;
+  background: rgba(255,255,255,0.0);
+  transition: all 0.3s ease;
+}
+
+body.content-mode .navbar-links a:hover,
+body.content-mode .navbar-links a.active {
+  background: rgba(224,234,252,0.7);
+  color: #1e3c72;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+body.content-mode .toggle-mode {
+  color: #3a5a8c;
 }

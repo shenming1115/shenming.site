@@ -7,14 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
   contentNavs.forEach(contentNav => {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
+      // 切换显示
       mainContent.style.display = 'none';
       contentPage.style.display = 'block';
-      // 激活content模式navbar
-      document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.add('content-mode'));
-      // 高亮Content按钮
-      document.querySelectorAll('#contentPage .navbar-links a').forEach(a => {
-        if(a.id === 'contentNav') a.classList.add('active');
-        else a.classList.remove('active');
+      document.body.classList.add('content-mode');
+      // 高亮当前按钮
+      document.querySelectorAll('.navbar-links a').forEach(a => {
+        a.classList.toggle('active', a.id === 'contentNav');
       });
     });
   });
@@ -24,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
       link.addEventListener('click', function() {
         contentPage.style.display = 'none';
         mainContent.style.display = 'block';
-        document.querySelectorAll('#contentPage .navbar').forEach(nav => nav.classList.remove('content-mode'));
-        document.querySelectorAll('#contentPage .navbar-links a').forEach(a => a.classList.remove('active'));
+        document.body.classList.remove('content-mode');
+        document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
     }
   });
