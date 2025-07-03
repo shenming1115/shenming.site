@@ -28,7 +28,7 @@
       </div>
     </div>
     <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
-    <button id="playButton">Play Sound</button>
+    <button id="playButton" class="button-63">Play Sound</button>
   </div>
 
   <div class="section" id="about">
@@ -57,12 +57,20 @@
     </div>
     
     <div class="cf-turnstile" 
-         data-sitekey="0x4AAAAAAAYourSiteKeyHere" 
+         data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
          data-theme="dark" 
          data-size="normal"
          data-callback="onTurnstileSuccess"
          data-expired-callback="onTurnstileExpired"
          data-error-callback="onTurnstileError">
+    </div>
+    
+    <div style="margin-top: 10px;">
+      <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" 
+              style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 12px; margin-right: 10px;">
+        🔄 重新加载验证
+      </button>
+      <small style="color: #999;">如果验证卡住，请点击重新加载</small>
     </div>
     
     <button type="submit" id="verifyBtn" disabled style="margin-top: 15px; opacity: 0.5;">

@@ -802,21 +802,22 @@ function addAdditionalVerification() {
 
 // Turnstile回调函数
 window.onTurnstileSuccess = function(token) {
+  console.log('✅ Turnstile验证成功');
   securityState.turnstileVerified = true;
   document.getElementById('verifyBtn').disabled = false;
   document.getElementById('verifyBtn').style.opacity = '1';
   document.getElementById('verificationResult').innerHTML = 
-    '<span style="color: #4CAF50;">✅ 验证成功</span>';
-  
+    '<span style="color: #4CAF50;">✅ 人机验证成功</span>';
+
   // 记录成功验证
-  logSecurityEvent('turnstile_success', {
+  logTurnstileEvent('turnstile_success', {
     token: token,
     riskLevel: securityState.riskLevel,
-    timestamp: new Date().toISOString()
   });
 };
 
 window.onTurnstileExpired = function() {
+  console.log('⚠️ Turnstile验证已过期');
   securityState.turnstileVerified = false;
   document.getElementById('verifyBtn').disabled = true;
   document.getElementById('verifyBtn').style.opacity = '0.5';
@@ -825,13 +826,36 @@ window.onTurnstileExpired = function() {
 };
 
 window.onTurnstileError = function(error) {
+  console.error('❌ Turnstile验证错误:', error);
+
+  let errorMessage = '';
+  switch(error) {
+    case 'network-error':
+      errorMessage = '❌ 网络连接错误，请检查网络后重试';
+      break;
+    case 'timeout':
+      errorMessage = '❌ 验证超时，请刷新页面重试';
+      break;
+    case 'invalid-sitekey':
+      errorMessage = '❌ 站点配置错误，请联系管理员';
+      break;
+    case 'invalid-domain':
+      errorMessage = '❌ 域名不匹配，请检查站点配置';
+      break;
+    case 'rate-limit':
+      errorMessage = '❌ 请求过于频繁，请稍后再试';
+      break;
+    default:
+      errorMessage = '❌ 验证失败: ' + error;
+  }
+
   document.getElementById('verificationResult').innerHTML = 
-    '<span style="color: #F44336;">❌ 验证失败: ' + error + '</span>';
-    
-  logSecurityEvent('turnstile_error', {
+    '<span style="color: #F44336;">' + errorMessage + '</span>';
+
+  // 记录错误验证
+  logTurnstileEvent('turnstile_error', {
     error: error,
     riskLevel: securityState.riskLevel,
-    timestamp: new Date().toISOString()
   });
 };
 
@@ -852,302 +876,134 @@ window.sendVerificationEmail = function() {
   });
 };
 
-// 安全事件日志
-function logSecurityEvent(event, data) {
-  const logData = {
-    event: event,
-    data: data,
-    userAgent: navigator.userAgent,
-    url: window.location.href,
-    referrer: document.referrer
-  };
+// 🔄 重新加载Turnstile验证
+window.refreshTurnstile = function() {
+  console.log('🔄 重新加载Turnstile验证');
   
-  // 发送到后端日志系统
-  fetch('/api/security-log', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(logData)
-  }).catch(e => console.log('Log failed'));
-}
-
-// 表单提交处理
-document.getElementById('captchaForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  if (!securityState.turnstileVerified) {
-    alert('请先完成人机验证');
-    return;
-  }
-  
-  // 高风险用户需要额外验证
-  if (securityState.riskLevel === 'high') {
-    const email = document.getElementById('verifyEmail');
-    if (email && !email.value) {
-      alert('高风险访问需要邮箱验证');
-      return;
+  try {
+    // 重置验证状态
+    securityState.turnstileVerified = false;
+    document.getElementById('verifyBtn').disabled = true;
+    document.getElementById('verifyBtn').style.opacity = '0.5';
+    document.getElementById('verificationResult').innerHTML = 
+      '<span style="color: #6c757d;">🔄 正在重新加载验证...</span>';
+    
+    // 如果Turnstile已加载，尝试重置
+    if (window.turnstile) {
+      const turnstileDiv = document.querySelector('.cf-turnstile');
+      if (turnstileDiv) {
+        // 清除现有的widget
+        turnstileDiv.innerHTML = '';
+        
+        // 重新渲染
+        setTimeout(() => {
+          window.turnstile.render(turnstileDiv, {
+            sitekey: '0x4AAAAAABjTIyITvZEz6LO_',
+            theme: 'dark',
+            size: 'normal',
+            callback: 'onTurnstileSuccess',
+            'expired-callback': 'onTurnstileExpired',
+            'error-callback': 'onTurnstileError'
+          });
+          
+          document.getElementById('verificationResult').innerHTML = 
+            '<span style="color: #4CAF50;">✅ 验证已重新加载</span>';
+        }, 500);
+      }
+    } else {
+      // 如果Turnstile未加载，尝试重新加载脚本
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = function() {
+        console.log('✅ Turnstile脚本重新加载成功');
+        document.getElementById('verificationResult').innerHTML = 
+          '<span style="color: #4CAF50;">✅ 验证服务已重新加载</span>';
+      };
+      script.onerror = function() {
+        console.error('❌ Turnstile脚本重新加载失败');
+        document.getElementById('verificationResult').innerHTML = 
+          '<span style="color: #F44336;">❌ 验证服务重新加载失败</span>';
+      };
+      document.head.appendChild(script);
     }
+    
+    logSecurityEvent('turnstile_refresh', {
+      timestamp: new Date().toISOString(),
+      reason: 'manual_refresh'
+    });
+    
+  } catch (error) {
+    console.error('❌ 重新加载验证时出错:', error);
+    document.getElementById('verificationResult').innerHTML = 
+      '<span style="color: #F44336;">❌ 重新加载失败，请刷新页面</span>';
+  }
+};
+
+// 自动重试机制
+let retryCount = 0;
+const maxRetries = 3;
+
+function autoRetryTurnstile() {
+  if (retryCount < maxRetries) {
+    retryCount++;
+    console.log(`🔄 自动重试Turnstile (${retryCount}/${maxRetries})`);
+    
+    setTimeout(() => {
+      refreshTurnstile();
+    }, 2000 * retryCount); // 递增延迟
+  } else {
+    console.log('❌ 达到最大重试次数');
+    document.getElementById('verificationResult').innerHTML = 
+      '<span style="color: #F44336;">❌ 验证服务连接失败，请检查网络后刷新页面</span>';
+  }
+}
+
+// 域名检查（确保在正确的域名下使用）
+function validateDomain() {
+  const currentDomain = window.location.hostname;
+  const allowedDomains = ['localhost', '127.0.0.1', 'shenming.site']; // 添加你的域名
+  
+  console.log('当前域名:', currentDomain);
+  
+  if (currentDomain === 'localhost' || currentDomain === '127.0.0.1' || currentDomain.includes('github.io')) {
+    console.log('✅ 在本地或GitHub Pages环境中运行');
+    return true;
   }
   
-  // 验证通过，可以提交表单或执行后续操作
-  document.getElementById('verificationResult').innerHTML = 
-    '<span style="color: #4CAF50;">🎉 所有验证完成，欢迎访问！</span>';
+  // 检查是否在允许的域名中
+  const isAllowed = allowedDomains.some(domain => 
+    currentDomain === domain || currentDomain.endsWith('.' + domain)
+  );
   
-  logSecurityEvent('verification_complete', {
-    riskLevel: securityState.riskLevel,
-    timestamp: new Date().toISOString()
-  });
-});
-
-// 📊 安全仪表板显示
-function createSecurityDashboard() {
-  if (document.getElementById('securityDashboard')) return;
+  if (!isAllowed) {
+    console.warn('⚠️ 当前域名可能不在Turnstile配置的域名列表中');
+  }
   
-  const dashboard = document.createElement('div');
-  dashboard.id = 'securityDashboard';
-  dashboard.style.cssText = `
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 300px;
-    background: rgba(0,0,0,0.9);
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 12px;
-    z-index: 10000;
-    display: none;
-  `;
-  
-  dashboard.innerHTML = `
-    <h4>🛡️ 安全监控面板</h4>
-    <div id="dashboardContent"></div>
-    <button onclick="toggleSecurityDashboard()" style="margin-top: 10px; padding: 5px 10px; background: #333; color: white; border: none; border-radius: 4px;">
-      隐藏
-    </button>
-  `;
-  
-  document.body.appendChild(dashboard);
-  
-  // 定期更新仪表板
-  setInterval(() => {
-    updateSecurityDashboard();
-  }, 5000);
+  return isAllowed;
 }
 
-function updateSecurityDashboard() {
-  const dashboard = document.getElementById('dashboardContent');
-  if (!dashboard) return;
-  
-  const behavior = securityState.behaviorAnalysis;
-  dashboard.innerHTML = `
-    <div>🎯 风险等级: <span style="color: ${securityState.riskLevel === 'high' ? '#ff4444' : securityState.riskLevel === 'medium' ? '#ffaa00' : '#44ff44'}">${securityState.riskLevel.toUpperCase()}</span></div>
-    <div>🖱️ 鼠标轨迹点: ${behavior.mouseTrajectory.length || 0}</div>
-    <div>👆 点击次数: ${behavior.clickPattern.length || 0}</div>
-    <div>⌨️ 按键次数: ${behavior.keyboardRhythm.length || 0}</div>
-    <div>📜 滚动事件: ${behavior.scrollBehavior.length || 0}</div>
-    <div>⚠️ 可疑活动分数: ${behavior.suspiciousActivity}</div>
-    <div>🤖 自动化检测: ${automationDetector.detected ? '❌ 检测到' : '✅ 未检测到'}</div>
-    <div>🔍 设备指纹: ${securityState.advancedFingerprint ? '✅ 已生成' : '⏳ 生成中'}</div>
-  `;
-}
-
-// 页面加载时初始化所有安全检测
+// 页面加载时进行检查
 document.addEventListener('DOMContentLoaded', function() {
-  // 🚨 开发模式开关 - 生产环境请设置为 false
-  const DEVELOPMENT_MODE = true;
+  console.log('🔍 开始Turnstile配置检查...');
   
-  // 预防性历史记录保护
-  (function() {
-    // 初始化时就设置历史记录陷阱
-    window.history.pushState(null, null, window.location.href);
-    window.history.pushState(null, null, window.location.href);
+  // 检查域名
+  validateDomain();
+  
+  // 检查sitekey
+  const turnstileDiv = document.querySelector('.cf-turnstile');
+  if (turnstileDiv) {
+    const sitekey = turnstileDiv.getAttribute('data-sitekey');
+    console.log('Sitekey:', sitekey);
     
-    // 监听返回按钮事件
-    window.addEventListener('popstate', function(event) {
-      // 阻止返回并保持在当前页面
-      window.history.pushState(null, null, window.location.href);
-      
-      // 如果检测到开发者工具被触发过，直接跳转
-      if (devToolsDetected) {
-        window.location.replace("https://www.google.com");
-      }
-    });
-    
-    // 页面隐藏时的保护
-    document.addEventListener('visibilitychange', function() {
-      if (devToolsDetected && document.visibilityState === 'visible') {
-        window.location.replace("https://www.google.com");
-      }
-    });
-    
-    // 焦点变化时的保护
-    window.addEventListener('focus', function() {
-      if (devToolsDetected) {
-        window.location.replace("https://www.google.com");
-      }
-    });
-    
-    // 页面unload时的保护
-    window.addEventListener('beforeunload', function(e) {
-      if (devToolsDetected) {
-        e.preventDefault();
-        window.location.replace("https://www.google.com");
-        return '';
-      }
-    });
-  })();
-  
-  if (!DEVELOPMENT_MODE) {
-    // 初始化反调试保护
-    antiDebugProtection.init();
-  }
-  
-  // 初始化行为分析
-  behaviorAnalyzer.init();
-  
-  // 检测自动化工具
-  automationDetector.detect();
-  
-  // 创建安全仪表板（开发时可见，生产环境建议移除）
-  if (DEVELOPMENT_MODE) {
-    createSecurityDashboard();
-  }
-  
-  // 获取IP信息
-  getUserIPInfo();
-  updateRiskDisplay();
-  
-  // 记录页面访问
-  logSecurityEvent('page_visit', {
-    timestamp: new Date().toISOString(),
-    deviceFingerprint: generateDeviceFingerprint(),
-    automationDetected: automationDetector.detected,
-    advancedFingerprint: securityState.advancedFingerprint
-  });
-  
-  // 延迟执行一些检测以避免影响页面加载
-  setTimeout(() => {
-    // 生成完整的设备指纹
-    generateAdvancedDeviceFingerprint();
-    
-    // 额外的安全检查
-    if (securityState.behaviorAnalysis.suspiciousActivity > 15) {
-      logSecurityEvent('high_risk_session', {
-        suspiciousScore: securityState.behaviorAnalysis.suspiciousActivity,
-        timestamp: new Date().toISOString()
-      });
+    if (sitekey === '0x4AAAAAAAYourSiteKeyHere') {
+      console.error('❌ 仍在使用占位符sitekey');
+    } else if (sitekey && sitekey.length > 10) {
+      console.log('✅ Sitekey已配置');
     }
-  }, 3000);
-});
-
-// 键盘检测
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'F12' || 
-      (e.ctrlKey && e.shiftKey && ['I','C','J'].includes(e.key)) || 
-      (e.ctrlKey && e.key === 'U') ||
-      (e.ctrlKey && e.key === 'S')) {
-    e.preventDefault();
-    e.stopPropagation();
-    antiDevTools();
-    return false;
   }
 });
-
-// 右键检测
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-  antiDevTools();
-  return false;
-});
-
-// 窗口大小检测 (更敏感的检测)
-let windowSizeCheck = setInterval(() => {
-  const threshold = 200; // 提高阈值，避免误判
-  if (window.outerWidth - window.innerWidth > threshold || 
-      window.outerHeight - window.innerHeight > threshold) {
-    clearInterval(windowSizeCheck);
-    antiDevTools();
-  }
-}, 2000); // 降低检测频率
-
-// 控制台检测
-let consoleCheck = setInterval(() => {
-  const before = new Date();
-  debugger;
-  const after = new Date();
-  if (after - before > 200) { // 提高阈值
-    clearInterval(consoleCheck);
-    antiDevTools();
-  }
-}, 5000); // 降低检测频率
-
-// 防止通过iframe绕过
-if (window.top !== window.self) {
-  antiDevTools();
-}
-
-// 额外的全局历史记录保护
-(function() {
-  let originalPushState = history.pushState;
-  let originalReplaceState = history.replaceState;
-  
-  // 重写history方法
-  window.history.pushState = function(state, title, url) {
-    if (devToolsDetected) {
-      window.location.replace("https://www.google.com");
-      return;
-    }
-    return originalPushState.apply(history, arguments);
-  };
-  
-  window.history.replaceState = function(state, title, url) {
-    if (devToolsDetected) {
-      window.location.replace("https://www.google.com");
-      return;
-    }
-    return originalReplaceState.apply(history, arguments);
-  };
-  
-  // 重写back和forward方法
-  window.history.back = function() {
-    if (devToolsDetected) {
-      window.location.replace("https://www.google.com");
-      return;
-    }
-  };
-  
-  window.history.forward = function() {
-    if (devToolsDetected) {
-      window.location.replace("https://www.google.com");
-      return;
-    }
-  };
-  
-  window.history.go = function(n) {
-    if (devToolsDetected) {
-      window.location.replace("https://www.google.com");
-      return;
-    }
-  };
-  
-  // 监听hashchange事件
-  window.addEventListener('hashchange', function(e) {
-    if (devToolsDetected) {
-      e.preventDefault();
-      window.location.replace("https://www.google.com");
-    }
-  });
-  
-  // 定期检查URL变化
-  let currentUrl = window.location.href;
-  setInterval(() => {
-    if (devToolsDetected && window.location.href !== currentUrl) {
-      window.location.replace("https://www.google.com");
-    }
-  }, 100);
-})();
 
 // 基本页面功能
 document.addEventListener('DOMContentLoaded', function() {
@@ -1209,3 +1065,102 @@ window.toggleSecurityDashboard = function() {
     dashboard.style.display = dashboard.style.display === 'none' ? 'block' : 'none';
   }
 };
+
+// 🔍 Turnstile 加载和状态检查
+function checkTurnstileStatus() {
+  if (typeof window.turnstile === 'undefined') {
+    console.log('⏳ Turnstile脚本尚未加载');
+    return false;
+  }
+  
+  console.log('✅ Turnstile脚本已加载');
+  return true;
+}
+
+// 监听Turnstile脚本加载
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (!checkTurnstileStatus()) {
+      document.getElementById('verificationResult').innerHTML = 
+        '<span style="color: #FF9800;">⚠️ 验证服务加载中，请稍候...</span>';
+        
+      // 再次检查
+      setTimeout(function() {
+        if (!checkTurnstileStatus()) {
+          document.getElementById('verificationResult').innerHTML = 
+            '<span style="color: #F44336;">❌ 验证服务加载失败，请检查网络连接</span>';
+        } else {
+          document.getElementById('verificationResult').innerHTML = 
+            '<span style="color: #4CAF50;">✅ 验证服务已就绪</span>';
+        }
+      }, 5000);
+    }
+  }, 2000);
+});
+
+// 域名检查（确保在正确的域名下使用）
+function validateDomain() {
+  const currentDomain = window.location.hostname;
+  const allowedDomains = ['localhost', '127.0.0.1', 'shenming.site']; // 添加你的域名
+  
+  console.log('当前域名:', currentDomain);
+  
+  if (currentDomain === 'localhost' || currentDomain === '127.0.0.1' || currentDomain.includes('github.io')) {
+    console.log('✅ 在本地或GitHub Pages环境中运行');
+    return true;
+  }
+  
+  // 检查是否在允许的域名中
+  const isAllowed = allowedDomains.some(domain => 
+    currentDomain === domain || currentDomain.endsWith('.' + domain)
+  );
+  
+  if (!isAllowed) {
+    console.warn('⚠️ 当前域名可能不在Turnstile配置的域名列表中');
+  }
+  
+  return isAllowed;
+}
+
+// 页面加载时进行检查
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🔍 开始Turnstile配置检查...');
+  
+  // 检查域名
+  validateDomain();
+  
+  // 检查sitekey
+  const turnstileDiv = document.querySelector('.cf-turnstile');
+  if (turnstileDiv) {
+    const sitekey = turnstileDiv.getAttribute('data-sitekey');
+    console.log('Sitekey:', sitekey);
+    
+    if (sitekey === '0x4AAAAAAAYourSiteKeyHere') {
+      console.error('❌ 仍在使用占位符sitekey');
+    } else if (sitekey && sitekey.length > 10) {
+      console.log('✅ Sitekey已配置');
+    }
+  }
+});
+
+// 添加日志记录功能，将Turnstile验证结果发送到后端服务
+async function logTurnstileEvent(eventType, eventData) {
+  try {
+    const response = await fetch('/log-turnstile-event', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        eventType,
+        eventData,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+    if (!response.ok) {
+      console.error('日志记录失败:', response.statusText);
+    }
+  } catch (error) {
+    console.error('日志记录时发生错误:', error);
+  }
+}
