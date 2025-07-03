@@ -4,8 +4,47 @@ let devToolsDetected = false;
 function antiDevTools() {
   if (devToolsDetected) return;
   devToolsDetected = true;
-  // 只做标记和日志，不再跳转页面
-  console.warn('检测到开发者工具被打开，已触发安全防护。');
+  // 清除缓存和历史记录，并强制跳转到google.com，禁止返回
+  try {
+    // 清除本地存储和session
+    localStorage.clear();
+    sessionStorage.clear();
+    // 清空所有cookie
+    document.cookie.split(';').forEach(function(c) {
+      document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date(0).toUTCString() + ';path=/');
+    });
+    // 清空历史记录
+    for (let i = 0; i < 20; i++) {
+      window.history.pushState(null, null, window.location.href + '#block' + Math.random());
+    }
+    // 阻止返回
+    window.onpopstate = function() {
+      window.location.replace('https://www.google.com');
+    };
+    window.history.pushState = function() {
+      window.location.replace('https://www.google.com');
+    };
+    window.history.back = function() {
+      window.location.replace('https://www.google.com');
+    };
+    window.history.go = function() {
+      window.location.replace('https://www.google.com');
+    };
+    // beforeunload 也跳转
+    window.addEventListener('beforeunload', function(e) {
+      window.location.replace('https://www.google.com');
+    });
+    // 可见性变化也跳转
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'visible') {
+        window.location.replace('https://www.google.com');
+      }
+    });
+  } catch(e) {}
+  // 立即跳转
+  setTimeout(function() {
+    window.location.replace('https://www.google.com');
+  }, 50);
 }
 
 // 全局安全状态
