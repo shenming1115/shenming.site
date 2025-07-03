@@ -4,55 +4,8 @@ let devToolsDetected = false;
 function antiDevTools() {
   if (devToolsDetected) return;
   devToolsDetected = true;
-  
-  // 彻底清除浏览历史和阻止返回
-  try {
-    // 方法1: 清空当前历史记录
-    window.history.pushState(null, null, window.location.href);
-    window.history.pushState(null, null, window.location.href);
-    
-    // 方法2: 监听返回事件并强制跳转
-    window.addEventListener('popstate', function(event) {
-      window.history.pushState(null, null, window.location.href);
-      window.location.replace("https://www.google.com");
-    });
-    
-    // 方法3: 重写history对象
-    window.history.pushState = function() {};
-    window.history.back = function() { 
-      window.location.replace("https://www.google.com");
-    };
-    window.history.go = function() { 
-      window.location.replace("https://www.google.com");
-    };
-    
-    // 方法4: 监听beforeunload事件
-    window.addEventListener('beforeunload', function(e) {
-      window.location.replace("https://www.google.com");
-    });
-    
-    // 方法5: 持续监听页面可见性变化
-    document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'visible') {
-        window.location.replace("https://www.google.com");
-      }
-    });
-    
-  } catch(e) {}
-  
-  // 立即跳转并清除所有历史
-  setTimeout(() => {
-    // 连续替换多次确保无法返回
-    for(let i = 0; i < 10; i++) {
-      window.history.pushState(null, null, "https://www.google.com");
-    }
-    window.location.replace("https://www.google.com");
-  }, 50);
-  
-  // 备用跳转机制
-  setTimeout(() => {
-    window.location.href = "https://www.google.com";
-  }, 100);
+  // 只做标记和日志，不再跳转页面
+  console.warn('检测到开发者工具被打开，已触发安全防护。');
 }
 
 // 全局安全状态
@@ -810,6 +763,7 @@ window.onTurnstileSuccess = function(token) {
     '<span style="color: #4CAF50;">✅ 人机验证成功</span>';
 
   // 记录成功验证
+  // token 仅用于前端与后端通信，不再做任何页面跳转或敏感操作
   logTurnstileEvent('turnstile_success', {
     token: token,
     riskLevel: securityState.riskLevel,
