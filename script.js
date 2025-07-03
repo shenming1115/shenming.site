@@ -807,7 +807,16 @@ window.onTurnstileSuccess = function(token) {
     token: token,
     riskLevel: securityState.riskLevel,
   });
-  // 不再跳转或强制离开页面
+
+  // 阻止form自动提交，防止页面跳转
+  var form = document.getElementById('captchaForm');
+  if (form) {
+    form.onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('verificationResult').innerHTML = '<span style="color: #4CAF50;">✅ 验证已通过，无需跳转</span>';
+      return false;
+    };
+  }
 };
 
 window.onTurnstileExpired = function() {
