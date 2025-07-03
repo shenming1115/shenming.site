@@ -58,28 +58,40 @@ async function fetchMalaysiaTimeAndIP() {
 fetchMalaysiaTimeAndIP();
 
 // 验证成功后切换到主内容和紫色渐变背景，并显示时间/IP
-window.onTurnstileSuccess = (function(orig){
-  return function(token) {
-    orig(token);
-    // 切换内容
-    document.getElementById('preVerifyMask').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
-    document.body.classList.add('after-verify-bg');
-    // 显示主界面时间和IP（优先用已获取的window._malaysiaTime和window._userIP）
-    if (window._malaysiaTime) {
-      document.getElementById('mainWelcome').textContent = window._malaysiaTime;
-      document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
-    } else {
-      document.getElementById('mainWelcome').textContent = '无法获取马来西亚时间';
-    }
-    if (window._userIP) {
-      document.getElementById('mainIP').textContent = 'Your IP: ' + window._userIP;
-    } else {
-      document.getElementById('mainIP').textContent = 'IP: 获取失败';
-    }
-    document.getElementById('mainIP').style.display = 'block';
+// 处理验证成功的回调函数
+function handleTurnstileSuccess(token) {
+  // 隐藏验证遮罩
+  document.getElementById('preVerifyMask').style.display = 'none';
+  
+  // 显示主内容并添加背景
+  const mainContent = document.getElementById('mainContent');
+  mainContent.style.display = 'block';
+  document.body.classList.add('after-verify-bg');
+  
+  // 更新时间显示
+  if (window._malaysiaTime) {
+    document.getElementById('mainWelcome').textContent = window._malaysiaTime;
+    document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
+  } else {
+    document.getElementById('mainWelcome').textContent = '无法获取马来西亚时间';
   }
-})(window.onTurnstileSuccess);
+  
+  // 更新IP显示
+  if (window._userIP) {
+    document.getElementById('mainIP').textContent = 'Your IP: ' + window._userIP;
+  } else {
+    document.getElementById('mainIP').textContent = 'IP: 获取失败';
+  }
+  document.getElementById('mainIP').style.display = 'block';
+  
+  // 自动滚动到主页
+  setTimeout(() => {
+    document.querySelector('#home').scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+// 设置 Turnstile 回调
+window.onTurnstileSuccess = handleTurnstileSuccess;
 
 // 更顺滑的水流渐变动画
 const preVerifyColors = [
