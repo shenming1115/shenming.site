@@ -917,31 +917,31 @@ function addAdditionalVerification() {
 }
 
 // Turnstile回调函数
-window.onTurnstileSuccess = function(token) {
-  console.log('✅ Turnstile验证成功');
-  securityState.turnstileVerified = true;
-  document.getElementById('verifyBtn').disabled = false;
-  document.getElementById('verifyBtn').style.opacity = '1';
-  document.getElementById('verificationResult').innerHTML = 
-    '<span style="color: #4CAF50;">✅ 人机验证成功</span>';
-
-  // 记录成功验证
-  // token 仅用于前端与后端通信，不再做任何页面跳转或敏感操作
-  logTurnstileEvent('turnstile_success', {
-    token: token,
-    riskLevel: securityState.riskLevel,
-  });
-
-  // 阻止form自动提交，防止页面跳转
-  var form = document.getElementById('captchaForm');
-  if (form) {
-    form.onsubmit = function(e) {
-      e.preventDefault();
-      document.getElementById('verificationResult').innerHTML = '<span style="color: #4CAF50;">✅ 验证已通过，无需跳转</span>';
-      return false;
-    };
-  }
-};
+// window.onTurnstileSuccess = function(token) {
+//   console.log('✅ Turnstile验证成功');
+//   securityState.turnstileVerified = true;
+//   document.getElementById('verifyBtn').disabled = false;
+//   document.getElementById('verifyBtn').style.opacity = '1';
+//   document.getElementById('verificationResult').innerHTML = 
+//     '<span style="color: #4CAF50;">✅ 人机验证成功</span>';
+//
+//   // 记录成功验证
+//   // token 仅用于前端与后端通信，不再做任何页面跳转或敏感操作
+//   logTurnstileEvent('turnstile_success', {
+//     token: token,
+//     riskLevel: securityState.riskLevel,
+//   });
+//
+//   // 阻止form自动提交，防止页面跳转
+//   var form = document.getElementById('captchaForm');
+//   if (form) {
+//     form.onsubmit = function(e) {
+//       e.preventDefault();
+//       document.getElementById('verificationResult').innerHTML = '<span style="color: #4CAF50;">✅ 验证已通过，无需跳转</span>';
+//       return false;
+//     };
+//   }
+//};
 
 window.onTurnstileExpired = function() {
   console.log('⚠️ Turnstile验证已过期');
