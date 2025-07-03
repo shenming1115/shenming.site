@@ -814,6 +814,7 @@ window.onTurnstileSuccess = function(token) {
     token: token,
     riskLevel: securityState.riskLevel,
   });
+  // 不再跳转或强制离开页面
 };
 
 window.onTurnstileExpired = function() {
