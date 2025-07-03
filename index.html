@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to MyWebsite</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+  <div class="navbar">
+    <div class="navbar-links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="toggle-mode" id="toggleMode">🌙</div>
+  </div>
+
+  <div class="content" id="home">
+    <h1>Welcome to MyWebsite</h1>
+    <p>Click below to play an awesome sound!</p>
+    <div class="character-wrapper">
+      <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
+      <div class="eyes-container">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
+      </div>
+    </div>
+    <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
+    <button id="playButton">Play Sound</button>
+  </div>
+
+  <div class="section" id="about">
+    <h2>About</h2>
+    <p>This is an awesome page designed with an elegant style.</p>
+  </div>
+
+  <div class="section" id="contact">
+    <h2>Contact</h2>
+    <p>Feel free to reach out through the following platforms:</p>
+    <div class="social-icons">
+      <a href="https://wa.me/your-phone-number" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
+      </a>
+      <a href="https://www.instagram.com/your-profile/" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
+      </a>
+    </div>
+  </div>
+
+  <form action="/validate" method="POST" id="captchaForm">
+    <div id="securityStatus" style="margin-bottom: 20px; text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+      <p>🔒 安全验证系统</p>
+      <div id="ipInfo" style="font-size: 14px; color: #ccc;"></div>
+      <div id="riskLevel" style="margin: 10px 0; font-weight: bold;"></div>
+    </div>
+    
+    <div class="cf-turnstile" 
+         data-sitekey="0x4AAAAAAAYourSiteKeyHere" 
+         data-theme="dark" 
+         data-size="normal"
+         data-callback="onTurnstileSuccess"
+         data-expired-callback="onTurnstileExpired"
+         data-error-callback="onTurnstileError">
+    </div>
+    
+    <button type="submit" id="verifyBtn" disabled style="margin-top: 15px; opacity: 0.5;">
+      🛡️ 验证我是人类
+    </button>
+    <div id="verificationResult" style="margin-top: 15px; font-size: 14px;"></div>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>

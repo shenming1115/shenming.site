@@ -1,0 +1,304 @@
+:root {
+  --primary: #6B597F;
+  --secondary: #BD6C73;
+  --accent: #A2869C;
+  --bg-light: linear-gradient(135deg, #92A1C2, #6B597F, #A2869C, #BD6C73, #3F5B8D, #2265AA);
+  --text-light: #ffffff;
+  --bg-dark: #121212;
+  --text-dark: #eeeeee;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg-light);
+  background-size: 600% 600%;
+  animation: gradientFlow 15s ease infinite;
+  color: var(--text-light);
+  scroll-behavior: smooth;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+body.dark-mode {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.navbar {
+  background-color: rgba(107, 89, 127, 0.95);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 24px;
+}
+
+.navbar a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  background: var(--secondary);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.toggle-mode {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+  padding: 8px;
+}
+
+.content {
+  margin-top: 100px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3em;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+p {
+  font-size: 1.2em;
+}
+
+button {
+  margin-top: 24px;
+  padding: 14px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: var(--secondary);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--accent);
+}
+
+.character-wrapper {
+  position: relative;
+  width: 300px;
+  margin: 40px auto;
+}
+
+.character-wrapper img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.eyes-container {
+  position: absolute;
+  top: 17%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.eye {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border: 3px solid #333;
+  border-radius: 50%;
+  margin: 0 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pupil {
+  width: 16px;
+  height: 16px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  transition: all 0.05s ease;
+}
+
+.eye.blinking {
+  animation: blink-eye 0.25s ease-in-out;
+}
+
+.pupil.blinking {
+  animation: blink-pupil 0.25s ease-in-out;
+}
+
+@keyframes blink-eye {
+  0% { height: 40px; }
+  50% { height: 4px; }
+  100% { height: 40px; }
+}
+
+@keyframes blink-pupil {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+  100% { transform: scaleY(1); }
+}
+
+.section {
+  padding: 80px 20px;
+}
+
+#about { background: #6B597F; }
+#contact { background: #3F5B8D; }
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* 安全验证相关样式 */
+#captchaForm {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#securityStatus {
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+}
+
+#ipInfo {
+  font-size: 14px;
+  color: #ccc;
+  margin-top: 10px;
+}
+
+#riskLevel {
+  margin: 10px 0;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#verifyBtn {
+  margin-top: 15px;
+  padding: 12px 24px;
+  background: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+#verifyBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#verifyBtn:hover:not(:disabled) {
+  background: var(--accent);
+}
+
+#verificationResult {
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.cf-turnstile {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* 安全仪表板样式 */
+#securityDashboard {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  background: rgba(0,0,0,0.9);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  z-index: 10000;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#securityDashboard h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+#dashboardContent div {
+  margin: 5px 0;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#securityDashboard button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#securityDashboard button:hover {
+  background: #555;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  #captchaForm {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+  
+  #securityDashboard {
+    width: 250px;
+    font-size: 11px;
+  }
+  
+  .cf-turnstile {
+    transform: scale(0.8);
+  }
+}

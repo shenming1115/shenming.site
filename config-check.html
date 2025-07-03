@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配置检查</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .check { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ 配置检查报告</h1>
+    <div id="checkResults"></div>
+
+    <script>
+        const checks = [];
+        
+        // 检查 CSS 文件
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = 'styles.css';
+        cssLink.onload = () => {
+            checks.push({type: 'success', message: '✅ styles.css 链接正常'});
+            updateResults();
+        };
+        cssLink.onerror = () => {
+            checks.push({type: 'error', message: '❌ styles.css 链接失败'});
+            updateResults();
+        };
+        document.head.appendChild(cssLink);
+        
+        // 检查 JS 文件
+        const jsScript = document.createElement('script');
+        jsScript.src = 'script.js';
+        jsScript.onload = () => {
+            checks.push({type: 'success', message: '✅ script.js 链接正常'});
+            updateResults();
+        };
+        jsScript.onerror = () => {
+            checks.push({type: 'error', message: '❌ script.js 链接失败'});
+            updateResults();
+        };
+        document.head.appendChild(jsScript);
+        
+        // 检查图片文件
+        const img = new Image();
+        img.onload = () => {
+            checks.push({type: 'success', message: '✅ 图片文件 (psycho-kev-9uYCEzNYZ2A-unsplash.jpg) 加载正常'});
+            updateResults();
+        };
+        img.onerror = () => {
+            checks.push({type: 'error', message: '❌ 图片文件 (psycho-kev-9uYCEzNYZ2A-unsplash.jpg) 加载失败'});
+            updateResults();
+        };
+        img.src = 'Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg';
+        
+        // 检查音频文件
+        const audio = new Audio();
+        audio.oncanplaythrough = () => {
+            checks.push({type: 'success', message: '✅ 音频文件 (burp-1.mp3) 加载正常'});
+            updateResults();
+        };
+        audio.onerror = () => {
+            checks.push({type: 'error', message: '❌ 音频文件 (burp-1.mp3) 加载失败'});
+            updateResults();
+        };
+        audio.src = 'Assets/burp-1.mp3';
+        
+        // 检查 Cloudflare Turnstile
+        if (window.turnstile) {
+            checks.push({type: 'success', message: '✅ Cloudflare Turnstile 脚本加载正常'});
+        } else {
+            checks.push({type: 'warning', message: '⚠️ Cloudflare Turnstile 脚本未加载（可能需要等待）'});
+        }
+        
+        // 检查必要的 HTML 元素
+        const requiredElements = [
+            'playButton',
+            'audioPlayer',
+            'toggleMode',
+            'captchaForm',
+            'verifyBtn',
+            'securityStatus',
+            'ipInfo',
+            'riskLevel',
+            'verificationResult'
+        ];
+        
+        requiredElements.forEach(id => {
+            if (document.getElementById(id)) {
+                checks.push({type: 'success', message: `✅ 元素 #${id} 存在`});
+            } else {
+                checks.push({type: 'error', message: `❌ 元素 #${id} 不存在`});
+            }
+        });
+        
+        function updateResults() {
+            const container = document.getElementById('checkResults');
+            container.innerHTML = '';
+            
+            checks.forEach(check => {
+                const div = document.createElement('div');
+                div.className = `check ${check.type}`;
+                div.textContent = check.message;
+                container.appendChild(div);
+            });
+            
+            // 统计
+            const successCount = checks.filter(c => c.type === 'success').length;
+            const errorCount = checks.filter(c => c.type === 'error').length;
+            const warningCount = checks.filter(c => c.type === 'warning').length;
+            
+            const summary = document.createElement('div');
+            summary.className = 'check';
+            summary.style.backgroundColor = '#e2e3e5';
+            summary.style.color = '#383d41';
+            summary.style.border = '1px solid #d6d8db';
+            summary.innerHTML = `
+                <strong>检查摘要:</strong><br>
+                ✅ 成功: ${successCount}<br>
+                ❌ 错误: ${errorCount}<br>
+                ⚠️ 警告: ${warningCount}
+            `;
+            container.appendChild(summary);
+        }
+        
+        // 初始结果
+        updateResults();
+        
+        // 延迟检查 Cloudflare Turnstile
+        setTimeout(() => {
+            if (window.turnstile) {
+                checks.push({type: 'success', message: '✅ Cloudflare Turnstile 脚本延迟加载成功'});
+            } else {
+                checks.push({type: 'warning', message: '⚠️ Cloudflare Turnstile 脚本仍未加载'});
+            }
+            updateResults();
+        }, 3000);
+    </script>
+</body>
+</html>

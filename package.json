@@ -1,0 +1,17 @@
+{
+  "name": "shenming-secure-website",
+  "version": "1.0.0",
+  "description": "A secure website with advanced anti-debugging protection",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": ["security", "anti-debug", "website", "protection"],
+  "author": "Shenming",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
