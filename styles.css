@@ -1,4 +1,4 @@
-:root {
+ :root {
   --primary: #6B597F;
   --secondary: #BD6C73;
   --accent: #A2869C;
@@ -6,6 +6,39 @@
   --text-light: #ffffff;
   --bg-dark: #121212;
   --text-dark: #eeeeee;
+}
+
+body.after-verify-bg {
+  background: var(--bg-light) !important;
+  background-size: 600% 600%;
+  animation: gradientFlow 15s ease infinite;
+}
+
+#preVerifyMask {
+  position: fixed;
+  z-index: 99999;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  transition: background 1.2s cubic-bezier(.4,2,.6,1);
+}
+
+#preVerifyBox {
+  background: rgba(255,255,255,0.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+  padding: 40px 32px 32px 32px;
+  min-width: 340px;
+  max-width: 95vw;
+  text-align: center;
+  color: #fff;
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  font-size: 1.1em;
 }
 
 html, body {

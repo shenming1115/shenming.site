@@ -8,77 +8,109 @@
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-  <div class="navbar">
-    <div class="navbar-links">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
+
+  <div id="preVerifyMask">
+    <div id="preVerifyBox">
+      <h2>🔒 进入前安全验证</h2>
+      <form action="/validate" method="POST" id="captchaForm">
+        <div id="securityStatus" style="margin-bottom: 20px; text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+          <p>请先通过人机验证以进入网站</p>
+          <div id="ipInfo" style="font-size: 14px; color: #ccc;"></div>
+          <div id="riskLevel" style="margin: 10px 0; font-weight: bold;"></div>
+        </div>
+        <div class="cf-turnstile" 
+             data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
+             data-theme="dark" 
+             data-size="normal"
+             data-callback="onTurnstileSuccess"
+             data-expired-callback="onTurnstileExpired"
+             data-error-callback="onTurnstileError">
+        </div>
+        <div style="margin-top: 10px;">
+          <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" 
+                  style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 12px; margin-right: 10px;">
+            🔄 重新加载验证
+          </button>
+          <small style="color: #999;">如果验证卡住，请点击重新加载</small>
+        </div>
+        <button type="submit" id="verifyBtn" disabled style="margin-top: 15px; opacity: 0.5;">
+          🛡️ 验证我是人类
+        </button>
+        <div id="verificationResult" style="margin-top: 15px; font-size: 14px;"></div>
+      </form>
     </div>
-    <div class="toggle-mode" id="toggleMode">🌙</div>
   </div>
 
-  <div class="content" id="home">
-    <h1>Welcome to MyWebsite</h1>
-    <p>Click below to play an awesome sound!</p>
-    <div class="character-wrapper">
-      <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
-      <div class="eyes-container">
-        <div class="eye"><div class="pupil"></div></div>
-        <div class="eye"><div class="pupil"></div></div>
+  <div id="mainContent" style="display:none;">
+    <div class="navbar">
+      <div class="navbar-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="toggle-mode" id="toggleMode">🌙</div>
+    </div>
+
+    <div class="content" id="home">
+      <h1>Welcome to MyWebsite</h1>
+      <p>Click below to play an awesome sound!</p>
+      <div class="character-wrapper">
+        <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
+        <div class="eyes-container">
+          <div class="eye"><div class="pupil"></div></div>
+          <div class="eye"><div class="pupil"></div></div>
+        </div>
+      </div>
+      <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
+      <button id="playButton" class="button-63">Play Sound</button>
+    </div>
+
+    <div class="section" id="about">
+      <h2>About</h2>
+      <p>This is an awesome page designed with an elegant style.</p>
+    </div>
+
+    <div class="section" id="contact">
+      <h2>Contact</h2>
+      <p>Feel free to reach out through the following platforms:</p>
+      <div class="social-icons">
+        <a href="https://wa.me/your-phone-number" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
+        </a>
+        <a href="https://www.instagram.com/your-profile/" target="_blank">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
+        </a>
       </div>
     </div>
-    <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
-    <button id="playButton" class="button-63">Play Sound</button>
   </div>
-
-  <div class="section" id="about">
-    <h2>About</h2>
-    <p>This is an awesome page designed with an elegant style.</p>
-  </div>
-
-  <div class="section" id="contact">
-    <h2>Contact</h2>
-    <p>Feel free to reach out through the following platforms:</p>
-    <div class="social-icons">
-      <a href="https://wa.me/your-phone-number" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
-      </a>
-      <a href="https://www.instagram.com/your-profile/" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
-      </a>
-    </div>
-  </div>
-
-  <form action="/validate" method="POST" id="captchaForm">
-    <div id="securityStatus" style="margin-bottom: 20px; text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-      <p>🔒 安全验证系统</p>
-      <div id="ipInfo" style="font-size: 14px; color: #ccc;"></div>
-      <div id="riskLevel" style="margin: 10px 0; font-weight: bold;"></div>
-    </div>
-    
-    <div class="cf-turnstile" 
-         data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
-         data-theme="dark" 
-         data-size="normal"
-         data-callback="onTurnstileSuccess"
-         data-expired-callback="onTurnstileExpired"
-         data-error-callback="onTurnstileError">
-    </div>
-    
-    <div style="margin-top: 10px;">
-      <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" 
-              style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 12px; margin-right: 10px;">
-        🔄 重新加载验证
-      </button>
-      <small style="color: #999;">如果验证卡住，请点击重新加载</small>
-    </div>
-    
-    <button type="submit" id="verifyBtn" disabled style="margin-top: 15px; opacity: 0.5;">
-      🛡️ 验证我是人类
-    </button>
-    <div id="verificationResult" style="margin-top: 15px; font-size: 14px;"></div>
-  </form>
 
   <script src="script.js"></script>
+  <script>
+    // 变换色背景（首次验证时）
+    const preVerifyColors = [
+      '#1e3c72', '#2a5298', '#6a11cb', '#2575fc', '#43cea2', '#185a9d', '#f7971e', '#ffd200', '#f7971e', '#fd1d1d', '#833ab4', '#fcb045'
+    ];
+    let colorIndex = 0;
+    function animatePreVerifyBg() {
+      const mask = document.getElementById('preVerifyMask');
+      if (!mask) return;
+      mask.style.background = `linear-gradient(135deg, ${preVerifyColors[colorIndex]}, ${preVerifyColors[(colorIndex+1)%preVerifyColors.length]})`;
+      colorIndex = (colorIndex + 1) % preVerifyColors.length;
+      setTimeout(animatePreVerifyBg, 1800);
+    }
+    animatePreVerifyBg();
+
+    // 验证成功后切换到主内容和紫色渐变背景
+    window.onTurnstileSuccess = (function(orig){
+      return function(token) {
+        orig(token);
+        // 切换内容
+        document.getElementById('preVerifyMask').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        // 切换body背景为主站紫色渐变
+        document.body.classList.add('after-verify-bg');
+      }
+    })(window.onTurnstileSuccess);
+  </script>
 </body>
 </html>
