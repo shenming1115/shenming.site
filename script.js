@@ -33,26 +33,37 @@ document.addEventListener('DOMContentLoaded', function() {
 // 获取马来西亚时间和IP，分别用于验证前和主界面
 async function fetchMalaysiaTimeAndIP() {
   // 获取马来西亚时间（使用 timeapi.io，支持CORS）
+  let malaysiaTime = '';
+  let userIP = '';
   try {
     const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kuala_Lumpur');
     const data = await res.json();
-    // 组装格式：2025-07-03 19:13:02 (MY)
-    const dateStr = `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')} ${String(data.hour).padStart(2,'0')}:${String(data.minute).padStart(2,'0')}:${String(data.seconds).padStart(2,'0')} (MY)`;
-    document.getElementById('preVerifyDatetime').textContent = dateStr;
-    window._malaysiaTime = dateStr;
+    malaysiaTime = `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')} ${String(data.hour).padStart(2,'0')}:${String(data.minute).padStart(2,'0')}:${String(data.seconds).padStart(2,'0')} (MY)`;
+    document.getElementById('preVerifyDatetime').textContent = malaysiaTime;
+    window._malaysiaTime = malaysiaTime;
   } catch (e) {
     document.getElementById('preVerifyDatetime').textContent = '无法获取马来西亚时间';
     window._malaysiaTime = '';
+    console.error('马来西亚时间获取失败', e);
   }
   // 获取IP
   try {
     const ipRes = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipRes.json();
-    document.getElementById('ipInfo').innerHTML = 'IP: ' + ipData.ip;
-    window._userIP = ipData.ip;
+    userIP = ipData.ip;
+    document.getElementById('ipInfo').innerHTML = 'IP: ' + userIP;
+    window._userIP = userIP;
   } catch (e) {
     document.getElementById('ipInfo').innerHTML = 'IP: 获取失败';
     window._userIP = '';
+    console.error('IP获取失败', e);
+  }
+  // content页面也显示时间和IP
+  if (document.getElementById('contentDatetime')) {
+    document.getElementById('contentDatetime').textContent = malaysiaTime ? ('Malaysia Time: ' + malaysiaTime) : '无法获取马来西亚时间';
+  }
+  if (document.getElementById('contentIP')) {
+    document.getElementById('contentIP').textContent = userIP ? ('Your IP: ' + userIP) : 'IP: 获取失败';
   }
 }
 fetchMalaysiaTimeAndIP();
