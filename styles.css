@@ -521,3 +521,36 @@ body.content-mode .home-page {
   0% { transform: rotate(0deg);}
   100% { transform: rotate(360deg);}
 }
+
+/* 冷笑话内容区域默认隐藏，collapsed 时只显示提示 */
+#contentPage .content-rect.collapsed .joke-content {
+  display: none;
+}
+#contentPage .content-rect.collapsed .joke-hint {
+  display: block;
+}
+#contentPage .content-rect .joke-hint {
+  display: none;
+  text-align: center;
+  color: #3a5a8c;
+  font-size: 1.2em;
+  padding: 48px 0 48px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+#contentPage .content-rect.collapsed {
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.92);
+}
+#contentPage .content-rect.collapsed:hover {
+  box-shadow: 0 8px 40px 0 rgba(31,38,135,0.18);
+  background: rgba(224,234,252,0.98);
+  color: #2265AA;
+}
+
+/* 展开后正常显示内容 */
+#contentPage .content-rect .joke-content {
+  display: block;
+}

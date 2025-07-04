@@ -13,6 +13,11 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'contentNav');
       });
+      // 重置 content-rect 状态
+      var contentRect = document.querySelector('#contentPage .content-rect');
+      if (contentRect) {
+        contentRect.classList.add('collapsed');
+      }
     });
   });
   // 离开content模式
@@ -1311,6 +1316,11 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'contentNav');
       });
+      // 重置 content-rect 状态
+      var contentRect = document.querySelector('#contentPage .content-rect');
+      if (contentRect) {
+        contentRect.classList.add('collapsed');
+      }
     });
   }
   // 点击返回主页
@@ -1331,4 +1341,17 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   });
+
+  // 点击 content-rect 展开冷笑话内容
+  var contentRect = document.querySelector('#contentPage .content-rect');
+  if (contentRect) {
+    contentRect.addEventListener('click', function(e) {
+      // 只在 collapsed 状态下响应
+      if (contentRect.classList.contains('collapsed')) {
+        contentRect.classList.remove('collapsed');
+        // 阻止冒泡，避免多次触发
+        e.stopPropagation();
+      }
+    });
+  }
 });
