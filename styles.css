@@ -430,11 +430,6 @@ button:hover {
 /* Content Page 全屏样式 */
 .content-page {
   display: none;
-body.content-mode .content-page {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
   position: fixed;
   top: 0;
   left: 0;
@@ -445,6 +440,13 @@ body.content-mode .content-page {
   justify-content: center;
   flex-direction: column;
   background: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+/* 仅在 content-mode 时显示 content-page */
+body.content-mode .content-page {
+  display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
 }
@@ -501,4 +503,13 @@ body.content-mode .navbar-links a.active {
 
 body.content-mode .toggle-mode {
   color: #3a5a8c;
+}
+
+body.content-mode .home-page {
+  display: none !important;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
