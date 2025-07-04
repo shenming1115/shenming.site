@@ -1303,3 +1303,21 @@ async function logTurnstileEvent(eventType, eventData) {
     console.error('日志记录时发生错误:', error);
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  // 点击导航栏 Content
+  var contentNav = document.getElementById('contentNav');
+  if (contentNav) {
+    contentNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.add('content-mode');
+    });
+  }
+  // 点击返回主页
+  var backHomeBtn = document.getElementById('backHomeBtn');
+  if (backHomeBtn) {
+    backHomeBtn.addEventListener('click', function() {
+      document.body.classList.remove('content-mode');
+    });
+  }
+});
