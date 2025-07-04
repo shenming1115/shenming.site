@@ -8,8 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
       // 切换显示
-      mainContent.style.display = 'none';
-      contentPage.style.display = 'block';
       document.body.classList.add('content-mode');
       // 高亮当前按钮
       document.querySelectorAll('.navbar-links a').forEach(a => {
@@ -21,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
     if(link.id !== 'contentNav') {
       link.addEventListener('click', function() {
-        contentPage.style.display = 'none';
-        mainContent.style.display = 'block';
         document.body.classList.remove('content-mode');
         document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
@@ -1311,6 +1307,10 @@ document.addEventListener('DOMContentLoaded', function() {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.add('content-mode');
+      // 高亮当前按钮
+      document.querySelectorAll('.navbar-links a').forEach(a => {
+        a.classList.toggle('active', a.id === 'contentNav');
+      });
     });
   }
   // 点击返回主页
@@ -1318,6 +1318,17 @@ document.addEventListener('DOMContentLoaded', function() {
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', function() {
       document.body.classList.remove('content-mode');
+      // 取消高亮
+      document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
+  // 其它导航回主页
+  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
+    if(link.id !== 'contentNav') {
+      link.addEventListener('click', function() {
+        document.body.classList.remove('content-mode');
+        document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
+      });
+    }
+  });
 });
