@@ -429,7 +429,7 @@ button:hover {
 
 /* Content Page 全屏样式 */
 .content-page {
-  display: none;
+  display: flex !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -439,6 +439,9 @@ button:hover {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background: none;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .content-sky-message {
