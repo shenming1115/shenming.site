@@ -1306,52 +1306,182 @@ async function logTurnstileEvent(eventType, eventData) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // 点击导航栏 Content
+  // Content导航切换
   var contentNav = document.getElementById('contentNav');
+  var contentRect = document.querySelector('#contentPage .content-rect');
+  var backHomeBtn = document.getElementById('backHomeBtn');
+  var animationNav = document.getElementById('animationNav');
+  var animationPage = document.getElementById('animationPage');
+  var animationRect = document.getElementById('animationRect');
+  var backHomeBtnAnim = document.getElementById('backHomeBtnAnim');
+
+  // 切换到content
   if (contentNav) {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.add('content-mode');
-      // 高亮当前按钮
+      document.body.classList.remove('animation-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'contentNav');
       });
-      // 重置 content-rect 状态
-      var contentRect = document.querySelector('#contentPage .content-rect');
-      if (contentRect) {
-        contentRect.classList.add('collapsed');
-      }
+      if (contentRect) contentRect.classList.add('collapsed');
     });
   }
-  // 点击返回主页
-  var backHomeBtn = document.getElementById('backHomeBtn');
+  // 切换到animation
+  if (animationNav) {
+    animationNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.add('animation-mode');
+      document.body.classList.remove('content-mode');
+      document.querySelectorAll('.navbar-links a').forEach(a => {
+        a.classList.toggle('active', a.id === 'animationNav');
+      });
+      if (animationRect) animationRect.classList.add('collapsed');
+    });
+  }
+  // 返回主页按钮
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', function() {
       document.body.classList.remove('content-mode');
-      // 取消高亮
+      document.body.classList.remove('animation-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
-  // 其它导航回主页
+  if (backHomeBtnAnim) {
+    backHomeBtnAnim.addEventListener('click', function() {
+      document.body.classList.remove('animation-mode');
+      document.body.classList.remove('content-mode');
+      document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
+    });
+  }
+  // 其它导航回主页时关闭 content/animation
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-    if(link.id !== 'contentNav') {
+    if(link.id !== 'contentNav' && link.id !== 'animationNav') {
       link.addEventListener('click', function() {
         document.body.classList.remove('content-mode');
+        document.body.classList.remove('animation-mode');
         document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
     }
   });
 
   // 点击 content-rect 展开冷笑话内容
-  var contentRect = document.querySelector('#contentPage .content-rect');
   if (contentRect) {
     contentRect.addEventListener('click', function(e) {
-      // 只在 collapsed 状态下响应
       if (contentRect.classList.contains('collapsed')) {
         contentRect.classList.remove('collapsed');
-        // 阻止冒泡，避免多次触发
+        e.stopPropagation();
+      }
+    });
+  }
+  // 点击 animation-rect 展开并绘制星空
+  if (animationRect) {
+    animationRect.addEventListener('click', function(e) {
+      if (animationRect.classList.contains('collapsed')) {
+        animationRect.classList.remove('collapsed');
+        drawStarryNight();
         e.stopPropagation();
       }
     });
   }
 });
+
+// 梵高星空动画
+function drawStarryNight() {
+  const canvas = document.getElementById('starryNightCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 背景
+  ctx.fillStyle = "#1a2340";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 星星
+  function drawStars(frame) {
+    ctx.clearRect(0, 0, canvas.width, 120);
+    for (let i = 0; i < 60; i++) {
+      let x = Math.random() * canvas.width;
+      let y = Math.random() * canvas.height * 0.7;
+      let r = Math.random() * 2.5 + 1.5 + Math.sin(frame / 10 + i) * 0.8;
+      let g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+      g.addColorStop(0, "#fffbe7");
+      g.addColorStop(0.5, "#ffe066");
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.arc(x, y, r * 3, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.globalAlpha = 0.8;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    // 月亮
+    let mx = 420, my = 60, mr = 32;
+    let moonGrad = ctx.createRadialGradient(mx, my, 8, mx, my, mr);
+    moonGrad.addColorStop(0, "#fffbe7");
+    moonGrad.addColorStop(0.5, "#ffe066");
+    moonGrad.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.beginPath();
+    ctx.arc(mx, my, mr, 0, Math.PI * 2);
+    ctx.fillStyle = moonGrad;
+    ctx.fill();
+    // 旋涡
+    swirl(120, 80, 32, "#6ec6ff");
+    swirl(180, 60, 22, "#ffe066");
+    swirl(320, 100, 28, "#fffbe7");
+    swirl(400, 140, 18, "#ffe066");
+  }
+
+  // 旋涡
+  function swirl(cx, cy, baseR, color, count = 18) {
+    for (let i = 0; i < count; i++) {
+      let angle = (i / count) * Math.PI * 2;
+      let r = baseR + Math.sin(i * 0.7) * 6;
+      let x = cx + Math.cos(angle) * r;
+      let y = cy + Math.sin(angle) * r;
+      ctx.beginPath();
+      ctx.arc(x, y, 8 + Math.sin(i * 1.2) * 2, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.18 + Math.random() * 0.15;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // 地平线
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(0, 260);
+  ctx.bezierCurveTo(80, 220, 180, 270, 260, 250);
+  ctx.bezierCurveTo(340, 230, 420, 320, 500, 260);
+  ctx.lineTo(500, 320);
+  ctx.lineTo(0, 320);
+  ctx.closePath();
+  ctx.fillStyle = "#2d3a4a";
+  ctx.globalAlpha = 0.85;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // 柏树
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(60, 320);
+  ctx.lineTo(80, 180);
+  ctx.bezierCurveTo(90, 140, 110, 200, 100, 320);
+  ctx.closePath();
+  ctx.fillStyle = "#22313a";
+  ctx.globalAlpha = 0.95;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // 动态星星闪烁
+  let frame = 0;
+  function animateStars() {
+    frame++;
+    drawStars(frame);
+    requestAnimationFrame(animateStars);
+  }
+  animateStars();
+}
