@@ -527,17 +527,18 @@ body.content-mode .home-page {
   display: none;
 }
 #contentPage .content-rect.collapsed .joke-hint {
-  display: block;
+  display: flex;
 }
 #contentPage .content-rect .joke-hint {
   display: none;
-  text-align: center;
-  color: #3a5a8c;
-  font-size: 1.2em;
-  padding: 48px 0 48px 0;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 32px 0;
   cursor: pointer;
   user-select: none;
   transition: color 0.2s;
+  border-radius: 18px;
 }
 #contentPage .content-rect.collapsed {
   cursor: pointer;
@@ -549,8 +550,65 @@ body.content-mode .home-page {
   background: rgba(224,234,252,0.98);
   color: #2265AA;
 }
-
-/* 展开后正常显示内容 */
 #contentPage .content-rect .joke-content {
+  display: block;
+}
+
+/* Animation Page 全屏样式 */
+.animation-page {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: none;
+  visibility: hidden;
+  opacity: 0;
+}
+body.animation-mode .animation-page {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+body.animation-mode .home-page,
+body.animation-mode .content-page,
+body.animation-mode .section {
+  display: none !important;
+}
+
+/* 动画卡片与content一致 */
+#animationPage .content-rect.collapsed .animation-content {
+  display: none;
+}
+#animationPage .content-rect.collapsed .animation-hint {
+  display: flex;
+}
+#animationPage .content-rect .animation-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: 32px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+  border-radius: 18px;
+}
+#animationPage .content-rect.collapsed {
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  background: rgba(255,255,255,0.92);
+}
+#animationPage .content-rect.collapsed:hover {
+  box-shadow: 0 8px 40px 0 rgba(31,38,135,0.18);
+  background: rgba(224,234,252,0.98);
+  color: #2265AA;
+}
+#animationPage .content-rect .animation-content {
   display: block;
 }

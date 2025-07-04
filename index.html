@@ -48,6 +48,7 @@
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
         <a href="#" id="contentNav">Content</a>
+        <a href="#" id="animationNav">Animation</a>
       </div>
       <div class="toggle-mode" id="toggleMode">🌙</div>
     </div>
@@ -72,9 +73,12 @@
     <div id="contentPage" class="content-page">
       <div class="content-bg-sky"></div>
       <div class="content-sky-message">
-        <div class="content-rect collapsed" style="margin-top:0;max-width:600px;min-width:320px;">
-          <button id="backHomeBtn" style="position:absolute;top:18px;right:24px;font-size:1.2em;z-index:10;">← 返回主页</button>
-          <div class="joke-hint">点击这个卡片，进入冷笑话时间<br><span style="font-size:2em;">👇</span></div>
+        <div class="content-rect collapsed" style="margin-top:0;max-width:600px;min-width:320px;position:relative;">
+          <button id="backHomeBtn" style="position:absolute;top:18px;right:24px;font-size:2em;z-index:10;background:none;border:none;cursor:pointer;">←</button>
+          <div class="joke-hint" style="display:flex;align-items:center;justify-content:center;min-height:180px;">
+            <span style="font-size:3.2em;line-height:1;margin-right:24px;">🌀</span>
+            <span style="font-size:1.5em;font-weight:700;color:#3a5a8c;">冷笑话1</span>
+          </div>
           <div class="joke-content">
             <h2 style="font-size:2em;margin-bottom:0.5em;">冷笑话时间<br><span style="font-size:0.7em;font-weight:normal;">Boring Joke Time</span></h2>
             <div id="contentDatetime" style="font-size:1.1em;color:#3a5a8c;font-weight:bold;margin-bottom:8px;"></div>
@@ -110,6 +114,24 @@
         <a href="https://www.instagram.com/your-profile/" target="_blank">
           <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
         </a>
+      </div>
+    </div>
+
+    <!-- Animation Page -->
+    <div id="animationPage" class="animation-page">
+      <div class="content-bg-sky"></div>
+      <div class="content-sky-message">
+        <div class="content-rect collapsed" id="animationRect" style="margin-top:0;max-width:600px;min-width:320px;position:relative;">
+          <button id="backHomeBtnAnim" style="position:absolute;top:18px;right:24px;font-size:2em;z-index:10;background:none;border:none;cursor:pointer;">←</button>
+          <div class="animation-hint" style="display:flex;align-items:center;justify-content:center;min-height:180px;">
+            <span style="font-size:3.2em;line-height:1;margin-right:24px;">🌌</span>
+            <span style="font-size:1.5em;font-weight:700;color:#3a5a8c;">Animation</span>
+          </div>
+          <div class="animation-content" style="display:flex;flex-direction:column;align-items:center;">
+            <h2 style="font-size:2em;margin-bottom:0.5em;">梵高的星空<br><span style="font-size:0.7em;font-weight:normal;">Van Gogh's Starry Night</span></h2>
+            <canvas id="starryNightCanvas" width="500" height="320" style="border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.10);background:#1a2340;margin-top:16px;"></canvas>
+          </div>
+        </div>
       </div>
     </div>
   </div>
