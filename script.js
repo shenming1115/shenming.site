@@ -4,16 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const contentPage = document.getElementById('contentPage');
   const mainContent = document.getElementById('mainContent');
   // 进入content模式
-  contentNavs.forEach(contentNav => {
+  contentNavs.forEach(function(contentNav) {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
-      // 切换显示
       document.body.classList.add('content-mode');
-      // 高亮当前按钮
+      document.body.classList.remove('animation-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'contentNav');
       });
-      // 重置 content-rect 状态
       var contentRect = document.querySelector('#contentPage .content-rect');
       if (contentRect) {
         contentRect.classList.add('collapsed');
@@ -21,10 +19,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   // 离开content模式
-  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-    if(link.id !== 'contentNav') {
+  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(function(link) {
+    if(link.id !== 'contentNav' && link.id !== 'animationNav') {
       link.addEventListener('click', function() {
         document.body.classList.remove('content-mode');
+        document.body.classList.remove('animation-mode');
         document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
     }
@@ -1238,51 +1237,6 @@ window.addEventListener('load', function() {
   }, 2000);
 });
 
-// 域名检查（确保在正确的域名下使用）
-function validateDomain() {
-  const currentDomain = window.location.hostname;
-  const allowedDomains = ['localhost', '127.0.0.1', 'shenming.site']; // 添加你的域名
-  
-  console.log('当前域名:', currentDomain);
-  
-  if (currentDomain === 'localhost' || currentDomain === '127.0.0.1' || currentDomain.includes('github.io')) {
-    console.log('✅ 在本地或GitHub Pages环境中运行');
-    return true;
-  }
-  
-  // 检查是否在允许的域名中
-  const isAllowed = allowedDomains.some(domain => 
-    currentDomain === domain || currentDomain.endsWith('.' + domain)
-  );
-  
-  if (!isAllowed) {
-    console.warn('⚠️ 当前域名可能不在Turnstile配置的域名列表中');
-  }
-  
-  return isAllowed;
-}
-
-// 页面加载时进行检查
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔍 开始Turnstile配置检查...');
-  
-  // 检查域名
-  validateDomain();
-  
-  // 检查sitekey
-  const turnstileDiv = document.querySelector('.cf-turnstile');
-  if (turnstileDiv) {
-    const sitekey = turnstileDiv.getAttribute('data-sitekey');
-    console.log('Sitekey:', sitekey);
-    
-    if (sitekey === '0x4AAAAAAAYourSiteKeyHere') {
-      console.error('❌ 仍在使用占位符sitekey');
-    } else if (sitekey && sitekey.length > 10) {
-      console.log('✅ Sitekey已配置');
-    }
-  }
-});
-
 // 添加日志记录功能，将Turnstile验证结果发送到后端服务
 async function logTurnstileEvent(eventType, eventData) {
   try {
@@ -1386,102 +1340,75 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// 梵高星空动画
+// 梵高星空动画（黑白星空粒子，闪烁，canvas小，背景不压迫）
 function drawStarryNight() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const W = canvas.width = 420;
+  const H = canvas.height = 260;
 
-  // 背景
-  ctx.fillStyle = "#1a2340";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // 生成星星粒子参数
+  const STAR_COUNT = 60;
+  const stars = [];
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 60 + Math.random() * 90;
+    const cx = W / 2 + Math.cos(angle) * radius * (0.7 + 0.6 * Math.random());
+    const cy = H / 2 - 20 + Math.sin(angle) * radius * (0.5 + 0.5 * Math.random());
+    const baseR = 1.2 + Math.random() * 1.8;
+    const phase = Math.random() * Math.PI * 2;
+    stars.push({cx, cy, baseR, phase, orbit: 24 + Math.random() * 40, orbitAngle: angle});
+  }
 
-  // 星星
-  function drawStars(frame) {
-    ctx.clearRect(0, 0, canvas.width, 120);
-    for (let i = 0; i < 60; i++) {
-      let x = Math.random() * canvas.width;
-      let y = Math.random() * canvas.height * 0.7;
-      let r = Math.random() * 2.5 + 1.5 + Math.sin(frame / 10 + i) * 0.8;
-      let g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
-      g.addColorStop(0, "#fffbe7");
-      g.addColorStop(0.5, "#ffe066");
+  // 动画主循环
+  let frame = 0;
+  function animate() {
+    frame++;
+    // 黑色背景
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#181b22";
+    ctx.fillRect(0, 0, W, H);
+
+    // 星星粒子（缓慢旋转+闪烁）
+    const centerX = W / 2, centerY = H / 2 - 20;
+    for (let i = 0; i < stars.length; i++) {
+      let s = stars[i];
+      // 星星缓慢绕中心旋转
+      let angle = s.orbitAngle + frame * 0.001 + Math.sin(frame * 0.002 + i) * 0.01;
+      let r = s.orbit;
+      let x = centerX + Math.cos(angle) * r;
+      let y = centerY + Math.sin(angle) * r * 0.7;
+      let starR = s.baseR + Math.sin(frame * 0.09 + s.phase + i) * 0.7;
+      let g = ctx.createRadialGradient(x, y, 0, x, y, starR * 3.2);
+      g.addColorStop(0, "#fff");
+      g.addColorStop(0.5, "#bbb");
       g.addColorStop(1, "rgba(255,255,255,0)");
       ctx.beginPath();
-      ctx.arc(x, y, r * 3, 0, Math.PI * 2);
+      ctx.arc(x, y, starR * 3.2, 0, Math.PI * 2);
       ctx.fillStyle = g;
-      ctx.globalAlpha = 0.8;
+      ctx.globalAlpha = 0.7 + 0.3 * Math.sin(frame * 0.08 + i);
       ctx.fill();
       ctx.globalAlpha = 1;
     }
-    // 月亮
-    let mx = 420, my = 60, mr = 32;
-    let moonGrad = ctx.createRadialGradient(mx, my, 8, mx, my, mr);
-    moonGrad.addColorStop(0, "#fffbe7");
-    moonGrad.addColorStop(0.5, "#ffe066");
-    moonGrad.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.beginPath();
-    ctx.arc(mx, my, mr, 0, Math.PI * 2);
-    ctx.fillStyle = moonGrad;
-    ctx.fill();
-    // 旋涡
-    swirl(120, 80, 32, "#6ec6ff");
-    swirl(180, 60, 22, "#ffe066");
-    swirl(320, 100, 28, "#fffbe7");
-    swirl(400, 140, 18, "#ffe066");
-  }
 
-  // 旋涡
-  function swirl(cx, cy, baseR, color, count = 18) {
-    for (let i = 0; i < count; i++) {
-      let angle = (i / count) * Math.PI * 2;
-      let r = baseR + Math.sin(i * 0.7) * 6;
-      let x = cx + Math.cos(angle) * r;
-      let y = cy + Math.sin(angle) * r;
-      ctx.beginPath();
-      ctx.arc(x, y, 8 + Math.sin(i * 1.2) * 2, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.globalAlpha = 0.18 + Math.random() * 0.15;
-      ctx.fill();
-      ctx.globalAlpha = 1;
+    // 偶尔闪一下的亮星
+    if (frame % 60 === 0) {
+      for (let i = 0; i < 2; i++) {
+        let sx = Math.random() * W;
+        let sy = Math.random() * H * 0.8;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sx, sy, 7 + Math.random() * 5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.7)";
+        ctx.shadowColor = "#fff";
+        ctx.shadowBlur = 16;
+        ctx.fill();
+        ctx.restore();
+      }
     }
+
+    requestAnimationFrame(animate);
   }
-
-  // 地平线
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(0, 260);
-  ctx.bezierCurveTo(80, 220, 180, 270, 260, 250);
-  ctx.bezierCurveTo(340, 230, 420, 320, 500, 260);
-  ctx.lineTo(500, 320);
-  ctx.lineTo(0, 320);
-  ctx.closePath();
-  ctx.fillStyle = "#2d3a4a";
-  ctx.globalAlpha = 0.85;
-  ctx.fill();
-  ctx.globalAlpha = 1;
-  ctx.restore();
-
-  // 柏树
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(60, 320);
-  ctx.lineTo(80, 180);
-  ctx.bezierCurveTo(90, 140, 110, 200, 100, 320);
-  ctx.closePath();
-  ctx.fillStyle = "#22313a";
-  ctx.globalAlpha = 0.95;
-  ctx.fill();
-  ctx.globalAlpha = 1;
-  ctx.restore();
-
-  // 动态星星闪烁
-  let frame = 0;
-  function animateStars() {
-    frame++;
-    drawStars(frame);
-    requestAnimationFrame(animateStars);
-  }
-  animateStars();
+  animate();
 }
