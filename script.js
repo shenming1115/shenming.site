@@ -1397,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（超多亮星云状旋转，点连线，不卡顿）
+// Animation page 星空动画（超多亮星云状旋转，点连线，黑洞感星云）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1417,24 +1417,40 @@ function drawStarSea() {
   let H = canvas.height;
 
   // 星云参数
-  const STAR_COUNT = 800; // 超多星点
+  const STAR_COUNT = 800;
   const CLOUD_CENTER = { x: W / 2, y: H / 2 };
   const RADIUS_MIN = Math.min(W, H) * 0.18;
   const RADIUS_MAX = Math.min(W, H) * 0.46;
-  const ROTATE_SPEED = 0.0007; // 云整体旋转速度
+  const ROTATE_SPEED = 0.0007;
   const STAR_COLORS = [
     "#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"
   ];
+
+  // 黑洞星云参数
+  const NEBULA_COUNT = 7; // 星云数量更多
+  const NEBULA_COLORS = [
+    "rgba(110,198,255,0.13)", "rgba(255,224,102,0.10)", "rgba(255,251,231,0.09)", "rgba(58,90,140,0.13)",
+    "rgba(131,58,180,0.12)", "rgba(37,117,252,0.10)", "rgba(252,176,69,0.10)"
+  ];
+  const nebulas = [];
+  for (let i = 0; i < NEBULA_COUNT; i++) {
+    const angle = (i / NEBULA_COUNT) * Math.PI * 2 + Math.random() * 0.5;
+    const r = (RADIUS_MIN + RADIUS_MAX) / 2 + Math.sin(i * 1.7) * 60 + Math.random() * 40;
+    const cx = CLOUD_CENTER.x + Math.cos(angle) * r * (0.7 + Math.random() * 0.3);
+    const cy = CLOUD_CENTER.y + Math.sin(angle) * r * (0.7 + Math.random() * 0.3);
+    const color = NEBULA_COLORS[i % NEBULA_COLORS.length];
+    const size = 180 + Math.random() * 120;
+    const speed = 0.00018 + Math.random() * 0.00025;
+    const phase = Math.random() * Math.PI * 2;
+    nebulas.push({cx, cy, color, size, speed, phase});
+  }
 
   // 生成星点分布（云状分布，带有随机扰动）
   const stars = [];
   for (let i = 0; i < STAR_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
-    // 云状分布，密度中心高，边缘稀疏
     const t = Math.pow(Math.random(), 1.7);
     const r = RADIUS_MIN + t * (RADIUS_MAX - RADIUS_MIN) + Math.sin(i) * 8;
-    const baseX = CLOUD_CENTER.x + Math.cos(angle) * r;
-    const baseY = CLOUD_CENTER.y + Math.sin(angle) * r;
     const color = STAR_COLORS[i % STAR_COLORS.length];
     const size = 1.2 + Math.random() * 1.8;
     const phase = Math.random() * Math.PI * 2;
@@ -1450,13 +1466,11 @@ function drawStarSea() {
     });
   }
 
-  // 连接星点的最大距离
   const LINK_DIST = Math.min(W, H) * 0.07;
 
   let frame = 0;
   let lastTime = performance.now();
   function animate(now) {
-    // 降低帧率到15fps，保证不卡
     if (now - lastTime < 66) {
       requestAnimationFrame(animate);
       return;
@@ -1473,26 +1487,45 @@ function drawStarSea() {
     ctx.fillRect(0, 0, W, H);
     ctx.restore();
 
+    // 绘制黑洞星云
+    for (let n of nebulas) {
+      let angle = frame * n.speed + n.phase;
+      let x = n.cx + Math.cos(angle) * 24;
+      let y = n.cy + Math.sin(angle) * 24;
+      ctx.save();
+      ctx.globalAlpha = 0.22 + 0.08 * Math.abs(Math.sin(frame * 0.008 + n.phase));
+      ctx.beginPath();
+      ctx.ellipse(
+        x, y,
+        n.size * (0.9 + 0.2 * Math.sin(frame * 0.01 + n.phase)),
+        n.size * (0.5 + 0.2 * Math.cos(frame * 0.012 + n.phase)),
+        angle,
+        0, Math.PI * 2
+      );
+      ctx.fillStyle = n.color;
+      ctx.filter = "blur(2.5px)";
+      ctx.fill();
+      ctx.filter = "none";
+      ctx.restore();
+    }
+
     // 计算星点新位置（整体旋转+云状扰动）
     for (let i = 0; i < STAR_COUNT; i++) {
       const star = stars[i];
-      // 云状扰动
       const cloudAngle = star.baseAngle + frame * star.cloudSpeed + Math.sin(frame * 0.002 + star.cloudOffset) * 0.12;
-      // 整体旋转
       const rotate = frame * ROTATE_SPEED;
       const angle = cloudAngle + rotate;
       star.x = CLOUD_CENTER.x + Math.cos(angle) * star.orbit;
       star.y = CLOUD_CENTER.y + Math.sin(angle) * star.orbit;
-      // 亮度恒为最高
       star.alpha = 1;
     }
 
-    // 连接星点（近距离才连线，营造云状丝缕感）
+    // 连接星点
     ctx.save();
     ctx.globalAlpha = 0.18;
     for (let i = 0; i < STAR_COUNT; i++) {
       const a = stars[i];
-      for (let j = i + 1; j < i + 8 && j < STAR_COUNT; j++) { // 只连近邻，避免爆炸
+      for (let j = i + 1; j < i + 8 && j < STAR_COUNT; j++) {
         const b = stars[j];
         const dx = a.x - b.x;
         const dy = a.y - b.y;
@@ -1509,7 +1542,7 @@ function drawStarSea() {
     }
     ctx.restore();
 
-    // 绘制星点（亮度最高，发光更强）
+    // 绘制星点
     for (let i = 0; i < STAR_COUNT; i++) {
       const star = stars[i];
       ctx.save();
@@ -1518,7 +1551,7 @@ function drawStarSea() {
       ctx.globalAlpha = 1;
       ctx.fillStyle = star.color;
       ctx.shadowColor = star.color;
-      ctx.shadowBlur = 32; // 发光更强
+      ctx.shadowBlur = 32;
       ctx.fill();
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
