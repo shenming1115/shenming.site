@@ -1323,7 +1323,13 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'animationNav');
       });
-      if (animationRect) animationRect.classList.add('collapsed');
+      // 直接展开动画，不显示“老子的星海”卡片
+      if (animationRect) {
+        animationRect.classList.remove('collapsed');
+        // 隐藏卡片内容（不显示任何文字/按钮/提示）
+        animationRect.style.display = 'none';
+      }
+      drawStarSea();
     });
   }
   // 返回主页按钮
@@ -1373,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 老子的星海（全屏黑色底，点状粒子，500个星璇同时运转，无闪光灯，2秒后文字渐隐）
+// Animation page 星空动画（200个星璇，点击animation直接显示，无“老子的星海”文字）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1384,7 +1390,6 @@ function drawStarSea() {
 
   // 全屏自适应
   function resizeCanvas() {
-    // 需要先移除css宽高，否则canvas不会自适应
     canvas.removeAttribute('style');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -1399,7 +1404,7 @@ function drawStarSea() {
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  const SWIRL_COUNT = 500;
+  const SWIRL_COUNT = 200; // 只生成200个星璇
   const PARTICLES_PER_SWIRL = 120;
   const NEBULA_COUNT = 6;
   const NEBULA_COLORS = [
@@ -1442,36 +1447,8 @@ function drawStarSea() {
     });
   }
 
-  // 2秒后渐隐动画
-  const contentRect = document.getElementById('animationRect');
-  let fadeTimeout = null;
-  let fadeFrame = null;
-  if (contentRect) {
-    contentRect.style.transition = 'opacity 1.2s cubic-bezier(.4,2,.6,1)';
-    contentRect.style.opacity = '1';
-    contentRect.style.pointerEvents = '';
-    clearTimeout(fadeTimeout);
-    fadeTimeout = setTimeout(() => {
-      let opacity = 1;
-      function fadeStep() {
-        opacity -= 0.04;
-        if (opacity <= 0) {
-          opacity = 0;
-          contentRect.style.opacity = '0';
-          contentRect.style.pointerEvents = 'none';
-          cancelAnimationFrame(fadeFrame);
-        } else {
-          contentRect.style.opacity = opacity.toString();
-          fadeFrame = requestAnimationFrame(fadeStep);
-        }
-      }
-      fadeStep();
-    }, 2000);
-  }
-
   let frame = 0;
   function animate() {
-    // 动态获取宽高，防止resize后画布不更新
     W = canvas.width;
     H = canvas.height;
     frame++;
@@ -1495,18 +1472,14 @@ function drawStarSea() {
       ctx.restore();
     }
 
-    // 500个星璇，每个星璇无数点状粒子旋转
+    // 200个星璇，每个星璇无数点状粒子旋转
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
-        // 每个粒子在星璇上的角度
         let baseAngle = (i / swirl.count) * Math.PI * 2;
-        // 星璇整体旋转
         let swirlAngle = baseAngle + frame * swirl.speed + swirl.phase;
-        // 星璇的半径带有轻微扰动
         let r = swirl.spread + Math.sin(i * 0.5 + frame * 0.01 + swirl.phase) * 8;
         let x = swirl.cx + Math.cos(swirlAngle) * r;
         let y = swirl.cy + Math.sin(swirlAngle) * r;
-        // 粒子颜色和闪烁
         ctx.save();
         ctx.beginPath();
         ctx.arc(x, y, 1 + Math.sin(frame * 0.04 + i) * 0.3, 0, Math.PI * 2);
