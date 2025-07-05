@@ -1384,6 +1384,8 @@ function drawStarSea() {
 
   // 全屏自适应
   function resizeCanvas() {
+    // 需要先移除css宽高，否则canvas不会自适应
+    canvas.removeAttribute('style');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
@@ -1474,8 +1476,10 @@ function drawStarSea() {
     H = canvas.height;
     frame++;
     ctx.clearRect(0, 0, W, H);
+    ctx.save();
     ctx.fillStyle = "#0a0c18";
     ctx.fillRect(0, 0, W, H);
+    ctx.restore();
 
     // 星云
     for (let n of nebulas) {
