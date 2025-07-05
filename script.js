@@ -46,17 +46,47 @@ async function fetchMalaysiaTimeAndIP() {
     window._malaysiaTime = '';
     console.error('马来西亚时间获取失败', e);
   }
-  // 获取IP
+  // 获取IP（支持IPv4和IPv6）
+  let ipv4 = '';
+  let ipv6 = '';
   try {
-    // 兼容性更好的IP API
-    const ipRes = await fetch('https://api.myip.com/');
-    const ipData = await ipRes.json();
-    userIP = ipData.ip;
-    document.getElementById('ipInfo').innerHTML = 'IP: ' + userIP;
-    window._userIP = userIP;
+    // 获取IPv4
+    let ipRes4 = await fetch('https://api.myip.com/');
+    let ipData4 = await ipRes4.json();
+    ipv4 = ipData4.ip;
+
+    // 获取IPv6（Cloudflare优先，备用ipify）
+    try {
+      let ipRes6 = await fetch('https://cloudflare.com/cdn-cgi/trace');
+      let text6 = await ipRes6.text();
+      let ipMatch = text6.match(/ip=([^\n]+)/);
+      if (ipMatch && ipMatch[1] && ipMatch[1].includes(':')) {
+        ipv6 = ipMatch[1];
+      }
+    } catch (e) {
+      try {
+        let ipRes6b = await fetch('https://api64.ipify.org?format=json');
+        let ipData6b = await ipRes6b.json();
+        if (ipData6b.ip && ipData6b.ip.includes(':')) {
+          ipv6 = ipData6b.ip;
+        }
+      } catch (e2) {}
+    }
+
+    // 展示IP
+    let ipInfoStr = '';
+    if (ipv4) ipInfoStr += 'IPv4: ' + ipv4;
+    if (ipv6) ipInfoStr += (ipInfoStr ? '<br>' : '') + 'IPv6: ' + ipv6;
+    if (!ipInfoStr) ipInfoStr = 'IP: 获取失败';
+    document.getElementById('ipInfo').innerHTML = ipInfoStr;
+    window._userIP = ipv4 || ipv6 || '';
+    window._userIPv4 = ipv4;
+    window._userIPv6 = ipv6;
   } catch (e) {
     document.getElementById('ipInfo').innerHTML = 'IP: 获取失败';
     window._userIP = '';
+    window._userIPv4 = '';
+    window._userIPv6 = '';
     console.error('IP获取失败', e);
   }
   // content页面也显示时间和IP
@@ -64,7 +94,10 @@ async function fetchMalaysiaTimeAndIP() {
     document.getElementById('contentDatetime').textContent = malaysiaTime ? ('Malaysia Time: ' + malaysiaTime) : '无法获取马来西亚时间';
   }
   if (document.getElementById('contentIP')) {
-    document.getElementById('contentIP').textContent = userIP ? ('Your IP: ' + userIP) : 'IP: 获取失败';
+    let ipStr = '';
+    if (ipv4) ipStr += 'IPv4: ' + ipv4;
+    if (ipv6) ipStr += (ipStr ? ' / ' : '') + 'IPv6: ' + ipv6;
+    document.getElementById('contentIP').textContent = ipStr || 'IP: 获取失败';
   }
 }
 fetchMalaysiaTimeAndIP();
@@ -1344,10 +1377,22 @@ document.addEventListener('DOMContentLoaded', function() {
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
+
+  // 防止多次初始化动画
+  if (canvas._starSeaStarted) return;
+  canvas._starSeaStarted = true;
+
   // 全屏自适应
-  const W = canvas.width = window.innerWidth;
-  const H = canvas.height = window.innerHeight;
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
   const ctx = canvas.getContext('2d');
+  let W = canvas.width;
+  let H = canvas.height;
 
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
@@ -1402,7 +1447,7 @@ function drawStarSea() {
   if (contentRect) {
     contentRect.style.transition = 'opacity 1.2s cubic-bezier(.4,2,.6,1)';
     contentRect.style.opacity = '1';
-    // 2秒后开始渐隐
+    contentRect.style.pointerEvents = '';
     clearTimeout(fadeTimeout);
     fadeTimeout = setTimeout(() => {
       let opacity = 1;
@@ -1424,6 +1469,9 @@ function drawStarSea() {
 
   let frame = 0;
   function animate() {
+    // 动态获取宽高，防止resize后画布不更新
+    W = canvas.width;
+    H = canvas.height;
     frame++;
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = "#0a0c18";
