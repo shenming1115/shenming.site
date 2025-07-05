@@ -1379,7 +1379,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（200个星璇，点击animation直接显示，无“老子的星海”文字）
+// Animation page 星空动画（50个星璇，点击animation直接显示，无“老子的星海”文字）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1404,7 +1404,7 @@ function drawStarSea() {
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  const SWIRL_COUNT = 200; // 只生成200个星璇
+  const SWIRL_COUNT = 50; // 只生成50个星璇
   const PARTICLES_PER_SWIRL = 120;
   const NEBULA_COUNT = 6;
   const NEBULA_COLORS = [
@@ -1472,7 +1472,7 @@ function drawStarSea() {
       ctx.restore();
     }
 
-    // 200个星璇，每个星璇无数点状粒子旋转
+    // 50个星璇，每个星璇无数点状粒子旋转
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
         let baseAngle = (i / swirl.count) * Math.PI * 2;
