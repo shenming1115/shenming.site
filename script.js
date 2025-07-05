@@ -1397,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（超多亮星云状旋转，点连线，黑洞感星云）
+// Animation page 星空动画（极限多星云，极限黑洞感，性能极限）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1426,21 +1426,22 @@ function drawStarSea() {
     "#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"
   ];
 
-  // 黑洞星云参数
-  const NEBULA_COUNT = 7; // 星云数量更多
+  // 极限多星云
+  const NEBULA_COUNT = 32; // 极限数量，建议不要再高
   const NEBULA_COLORS = [
     "rgba(110,198,255,0.13)", "rgba(255,224,102,0.10)", "rgba(255,251,231,0.09)", "rgba(58,90,140,0.13)",
-    "rgba(131,58,180,0.12)", "rgba(37,117,252,0.10)", "rgba(252,176,69,0.10)"
+    "rgba(131,58,180,0.12)", "rgba(37,117,252,0.10)", "rgba(252,176,69,0.10)",
+    "rgba(255,255,255,0.09)", "rgba(67,206,162,0.10)", "rgba(253,29,29,0.09)"
   ];
   const nebulas = [];
   for (let i = 0; i < NEBULA_COUNT; i++) {
     const angle = (i / NEBULA_COUNT) * Math.PI * 2 + Math.random() * 0.5;
-    const r = (RADIUS_MIN + RADIUS_MAX) / 2 + Math.sin(i * 1.7) * 60 + Math.random() * 40;
+    const r = (RADIUS_MIN + RADIUS_MAX) / 2 + Math.sin(i * 1.7) * 60 + Math.random() * 60;
     const cx = CLOUD_CENTER.x + Math.cos(angle) * r * (0.7 + Math.random() * 0.3);
     const cy = CLOUD_CENTER.y + Math.sin(angle) * r * (0.7 + Math.random() * 0.3);
     const color = NEBULA_COLORS[i % NEBULA_COLORS.length];
-    const size = 180 + Math.random() * 120;
-    const speed = 0.00018 + Math.random() * 0.00025;
+    const size = 160 + Math.random() * 180;
+    const speed = 0.00013 + Math.random() * 0.00025;
     const phase = Math.random() * Math.PI * 2;
     nebulas.push({cx, cy, color, size, speed, phase});
   }
@@ -1487,13 +1488,13 @@ function drawStarSea() {
     ctx.fillRect(0, 0, W, H);
     ctx.restore();
 
-    // 绘制黑洞星云
+    // 绘制极限多黑洞星云
     for (let n of nebulas) {
       let angle = frame * n.speed + n.phase;
       let x = n.cx + Math.cos(angle) * 24;
       let y = n.cy + Math.sin(angle) * 24;
       ctx.save();
-      ctx.globalAlpha = 0.22 + 0.08 * Math.abs(Math.sin(frame * 0.008 + n.phase));
+      ctx.globalAlpha = 0.18 + 0.08 * Math.abs(Math.sin(frame * 0.008 + n.phase));
       ctx.beginPath();
       ctx.ellipse(
         x, y,
@@ -1520,7 +1521,6 @@ function drawStarSea() {
       star.alpha = 1;
     }
 
-    // 连接星点
     ctx.save();
     ctx.globalAlpha = 0.18;
     for (let i = 0; i < STAR_COUNT; i++) {
@@ -1542,7 +1542,6 @@ function drawStarSea() {
     }
     ctx.restore();
 
-    // 绘制星点
     for (let i = 0; i < STAR_COUNT; i++) {
       const star = stars[i];
       ctx.save();
