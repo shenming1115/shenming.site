@@ -1397,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（极限高数量星璇不卡顿）
+// Animation page 星空动画（极限高数量星璇不卡顿，星点更亮且旋转感更强）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1419,10 +1419,10 @@ function drawStarSea() {
 
   // 极限优化参数
   const STAR_COLORS = [
-    "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
+    "#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"
   ];
-  const SWIRL_COUNT = 400; // 极限高数量星璇
-  const PARTICLES_PER_SWIRL = 6; // 每个星璇粒子极少
+  const SWIRL_COUNT = 400;
+  const PARTICLES_PER_SWIRL = 6;
   const NEBULA_COUNT = 2;
   const NEBULA_COLORS = [
     "rgba(110,198,255,0.06)", "rgba(255,224,102,0.06)", "rgba(255,251,231,0.04)", "rgba(58,90,140,0.06)"
@@ -1442,6 +1442,7 @@ function drawStarSea() {
     nebulas.push({cx, cy, color, size, speed, phase});
   }
 
+  // 星璇参数
   const swirls = [];
   for (let i = 0; i < SWIRL_COUNT; i++) {
     const swirlAngle = (i / SWIRL_COUNT) * Math.PI * 2;
@@ -1449,7 +1450,7 @@ function drawStarSea() {
     const cx = W/2 + Math.cos(swirlAngle) * swirlRadius * (0.7 + Math.random() * 0.3);
     const cy = H/2 + Math.sin(swirlAngle) * swirlRadius * (0.5 + Math.random() * 0.5);
     const swirlColor = STAR_COLORS[i % STAR_COLORS.length];
-    const swirlSpeed = 0.0004 + Math.random() * 0.0007;
+    const swirlSpeed = 0.0007 + Math.random() * 0.0012; // 更快旋转
     const swirlPhase = Math.random() * Math.PI * 2;
     const swirlSpread = 36 + Math.random() * 60;
     swirls.push({
@@ -1496,20 +1497,26 @@ function drawStarSea() {
       ctx.restore();
     }
 
-    // 星璇
+    // 星璇（更亮更有旋转感）
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
         let baseAngle = (i / swirl.count) * Math.PI * 2;
+        // 让每个星点有轻微的自转和呼吸亮度
         let swirlAngle = baseAngle + frame * swirl.speed + swirl.phase;
-        let r = swirl.spread + Math.sin(i * 0.5 + frame * 0.01 + swirl.phase) * 8;
+        let r = swirl.spread + Math.sin(i * 0.5 + frame * 0.03 + swirl.phase) * 8;
         let x = swirl.cx + Math.cos(swirlAngle) * r;
         let y = swirl.cy + Math.sin(swirlAngle) * r;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2);
-        ctx.globalAlpha = 0.35 + 0.1 * Math.sin(frame * 0.03 + i + swirl.phase);
+        // 星点更亮更大
+        ctx.arc(x, y, 1.5 + 0.7 * Math.abs(Math.sin(frame * 0.08 + i)), 0, Math.PI * 2);
+        // 呼吸式高亮
+        ctx.globalAlpha = 0.7 + 0.3 * Math.abs(Math.sin(frame * 0.09 + i + swirl.phase));
         ctx.fillStyle = swirl.color;
+        ctx.shadowColor = swirl.color;
+        ctx.shadowBlur = 12; // 明显发光
         ctx.fill();
+        ctx.shadowBlur = 0;
         ctx.globalAlpha = 1;
         ctx.restore();
       }
