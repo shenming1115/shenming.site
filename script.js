@@ -1340,7 +1340,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 老子的星海（全屏黑色底，点状粒子，20个星璇同时运转）
+// Animation page 老子的星海（全屏黑色底，点状粒子，500个星璇同时运转，无闪光灯，2秒后文字渐隐）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1352,7 +1352,7 @@ function drawStarSea() {
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  const SWIRL_COUNT = 20;
+  const SWIRL_COUNT = 500;
   const PARTICLES_PER_SWIRL = 120;
   const NEBULA_COUNT = 6;
   const NEBULA_COLORS = [
@@ -1395,6 +1395,33 @@ function drawStarSea() {
     });
   }
 
+  // 2秒后渐隐动画
+  const contentRect = document.getElementById('animationRect');
+  let fadeTimeout = null;
+  let fadeFrame = null;
+  if (contentRect) {
+    contentRect.style.transition = 'opacity 1.2s cubic-bezier(.4,2,.6,1)';
+    contentRect.style.opacity = '1';
+    // 2秒后开始渐隐
+    clearTimeout(fadeTimeout);
+    fadeTimeout = setTimeout(() => {
+      let opacity = 1;
+      function fadeStep() {
+        opacity -= 0.04;
+        if (opacity <= 0) {
+          opacity = 0;
+          contentRect.style.opacity = '0';
+          contentRect.style.pointerEvents = 'none';
+          cancelAnimationFrame(fadeFrame);
+        } else {
+          contentRect.style.opacity = opacity.toString();
+          fadeFrame = requestAnimationFrame(fadeStep);
+        }
+      }
+      fadeStep();
+    }, 2000);
+  }
+
   let frame = 0;
   function animate() {
     frame++;
@@ -1416,7 +1443,7 @@ function drawStarSea() {
       ctx.restore();
     }
 
-    // 20个星璇，每个星璇无数点状粒子旋转
+    // 500个星璇，每个星璇无数点状粒子旋转
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
         // 每个粒子在星璇上的角度
@@ -1442,39 +1469,39 @@ function drawStarSea() {
       }
     }
 
-    // 偶尔闪一下的亮点
-    if (frame % 60 === 0) {
-      for (let i = 0; i < 10; i++) {
-        let sx = Math.random() * W;
-        let sy = Math.random() * H * 0.98;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(sx, sy, 2 + Math.random() * 2, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255,0.8)";
-        ctx.shadowColor = "#fff";
-        ctx.shadowBlur = 18;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    // 偶尔闪一下的亮星
-    if (frame % 60 === 0) {
-      for (let i = 0; i < 8; i++) {
-        let sx = Math.random() * W;
-        let sy = Math.random() * H * 0.95;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(sx, sy, 16 + Math.random() * 16, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255,0.7)";
-        ctx.shadowColor = "#fff";
-        ctx.shadowBlur = 40;
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
     requestAnimationFrame(animate);
   }
   animate();
 }
+
+// 全局导航栏透明效果（所有页面都显示navbar并随滚动变透明）
+document.addEventListener('DOMContentLoaded', function () {
+  const navbar = document.querySelector('.navbar');
+  let lastScrollY = window.scrollY;
+
+  function updateNavbarTransparency() {
+    if (!navbar) return;
+    if (window.scrollY > 30) {
+      navbar.classList.add('transparent');
+    } else {
+      navbar.classList.remove('transparent');
+    }
+  }
+
+  // 监听所有页面的滚动
+  window.addEventListener('scroll', updateNavbarTransparency, { passive: true });
+
+  // 监听 content/animation 切换时的滚动
+  document.addEventListener('scroll', updateNavbarTransparency, { passive: true });
+
+  // 进入content/animation模式时也保证navbar显示
+  function ensureNavbarVisible() {
+    if (navbar) navbar.style.display = 'flex';
+  }
+  // 监听模式切换
+  document.body.addEventListener('classChange', ensureNavbarVisible);
+  ensureNavbarVisible();
+
+  // 兼容切换页面时重新检测
+  updateNavbarTransparency();
+});

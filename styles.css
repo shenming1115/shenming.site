@@ -170,13 +170,23 @@ body.dark-mode {
   padding: 12px 24px;
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  width: 100vw;
   z-index: 1000;
+  transition: background 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s cubic-bezier(.4,2,.6,1), opacity 0.4s;
+  box-sizing: border-box;
+}
+
+.navbar.transparent {
+  background-color: rgba(107, 89, 127, 0.15) !important;
+  box-shadow: none !important;
+  opacity: 0.85;
 }
 
 .navbar-links {
   display: flex;
   gap: 24px;
+  align-items: center;
 }
 
 .navbar a {
@@ -196,7 +206,21 @@ body.dark-mode {
   font-size: 24px;
   cursor: pointer;
   color: var(--text-light);
-  padding: 8px;
+  padding: 8px 16px;
+  margin-left: auto;
+  margin-right: 12px;
+  /* 让其靠右但不贴边 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  transition: background 0.2s;
+}
+.toggle-mode:hover {
+  background: rgba(0,0,0,0.13);
 }
 
 .content {
@@ -636,4 +660,34 @@ body.animation-mode .section {
 #contentPage .content-sky-message {
   position: relative;
   z-index: 2;
+}
+
+/* 透明导航栏动画效果 */
+.navbar {
+  transition: background 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s cubic-bezier(.4,2,.6,1), opacity 0.4s;
+  background-color: rgba(107, 89, 127, 0.95);
+}
+
+.navbar.transparent {
+  background-color: rgba(107, 89, 127, 0.15) !important;
+  box-shadow: none !important;
+  opacity: 0.85;
+}
+
+/* 保证所有页面都能看到navbar */
+body .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 1000;
+}
+
+/* 内容下移防止被navbar遮挡 */
+.home-page,
+.content-page,
+.section,
+#animationPage,
+#contentPage {
+  padding-top: 70px;
 }
