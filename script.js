@@ -1221,13 +1221,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 4000);
 
   // 夜间模式切换
-  const modeBtn = document.getElementById('toggleMode');
-  if (modeBtn) {
-    modeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-    });
-  }
+  document.addEventListener('DOMContentLoaded', function() {
+    const modeBtn = document.getElementById('toggleMode');
+    if (modeBtn) {
+      // 初始化按钮状态
+      function updateModeBtn() {
+        modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+      }
+      // 切换深色模式
+      modeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        updateModeBtn();
+      });
+      // 页面加载时根据本地存储自动切换
+      if (localStorage.getItem('dark-mode') === 'true') {
+        document.body.classList.add('dark-mode');
+      }
+      updateModeBtn();
+      // 监听模式变化保存到本地
+      const observer = new MutationObserver(() => {
+        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+        updateModeBtn();
+      });
+      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    }
+  });
 });
 
 // 安全仪表板控制函数
@@ -1379,7 +1397,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（进一步性能优化）
+// Animation page 星空动画（极限高数量星璇不卡顿）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
@@ -1399,18 +1417,18 @@ function drawStarSea() {
   let W = canvas.width;
   let H = canvas.height;
 
-  // 性能优化参数
+  // 极限优化参数
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  const SWIRL_COUNT = 30; // 再降低星璇数量
-  const PARTICLES_PER_SWIRL = 36; // 再降低每个星璇的粒子数
-  const NEBULA_COUNT = 1; // 只保留1个星云
+  const SWIRL_COUNT = 400; // 极限高数量星璇
+  const PARTICLES_PER_SWIRL = 6; // 每个星璇粒子极少
+  const NEBULA_COUNT = 2;
   const NEBULA_COLORS = [
-    "rgba(110,198,255,0.10)", "rgba(255,224,102,0.10)", "rgba(255,251,231,0.08)", "rgba(58,90,140,0.10)"
+    "rgba(110,198,255,0.06)", "rgba(255,224,102,0.06)", "rgba(255,251,231,0.04)", "rgba(58,90,140,0.06)"
   ];
 
-  // 预先计算所有星璇和星云参数，避免每帧重复计算
+  // 预先计算所有星璇和星云参数
   const nebulas = [];
   for (let i = 0; i < NEBULA_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
@@ -1419,7 +1437,7 @@ function drawStarSea() {
     const cy = H/2 + Math.sin(angle) * r * (0.5 + Math.random() * 0.5);
     const color = NEBULA_COLORS[Math.floor(Math.random() * NEBULA_COLORS.length)];
     const size = 120 + Math.random() * 120;
-    const speed = 0.0005 + Math.random() * 0.001;
+    const speed = 0.0002 + Math.random() * 0.0005;
     const phase = Math.random() * Math.PI * 2;
     nebulas.push({cx, cy, color, size, speed, phase});
   }
@@ -1431,7 +1449,7 @@ function drawStarSea() {
     const cx = W/2 + Math.cos(swirlAngle) * swirlRadius * (0.7 + Math.random() * 0.3);
     const cy = H/2 + Math.sin(swirlAngle) * swirlRadius * (0.5 + Math.random() * 0.5);
     const swirlColor = STAR_COLORS[i % STAR_COLORS.length];
-    const swirlSpeed = 0.001 + Math.random() * 0.002; // 再降低旋转速度
+    const swirlSpeed = 0.0004 + Math.random() * 0.0007;
     const swirlPhase = Math.random() * Math.PI * 2;
     const swirlSpread = 36 + Math.random() * 60;
     swirls.push({
@@ -1448,8 +1466,8 @@ function drawStarSea() {
   let frame = 0;
   let lastTime = performance.now();
   function animate(now) {
-    // 降低帧率到20fps
-    if (now - lastTime < 50) {
+    // 降低帧率到15fps，保证不卡
+    if (now - lastTime < 66) {
       requestAnimationFrame(animate);
       return;
     }
@@ -1470,7 +1488,7 @@ function drawStarSea() {
       let x = n.cx + Math.cos(angle) * 18;
       let y = n.cy + Math.sin(angle) * 18;
       ctx.save();
-      ctx.globalAlpha = 0.10 + 0.05 * Math.abs(Math.sin(frame * 0.008 + n.phase));
+      ctx.globalAlpha = 0.05 + 0.03 * Math.abs(Math.sin(frame * 0.008 + n.phase));
       ctx.beginPath();
       ctx.ellipse(x, y, n.size * (0.9 + 0.2 * Math.sin(frame * 0.01 + n.phase)), n.size * 0.5, angle, 0, Math.PI * 2);
       ctx.fillStyle = n.color;
@@ -1488,10 +1506,9 @@ function drawStarSea() {
         let y = swirl.cy + Math.sin(swirlAngle) * r;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(x, y, 1, 0, Math.PI * 2); // 固定粒子半径
-        ctx.globalAlpha = 0.5 + 0.2 * Math.sin(frame * 0.03 + i + swirl.phase);
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.globalAlpha = 0.35 + 0.1 * Math.sin(frame * 0.03 + i + swirl.phase);
         ctx.fillStyle = swirl.color;
-        // 不再使用阴影，进一步提升性能
         ctx.fill();
         ctx.globalAlpha = 1;
         ctx.restore();
