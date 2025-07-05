@@ -1379,16 +1379,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Animation page 星空动画（50个星璇，点击animation直接显示，无“老子的星海”文字）
+// Animation page 星空动画（进一步性能优化）
 function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
 
-  // 防止多次初始化动画
   if (canvas._starSeaStarted) return;
   canvas._starSeaStarted = true;
 
-  // 全屏自适应
   function resizeCanvas() {
     canvas.removeAttribute('style');
     canvas.width = window.innerWidth;
@@ -1401,17 +1399,18 @@ function drawStarSea() {
   let W = canvas.width;
   let H = canvas.height;
 
+  // 性能优化参数
   const STAR_COLORS = [
     "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  const SWIRL_COUNT = 50; // 只生成50个星璇
-  const PARTICLES_PER_SWIRL = 120;
-  const NEBULA_COUNT = 6;
+  const SWIRL_COUNT = 30; // 再降低星璇数量
+  const PARTICLES_PER_SWIRL = 36; // 再降低每个星璇的粒子数
+  const NEBULA_COUNT = 1; // 只保留1个星云
   const NEBULA_COLORS = [
     "rgba(110,198,255,0.10)", "rgba(255,224,102,0.10)", "rgba(255,251,231,0.08)", "rgba(58,90,140,0.10)"
   ];
 
-  // 星云
+  // 预先计算所有星璇和星云参数，避免每帧重复计算
   const nebulas = [];
   for (let i = 0; i < NEBULA_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
@@ -1425,7 +1424,6 @@ function drawStarSea() {
     nebulas.push({cx, cy, color, size, speed, phase});
   }
 
-  // 星璇参数
   const swirls = [];
   for (let i = 0; i < SWIRL_COUNT; i++) {
     const swirlAngle = (i / SWIRL_COUNT) * Math.PI * 2;
@@ -1433,7 +1431,7 @@ function drawStarSea() {
     const cx = W/2 + Math.cos(swirlAngle) * swirlRadius * (0.7 + Math.random() * 0.3);
     const cy = H/2 + Math.sin(swirlAngle) * swirlRadius * (0.5 + Math.random() * 0.5);
     const swirlColor = STAR_COLORS[i % STAR_COLORS.length];
-    const swirlSpeed = 0.003 + Math.random() * 0.008;
+    const swirlSpeed = 0.001 + Math.random() * 0.002; // 再降低旋转速度
     const swirlPhase = Math.random() * Math.PI * 2;
     const swirlSpread = 36 + Math.random() * 60;
     swirls.push({
@@ -1448,7 +1446,15 @@ function drawStarSea() {
   }
 
   let frame = 0;
-  function animate() {
+  let lastTime = performance.now();
+  function animate(now) {
+    // 降低帧率到20fps
+    if (now - lastTime < 50) {
+      requestAnimationFrame(animate);
+      return;
+    }
+    lastTime = now;
+
     W = canvas.width;
     H = canvas.height;
     frame++;
@@ -1464,7 +1470,7 @@ function drawStarSea() {
       let x = n.cx + Math.cos(angle) * 18;
       let y = n.cy + Math.sin(angle) * 18;
       ctx.save();
-      ctx.globalAlpha = 0.13 + 0.08 * Math.abs(Math.sin(frame * 0.008 + n.phase));
+      ctx.globalAlpha = 0.10 + 0.05 * Math.abs(Math.sin(frame * 0.008 + n.phase));
       ctx.beginPath();
       ctx.ellipse(x, y, n.size * (0.9 + 0.2 * Math.sin(frame * 0.01 + n.phase)), n.size * 0.5, angle, 0, Math.PI * 2);
       ctx.fillStyle = n.color;
@@ -1472,7 +1478,7 @@ function drawStarSea() {
       ctx.restore();
     }
 
-    // 50个星璇，每个星璇无数点状粒子旋转
+    // 星璇
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
         let baseAngle = (i / swirl.count) * Math.PI * 2;
@@ -1482,13 +1488,11 @@ function drawStarSea() {
         let y = swirl.cy + Math.sin(swirlAngle) * r;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(x, y, 1 + Math.sin(frame * 0.04 + i) * 0.3, 0, Math.PI * 2);
-        ctx.globalAlpha = 0.7 + 0.3 * Math.sin(frame * 0.03 + i + swirl.phase);
+        ctx.arc(x, y, 1, 0, Math.PI * 2); // 固定粒子半径
+        ctx.globalAlpha = 0.5 + 0.2 * Math.sin(frame * 0.03 + i + swirl.phase);
         ctx.fillStyle = swirl.color;
-        ctx.shadowColor = swirl.color;
-        ctx.shadowBlur = 6;
+        // 不再使用阴影，进一步提升性能
         ctx.fill();
-        ctx.shadowBlur = 0;
         ctx.globalAlpha = 1;
         ctx.restore();
       }
@@ -1496,7 +1500,7 @@ function drawStarSea() {
 
     requestAnimationFrame(animate);
   }
-  animate();
+  requestAnimationFrame(animate);
 }
 
 // 全局导航栏透明效果（所有页面都显示navbar并随滚动变透明）
@@ -1525,6 +1529,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   // 监听模式切换
   document.body.addEventListener('classChange', ensureNavbarVisible);
+ensureNavbarVisible();
+
+// 兼容切换页面时重新检测
+updateNavbarTransparency();
   ensureNavbarVisible();
 
   // 兼容切换页面时重新检测
