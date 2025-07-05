@@ -1333,58 +1333,65 @@ document.addEventListener('DOMContentLoaded', function() {
     animationRect.addEventListener('click', function(e) {
       if (animationRect.classList.contains('collapsed')) {
         animationRect.classList.remove('collapsed');
-        drawStarryNight();
+        drawStarSea();
         e.stopPropagation();
       }
     });
   }
 });
 
-// Animation page 星空背景（黑色底，蓝黄粒子星空，粒子大屏+多旋转特效）
-function drawStarryNight() {
+// Animation page 老子的星海（全屏黑色底，点状粒子，20个星璇同时运转）
+function drawStarSea() {
   const canvas = document.getElementById('starryNightCanvas');
   if (!canvas) return;
-  // 大屏幕
-  const W = canvas.width = window.innerWidth > 1200 ? 1200 : window.innerWidth * 0.98;
-  const H = canvas.height = window.innerHeight > 700 ? 700 : window.innerHeight * 0.8;
+  // 全屏自适应
+  const W = canvas.width = window.innerWidth;
+  const H = canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
 
-  // 粒子参数
-  const STAR_COUNT = 120;
-  const swirlCount = 8;
-  const swirlColors = [
-    "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#ffe066", "#6ec6ff", "#fffbe7", "#ffe066"
+  const STAR_COLORS = [
+    "#ffe066", "#fffbe7", "#6ec6ff", "#3a5aee", "#fff", "#b3e0ff", "#f9f871"
   ];
-  // 星星粒子
-  const stars = [];
-  for (let i = 0; i < STAR_COUNT; i++) {
+  const SWIRL_COUNT = 20;
+  const PARTICLES_PER_SWIRL = 120;
+  const NEBULA_COUNT = 6;
+  const NEBULA_COLORS = [
+    "rgba(110,198,255,0.10)", "rgba(255,224,102,0.10)", "rgba(255,251,231,0.08)", "rgba(58,90,140,0.10)"
+  ];
+
+  // 星云
+  const nebulas = [];
+  for (let i = 0; i < NEBULA_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const radius = 180 + Math.random() * (W/2 - 200);
-    const cx = W / 2 + Math.cos(angle) * radius * (0.7 + 0.6 * Math.random());
-    const cy = H / 2 + Math.sin(angle) * radius * (0.5 + 0.7 * Math.random());
-    const baseR = 6 + Math.random() * 12;
-    const color1 = Math.random() > 0.5 ? "#ffe066" : "#6ec6ff";
-    const color2 = Math.random() > 0.5 ? "#fffbe7" : "#3a5aee";
-    const speed = 0.004 + Math.random() * 0.012;
+    const r = 180 + Math.random() * (Math.min(W, H) / 2 - 180);
+    const cx = W/2 + Math.cos(angle) * r * (0.7 + Math.random() * 0.3);
+    const cy = H/2 + Math.sin(angle) * r * (0.5 + Math.random() * 0.5);
+    const color = NEBULA_COLORS[Math.floor(Math.random() * NEBULA_COLORS.length)];
+    const size = 120 + Math.random() * 120;
+    const speed = 0.0005 + Math.random() * 0.001;
     const phase = Math.random() * Math.PI * 2;
-    stars.push({cx, cy, baseR, color1, color2, speed, phase, orbit: 80 + Math.random() * 180, orbitAngle: angle});
+    nebulas.push({cx, cy, color, size, speed, phase});
   }
 
-  // 多旋涡参数
+  // 星璇参数
   const swirls = [];
-  for (let i = 0; i < swirlCount; i++) {
-    const angle = (i / swirlCount) * Math.PI * 2;
-    const r = 180 + Math.random() * 120;
-    const cx = W/2 + Math.cos(angle) * r * 0.7;
-    const cy = H/2 + Math.sin(angle) * r * 0.5;
+  for (let i = 0; i < SWIRL_COUNT; i++) {
+    const swirlAngle = (i / SWIRL_COUNT) * Math.PI * 2;
+    const swirlRadius = 180 + Math.random() * (Math.min(W, H) / 2 - 180);
+    const cx = W/2 + Math.cos(swirlAngle) * swirlRadius * (0.7 + Math.random() * 0.3);
+    const cy = H/2 + Math.sin(swirlAngle) * swirlRadius * (0.5 + Math.random() * 0.5);
+    const swirlColor = STAR_COLORS[i % STAR_COLORS.length];
+    const swirlSpeed = 0.003 + Math.random() * 0.008;
+    const swirlPhase = Math.random() * Math.PI * 2;
+    const swirlSpread = 36 + Math.random() * 60;
     swirls.push({
       cx,
       cy,
-      r: 36 + Math.random() * 32,
-      color: swirlColors[i % swirlColors.length],
-      count: 16 + Math.floor(Math.random() * 8),
-      speed: 0.008 + Math.random() * 0.008,
-      phase: Math.random() * Math.PI * 2
+      color: swirlColor,
+      speed: swirlSpeed,
+      phase: swirlPhase,
+      spread: swirlSpread,
+      count: PARTICLES_PER_SWIRL
     });
   }
 
@@ -1392,45 +1399,42 @@ function drawStarryNight() {
   function animate() {
     frame++;
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = "#10101a";
+    ctx.fillStyle = "#0a0c18";
     ctx.fillRect(0, 0, W, H);
 
-    // 星星粒子（各自旋转）
-    for (let s of stars) {
-      let angle = frame * s.speed + s.phase;
+    // 星云
+    for (let n of nebulas) {
+      let angle = frame * n.speed + n.phase;
+      let x = n.cx + Math.cos(angle) * 18;
+      let y = n.cy + Math.sin(angle) * 18;
       ctx.save();
-      ctx.translate(s.cx, s.cy);
-      ctx.rotate(angle);
-      let grad = ctx.createRadialGradient(0, 0, 0, 0, 0, s.baseR);
-      grad.addColorStop(0, s.color1);
-      grad.addColorStop(0.5, s.color2);
-      grad.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.globalAlpha = 0.13 + 0.08 * Math.abs(Math.sin(frame * 0.008 + n.phase));
       ctx.beginPath();
-      ctx.arc(0, 0, s.baseR, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.globalAlpha = 0.85 + 0.15 * Math.sin(frame * 0.03 + s.phase);
-      ctx.shadowColor = s.color1;
-      ctx.shadowBlur = 16;
+      ctx.ellipse(x, y, n.size * (0.9 + 0.2 * Math.sin(frame * 0.01 + n.phase)), n.size * 0.5, angle, 0, Math.PI * 2);
+      ctx.fillStyle = n.color;
       ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.globalAlpha = 1;
       ctx.restore();
     }
 
-    // 多旋涡
+    // 20个星璇，每个星璇无数点状粒子旋转
     for (let swirl of swirls) {
       for (let i = 0; i < swirl.count; i++) {
-        let angle = (i / swirl.count) * Math.PI * 2 + frame * swirl.speed + swirl.phase;
-        let r = swirl.r + Math.sin(i * 0.7 + frame * 0.03) * 12;
-        let x = swirl.cx + Math.cos(angle) * r;
-        let y = swirl.cy + Math.sin(angle) * r;
+        // 每个粒子在星璇上的角度
+        let baseAngle = (i / swirl.count) * Math.PI * 2;
+        // 星璇整体旋转
+        let swirlAngle = baseAngle + frame * swirl.speed + swirl.phase;
+        // 星璇的半径带有轻微扰动
+        let r = swirl.spread + Math.sin(i * 0.5 + frame * 0.01 + swirl.phase) * 8;
+        let x = swirl.cx + Math.cos(swirlAngle) * r;
+        let y = swirl.cy + Math.sin(swirlAngle) * r;
+        // 粒子颜色和闪烁
         ctx.save();
-        ctx.globalAlpha = 0.13 + 0.13 * Math.abs(Math.sin(frame * 0.01 + i));
         ctx.beginPath();
-        ctx.arc(x, y, 16 + Math.sin(i * 1.2 + frame * 0.02) * 4, 0, Math.PI * 2);
+        ctx.arc(x, y, 1 + Math.sin(frame * 0.04 + i) * 0.3, 0, Math.PI * 2);
+        ctx.globalAlpha = 0.7 + 0.3 * Math.sin(frame * 0.03 + i + swirl.phase);
         ctx.fillStyle = swirl.color;
         ctx.shadowColor = swirl.color;
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 6;
         ctx.fill();
         ctx.shadowBlur = 0;
         ctx.globalAlpha = 1;
@@ -1438,17 +1442,33 @@ function drawStarryNight() {
       }
     }
 
-    // 偶尔闪一下的亮星
+    // 偶尔闪一下的亮点
     if (frame % 60 === 0) {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 10; i++) {
         let sx = Math.random() * W;
-        let sy = Math.random() * H * 0.9;
+        let sy = Math.random() * H * 0.98;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(sx, sy, 18 + Math.random() * 10, 0, Math.PI * 2);
+        ctx.arc(sx, sy, 2 + Math.random() * 2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+        ctx.shadowColor = "#fff";
+        ctx.shadowBlur = 18;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // 偶尔闪一下的亮星
+    if (frame % 60 === 0) {
+      for (let i = 0; i < 8; i++) {
+        let sx = Math.random() * W;
+        let sy = Math.random() * H * 0.95;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sx, sy, 16 + Math.random() * 16, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(255,255,255,0.7)";
         ctx.shadowColor = "#fff";
-        ctx.shadowBlur = 32;
+        ctx.shadowBlur = 40;
         ctx.fill();
         ctx.restore();
       }

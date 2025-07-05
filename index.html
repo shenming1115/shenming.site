@@ -118,18 +118,19 @@
     </div>
 
     <!-- Animation Page -->
-    <div id="animationPage" class="animation-page">
-      <div class="content-bg-sky"></div>
-      <div class="content-sky-message">
-        <div class="content-rect collapsed" id="animationRect" style="margin-top:0;max-width:600px;min-width:320px;position:relative;">
+    <div id="animationPage" class="animation-page" style="background:#0a0c18;">
+      <div class="starsea-bg-canvas-wrap" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;">
+        <canvas id="starryNightCanvas" style="width:100vw;height:100vh;display:block;background:#0a0c18;"></canvas>
+      </div>
+      <div class="content-sky-message" style="position:relative;z-index:2;">
+        <div class="content-rect collapsed" id="animationRect" style="margin-top:0;max-width:900px;min-width:320px;position:relative;background:rgba(0,0,0,0.18);box-shadow:0 4px 24px rgba(0,0,0,0.10);">
           <button id="backHomeBtnAnim" style="position:absolute;top:18px;right:24px;font-size:2em;z-index:10;background:none;border:none;cursor:pointer;">←</button>
           <div class="animation-hint" style="display:flex;align-items:center;justify-content:center;min-height:180px;">
             <span style="font-size:3.2em;line-height:1;margin-right:24px;">🌌</span>
-            <span style="font-size:1.5em;font-weight:700;color:#3a5a8c;">Animation</span>
+            <span style="font-size:1.5em;font-weight:700;color:#fff;">老子的星海</span>
           </div>
           <div class="animation-content" style="display:flex;flex-direction:column;align-items:center;">
-            <h2 style="font-size:2em;margin-bottom:0.5em;">梵高的星空<br><span style="font-size:0.7em;font-weight:normal;">Van Gogh's Starry Night</span></h2>
-            <canvas id="starryNightCanvas" width="420" height="260" style="border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.10);background:#181b22;margin-top:16px;"></canvas>
+            <h2 style="font-size:2em;margin-bottom:0.5em;color:#fff;">老子的星海<br><span style="font-size:0.7em;font-weight:normal;color:#b3e0ff;">Laozi's Star Sea</span></h2>
           </div>
         </div>
       </div>

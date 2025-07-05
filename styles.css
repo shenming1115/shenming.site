@@ -540,64 +540,59 @@ body.animation-mode .section {
   display: block;
 }
 
-/* 蓝天白云水幕流动背景 for content-page */
-#contentPage .content-bg-sky {
+/* AnimationPage星海全屏背景 */
+#animationPage {
+  background: #0a0c18 !important;
   position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  z-index: 99;
+  overflow: auto;
+}
+#animationPage .starsea-bg-canvas-wrap {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(120deg, #b3d8f6 0%, #e0eafc 40%, #cfdef3 70%, #f5fafd 100%);
-  background-image: url('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/sky/clouds.png'), linear-gradient(120deg, #b3d8f6 0%, #e0eafc 40%, #cfdef3 70%, #f5fafd 100%);
-  background-repeat: repeat-x, no-repeat;
-  background-size: 1200px 300px, 200% 200%;
-  background-position: 0 40px, 0% 50%;
-  animation: skyCloudFlow 18s linear infinite, cloudMove 60s linear infinite;
-  opacity: 1;
-  filter: brightness(1.08) saturate(1.08);
 }
-@keyframes skyCloudFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
+#starryNightCanvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  min-width: 100vw;
+  min-height: 100vh;
+  display: block;
+  background: #0a0c18 !important;
+  /* 让canvas始终铺满且不留白 */
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 1;
 }
-@keyframes cloudMove {
-  0% { background-position: 0 40px, 0% 50%; }
-  100% { background-position: 1200px 40px, 100% 50%; }
-}
-
-/* 保证 content-page 内容在背景之上 */
-#contentPage .content-sky-message {
+#animationPage .content-sky-message {
   position: relative;
   z-index: 2;
-}
-
-/* Animation canvas自适应居中 */
-#starryNightCanvas {
-  display: block;
-  margin: 0 auto;
-  max-width: 98vw;
-  width: 420px;
-  height: 260px;
-  background: #181b22;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-}
-/* 动画卡片与content一致 */
-#animationPage .content-rect.collapsed .animation-content {
-  display: none;
-}
-#animationPage .content-rect.collapsed .animation-hint {
+  width: 100vw;
+  min-height: 100vh;
   display: flex;
-}
-#animationPage .content-rect .animation-hint {
-  display: none;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 180px;
-  padding: 32px 0;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.2s;
-  border-radius: 18px;
+  justify-content: flex-start;
+  padding-top: 8vh;
+  padding-bottom: 8vh;
+}
+#animationPage .content-rect {
+  background: rgba(0,0,0,0.18);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  /* ...existing code... */
+}
+#animationPage .animation-hint span,
+#animationPage .animation-content h2 {
+  color: #fff !important;
 }
 #animationPage .content-rect.collapsed {
   cursor: pointer;
