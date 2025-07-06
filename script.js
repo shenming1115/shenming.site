@@ -1220,32 +1220,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, 4000);
 
-  // 夜间模式切换
-  document.addEventListener('DOMContentLoaded', function() {
-    const modeBtn = document.getElementById('toggleMode');
-    if (modeBtn) {
-      // 初始化按钮状态
-      function updateModeBtn() {
-        modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  // 夜间模式切换（全局应用到每个页面）
+document.addEventListener('DOMContentLoaded', function() {
+  const modeBtn = document.getElementById('toggleMode');
+  // 初始化按钮状态和body类
+  function updateModeBtn() {
+    modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+  }
+  // 检查本地存储
+  if (localStorage.getItem('dark-mode') === 'true') {
+    document.body.classList.add('dark-mode');
+  }
+  updateModeBtn();
+  // 切换深色模式
+  modeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+    updateModeBtn();
+  });
+  // 监听模式变化，确保所有页面都应用
+  const observer = new MutationObserver(() => {
+    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+    updateModeBtn();
+    // 额外：同步所有主要内容区的深色样式
+    document.querySelectorAll('.content, .content-page, .section, .animation-page').forEach(el => {
+      if (document.body.classList.contains('dark-mode')) {
+        el.classList.add('dark-mode');
+      } else {
+        el.classList.remove('dark-mode');
       }
-      // 切换深色模式
-      modeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        updateModeBtn();
-      });
-      // 页面加载时根据本地存储自动切换
-      if (localStorage.getItem('dark-mode') === 'true') {
-        document.body.classList.add('dark-mode');
-      }
-      updateModeBtn();
-      // 监听模式变化保存到本地
-      const observer = new MutationObserver(() => {
-        localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        updateModeBtn();
-      });
-      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    });
+  });
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  // 首次加载时同步
+  document.querySelectorAll('.content, .content-page, .section, .animation-page').forEach(el => {
+    if (document.body.classList.contains('dark-mode')) {
+      el.classList.add('dark-mode');
+    } else {
+      el.classList.remove('dark-mode');
     }
   });
+});
+
 });
 
 // 安全仪表板控制函数
