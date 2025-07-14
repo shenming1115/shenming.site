@@ -1,189 +1,6 @@
-// Content section show/hide logic
-document.addEventListener('DOMContentLoaded', function() {
-  const contentNavs = document.querySelectorAll('#contentNav');
-  const contentPage = document.getElementById('contentPage');
-  const mainContent = document.getElementById('mainContent');
-  // 进入content模式
-  contentNavs.forEach(function(contentNav) {
-    contentNav.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.body.classList.add('content-mode');
-      document.body.classList.remove('animation-mode');
-      document.querySelectorAll('.navbar-links a').forEach(a => {
-        a.classList.toggle('active', a.id === 'contentNav');
-      });
-      var contentRect = document.querySelector('#contentPage .content-rect');
-      if (contentRect) {
-        contentRect.classList.add('collapsed');
-      }
-    });
-  });
-  // 离开content模式
-  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(function(link) {
-    if(link.id !== 'contentNav' && link.id !== 'animationNav') {
-      link.addEventListener('click', function() {
-        document.body.classList.remove('content-mode');
-        document.body.classList.remove('animation-mode');
-        document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
-      });
-    }
-  });
-});
+// --- Global State and Configuration ---
 
-// 获取马来西亚时间和IP，分别用于验证前和主界面
-async function fetchMalaysiaTimeAndIP() {
-  // 获取马来西亚时间（使用 timeapi.io，支持CORS）
-  let malaysiaTime = '';
-  let userIP = '';
-  try {
-    const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kuala_Lumpur');
-    const data = await res.json();
-    malaysiaTime = `${data.year}-${String(data.month).padStart(2,'0')}-${String(data.day).padStart(2,'0')} ${String(data.hour).padStart(2,'0')}:${String(data.minute).padStart(2,'0')}:${String(data.seconds).padStart(2,'0')} (MY)`;
-    document.getElementById('preVerifyDatetime').textContent = malaysiaTime;
-    window._malaysiaTime = malaysiaTime;
-  } catch (e) {
-    document.getElementById('preVerifyDatetime').textContent = '无法获取马来西亚时间';
-    window._malaysiaTime = '';
-    console.error('马来西亚时间获取失败', e);
-  }
-  // 获取IP（支持IPv4和IPv6）
-  let ipv4 = '';
-  let ipv6 = '';
-  try {
-    // 获取IPv4
-    let ipRes4 = await fetch('https://api.myip.com/');
-    let ipData4 = await ipRes4.json();
-    ipv4 = ipData4.ip;
-
-    // 获取IPv6（Cloudflare优先，备用ipify）
-    try {
-      let ipRes6 = await fetch('https://cloudflare.com/cdn-cgi/trace');
-      let text6 = await ipRes6.text();
-      let ipMatch = text6.match(/ip=([^\n]+)/);
-      if (ipMatch && ipMatch[1] && ipMatch[1].includes(':')) {
-        ipv6 = ipMatch[1];
-      }
-    } catch (e) {
-      try {
-        let ipRes6b = await fetch('https://api64.ipify.org?format=json');
-        let ipData6b = await ipRes6b.json();
-        if (ipData6b.ip && ipData6b.ip.includes(':')) {
-          ipv6 = ipData6b.ip;
-        }
-      } catch (e2) {}
-    }
-
-    // 展示IP
-    let ipInfoStr = '';
-    if (ipv4) ipInfoStr += 'IPv4: ' + ipv4;
-    if (ipv6) ipInfoStr += (ipInfoStr ? '<br>' : '') + 'IPv6: ' + ipv6;
-    if (!ipInfoStr) ipInfoStr = 'IP: 获取失败';
-    document.getElementById('ipInfo').innerHTML = ipInfoStr;
-    window._userIP = ipv4 || ipv6 || '';
-    window._userIPv4 = ipv4;
-    window._userIPv6 = ipv6;
-  } catch (e) {
-    document.getElementById('ipInfo').innerHTML = 'IP: 获取失败';
-    window._userIP = '';
-    window._userIPv4 = '';
-    window._userIPv6 = '';
-    console.error('IP获取失败', e);
-  }
-  // content页面也显示时间和IP
-  if (document.getElementById('contentDatetime')) {
-    document.getElementById('contentDatetime').textContent = malaysiaTime ? ('Malaysia Time: ' + malaysiaTime) : '无法获取马来西亚时间';
-  }
-  if (document.getElementById('contentIP')) {
-    let ipStr = '';
-    if (ipv4) ipStr += 'IPv4: ' + ipv4;
-    if (ipv6) ipStr += (ipStr ? ' / ' : '') + 'IPv6: ' + ipv6;
-    document.getElementById('contentIP').textContent = ipStr || 'IP: 获取失败';
-  }
-}
-fetchMalaysiaTimeAndIP();
-
-// 验证成功后切换到主内容和紫色渐变背景，并显示时间/IP
-// 处理验证成功的回调函数
-function handleTurnstileSuccess(token) {
-  // 隐藏验证遮罩
-  document.getElementById('preVerifyMask').style.display = 'none';
-  
-  // 显示主内容并添加背景
-  const mainContent = document.getElementById('mainContent');
-  mainContent.style.display = 'block';
-  document.body.classList.add('after-verify-bg');
-  
-  // 更新时间显示
-  if (window._malaysiaTime) {
-    document.getElementById('mainWelcome').textContent = 'Welcome to MyWebsite'; // Restore welcome message
-    document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
-  } else {
-    document.getElementById('mainWelcome').textContent = 'Welcome to MyWebsite';
-    document.getElementById('mainDatetime').textContent = 'Could not fetch Malaysia time';
-  }
-  
-  // 更新IP显示
-  if (window._userIPv4 || window._userIPv6) {
-    let ipStr = '';
-    if (window._userIPv4) ipStr += 'IPv4: ' + window._userIPv4;
-    if (window._userIPv6) ipStr += (ipStr ? ' / ' : '') + 'IPv6: ' + window._userIPv6;
-    document.getElementById('mainIP').textContent = 'Your IP: ' + ipStr;
-  } else {
-    document.getElementById('mainIP').textContent = 'IP: Not available';
-  }
-  document.getElementById('mainIP').style.display = 'block';
-  
-  // 自动滚动到主页
-  setTimeout(() => {
-    const homeElement = document.querySelector('#home');
-    if (homeElement) {
-      homeElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, 100);
-}
-
-// 设置 Turnstile 回调
-window.onTurnstileSuccess = handleTurnstileSuccess;
-
-// 更顺滑的水流渐变动画
-const preVerifyColors = [
-  [30,60,114], [42,82,152], [106,17,203], [37,117,252], [67,206,162], [24,90,157], [247,151,30], [255,210,0], [253,29,29], [131,58,180], [252,176,69]
-];
-let t = 0;
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-function rgbArrToStr(arr) {
-  return `rgb(${arr[0]},${arr[1]},${arr[2]})`;
-}
-function animatePreVerifyBg() {
-  const mask = document.getElementById('preVerifyMask');
-  if (!mask) return;
-  // 计算当前渐变的两个颜色
-  const idx1 = Math.floor(t) % preVerifyColors.length;
-  const idx2 = (idx1 + 1) % preVerifyColors.length;
-  const frac = t - Math.floor(t);
-  const color1 = [
-    lerp(preVerifyColors[idx1][0], preVerifyColors[idx2][0], frac),
-    lerp(preVerifyColors[idx1][1], preVerifyColors[idx2][1], frac),
-    lerp(preVerifyColors[idx1][2], preVerifyColors[idx2][2], frac)
-  ];
-  const idx3 = (idx1 + 2) % preVerifyColors.length;
-  const color2 = [
-    lerp(preVerifyColors[idx2][0], preVerifyColors[idx3][0], frac),
-    lerp(preVerifyColors[idx2][1], preVerifyColors[idx3][1], frac),
-    lerp(preVerifyColors[idx2][2], preVerifyColors[idx3][2], frac)
-  ];
-  mask.style.background = `linear-gradient(135deg, ${rgbArrToStr(color1)}, ${rgbArrToStr(color2)})`;
-  t += 0.015; // 控制流动速度
-  requestAnimationFrame(animatePreVerifyBg);
-}
-animatePreVerifyBg();
-// 🚫 增强的DevTools检测和防护
-// NOTE: The first, simpler antiDevTools function has been removed to fix a duplicate function error.
-// The more comprehensive version at the end of the file is now used exclusively.
-
-// 全局安全状态
+let devToolsDetected = false;
 let securityState = {
   ipInfo: null,
   riskLevel: 'unknown',
@@ -199,200 +16,384 @@ let securityState = {
   advancedFingerprint: null
 };
 
-// 🎯 高级反调试和混淆保护
-const antiDebugProtection = (() => {
-  const _0x1a2b = ['devtools', 'console', 'debug', 'firebug'];
-  let _0x3c4d = 0;
-  
-  // 控制台输出干扰
-  const originalConsole = {
-    log: console.log,
-    warn: console.warn,
-    error: console.error,
-    info: console.info
-  };
-  
-  // 劫持控制台
-  console.log = console.warn = console.error = console.info = function() {
-    _0x3c4d++;
-    if (_0x3c4d > 10) { // 提高阈值，避免误判
-      antiDevTools();
-    }
-    return false;
-  };
-  
-  // 时间检测陷阱
-  const timeCheck = () => {
-    const start = performance.now();
-    debugger;
-    const end = performance.now();
-    if (end - start > 100) { // 提高阈值
-      antiDevTools();
-    }
-  };
-  
-  // 多重调试器陷阱
-  const debugTraps = [
-    () => { debugger; },
-    () => { eval('debugger'); },
-    () => { (function(){debugger;})(); },
-    () => { Function('debugger')(); }
-  ];
-  
-  // 随机执行调试陷阱
-  setInterval(() => {
-    const trap = debugTraps[Math.floor(Math.random() * debugTraps.length)];
-    try {
-      const before = Date.now();
-      trap();
-      const after = Date.now();
-      if (after - before > 200) { // 提高阈值
-        antiDevTools();
-      }
-    } catch(e) {
-      // 移除自动触发antiDevTools，避免误判
-    }
-  }, 10000 + Math.random() * 10000); // 降低检测频率
-  
-  // 检测开发者工具特征
-  const detectDevTools = () => {
-    let devtools = {open: false};
-    const element = document.createElement('div');
-    Object.defineProperty(element, 'id', {
-      get: function() {
-        devtools.open = true;
-        antiDevTools();
-      }
-    });
-    setInterval(() => {
-      console.dir(element);
-    }, 2000);
-  };
-  
-  return {
-    timeCheck,
-    detectDevTools,
-    init: function() {
-      detectDevTools();
-      // 降低检测频率，避免影响正常使用
-      setInterval(timeCheck, 5000);
-    }
-  };
-})();
+// --- Core Functions ---
 
-// 🕵️ 鼠标轨迹和行为分析系统
-const behaviorAnalyzer = {
-  mousePoints: [],
-  clickTimes: [],
-  keyPressTimes: [],
-  scrollEvents: [],
-  
-  // 记录鼠标轨迹
-  trackMouseMovement: function(e) {
-    const now = Date.now();
-    this.mousePoints.push({
-      x: e.clientX,
-      y: e.clientY,
-      timestamp: now
+// Fetch Malaysia Time and IP
+async function fetchMalaysiaTimeAndIP() {
+  // Fetch Malaysia Time
+  try {
+    const res = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kuala_Lumpur');
+    const data = await res.json();
+    const malaysiaTime = `${data.year}-${String(data.month).padStart(2, '0')}-${String(data.day).padStart(2, '0')} ${String(data.hour).padStart(2, '0')}:${String(data.minute).padStart(2, '0')}:${String(data.seconds).padStart(2, '0')} (MY)`;
+    document.getElementById('preVerifyDatetime').textContent = malaysiaTime;
+    window._malaysiaTime = malaysiaTime;
+  } catch (e) {
+    document.getElementById('preVerifyDatetime').textContent = 'Could not fetch Malaysia time';
+    window._malaysiaTime = '';
+    console.error('Failed to fetch Malaysia time', e);
+  }
+
+  // Fetch IP Address
+  let ipv4 = '', ipv6 = '';
+  try {
+    const ipRes4 = await fetch('https://api.myip.com/');
+    const ipData4 = await ipRes4.json();
+    ipv4 = ipData4.ip;
+    window._userIPv4 = ipv4;
+  } catch (e) { console.error('Failed to fetch IPv4', e); }
+
+  try {
+    const ipRes6 = await fetch('https://cloudflare.com/cdn-cgi/trace');
+    const text6 = await ipRes6.text();
+    const ipMatch = text6.match(/ip=([^\n]+)/);
+    if (ipMatch && ipMatch[1] && ipMatch[1].includes(':')) {
+      ipv6 = ipMatch[1];
+    }
+    window._userIPv6 = ipv6;
+  } catch (e) { console.error('Failed to fetch IPv6', e); }
+
+  // Display IP Info
+  let ipInfoStr = '';
+  if (ipv4) ipInfoStr += 'IPv4: ' + ipv4;
+  if (ipv6) ipInfoStr += (ipInfoStr ? '<br>' : '') + 'IPv6: ' + ipv6;
+  if (!ipInfoStr) ipInfoStr = 'IP: Not available';
+  document.getElementById('ipInfo').innerHTML = ipInfoStr;
+  window._userIP = ipv4 || ipv6 || '';
+
+  // Update content page IP/Time
+  if (document.getElementById('contentDatetime')) {
+    document.getElementById('contentDatetime').textContent = window._malaysiaTime ? ('Malaysia Time: ' + window._malaysiaTime) : 'Could not fetch Malaysia time';
+  }
+  if (document.getElementById('contentIP')) {
+    document.getElementById('contentIP').textContent = ipInfoStr;
+  }
+}
+
+// Handle successful Turnstile verification
+function handleTurnstileSuccess(token) {
+  document.getElementById('preVerifyMask').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  document.body.classList.add('after-verify-bg');
+
+  document.getElementById('mainWelcome').textContent = 'Welcome to MyWebsite';
+  if (window._malaysiaTime) {
+    document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
+  } else {
+    document.getElementById('mainDatetime').textContent = 'Could not fetch Malaysia time';
+  }
+
+  let ipStr = '';
+  if (window._userIPv4) ipStr += 'IPv4: ' + window._userIPv4;
+  if (window._userIPv6) ipStr += (ipStr ? ' / ' : '') + 'IPv6: ' + window._userIPv6;
+  document.getElementById('mainIP').textContent = ipStr ? 'Your IP: ' + ipStr : 'IP: Not available';
+  document.getElementById('mainIP').style.display = 'block';
+
+  setTimeout(() => {
+    const homeElement = document.querySelector('#home');
+    if (homeElement) {
+      homeElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, 100);
+}
+
+// Set Turnstile callbacks
+window.onTurnstileSuccess = handleTurnstileSuccess;
+
+window.onTurnstileExpired = function() {
+  console.log('⚠️ Turnstile verification expired');
+  const verificationResult = document.getElementById('verificationResult');
+  if (verificationResult) {
+    verificationResult.innerHTML = '<span style="color: #FF9800;">⚠️ Verification has expired, please verify again.</span>';
+  }
+};
+
+window.onTurnstileError = function(error) {
+  console.error('❌ Turnstile verification error:', error);
+  const verificationResult = document.getElementById('verificationResult');
+  if (verificationResult) {
+    verificationResult.innerHTML = `<span style="color: #F44336;">❌ Verification failed: ${error}</span>`;
+  }
+};
+
+// --- Anti-Debugging and Security ---
+
+// Centralized anti-DevTools function
+function antiDevTools() {
+  if (devToolsDetected) return;
+  devToolsDetected = true;
+  console.warn("Developer tools detected. Further interaction may be restricted.");
+  // Aggressive action (e.g., redirect) can be added here if needed for production.
+  // For now, it will just log a warning.
+  // Example: window.location.replace("https://www.google.com");
+}
+
+// Security event logger (placeholder)
+function logSecurityEvent(event, data) {
+    // In a real application, this would send data to a logging server.
+    // For now, it just logs to the console for debugging.
+    console.log(`[Security Event] ${event}:`, data);
+}
+
+// Initialize all security features
+function initializeSecurity() {
+    // Anti-debugging
+    const antiDebugProtection = (() => {
+        let consoleCount = 0;
+        const originalConsole = { log: console.log, warn: console.warn, error: console.error, info: console.info };
+        console.log = console.warn = console.error = console.info = function() {
+            consoleCount++;
+            if (consoleCount > 20) antiDevTools();
+            return false;
+        };
+        const timeCheck = () => {
+            const start = performance.now();
+            debugger;
+            if (performance.now() - start > 100) antiDevTools();
+        };
+        setInterval(timeCheck, 5000);
+    })();
+
+    // Keyboard shortcut detection
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+            e.preventDefault();
+            antiDevTools();
+        }
     });
-    
-    // 保持最近1000个点
-    if (this.mousePoints.length > 1000) {
-      this.mousePoints.shift();
+
+    // Right-click detection
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        antiDevTools();
+    });
+}
+
+
+// --- Page Animations and Interactions ---
+
+// Animate pre-verification background
+function animatePreVerifyBg() {
+  const preVerifyColors = [
+    [30, 60, 114], [42, 82, 152], [106, 17, 203], [37, 117, 252], [67, 206, 162],
+    [24, 90, 157], [247, 151, 30], [255, 210, 0], [253, 29, 29], [131, 58, 180], [252, 176, 69]
+  ];
+  let t = 0;
+  const mask = document.getElementById('preVerifyMask');
+  if (!mask) return;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function rgbArrToStr(arr) { return `rgb(${arr[0]},${arr[1]},${arr[2]})`; }
+
+  function animate() {
+    const idx1 = Math.floor(t) % preVerifyColors.length;
+    const idx2 = (idx1 + 1) % preVerifyColors.length;
+    const frac = t - Math.floor(t);
+    const color1 = [
+      lerp(preVerifyColors[idx1][0], preVerifyColors[idx2][0], frac),
+      lerp(preVerifyColors[idx1][1], preVerifyColors[idx2][1], frac),
+      lerp(preVerifyColors[idx1][2], preVerifyColors[idx2][2], frac)
+    ];
+    const idx3 = (idx1 + 2) % preVerifyColors.length;
+    const color2 = [
+      lerp(preVerifyColors[idx2][0], preVerifyColors[idx3][0], frac),
+      lerp(preVerifyColors[idx2][1], preVerifyColors[idx3][1], frac),
+      lerp(preVerifyColors[idx2][2], preVerifyColors[idx3][2], frac)
+    ];
+    mask.style.background = `linear-gradient(135deg, ${rgbArrToStr(color1)}, ${rgbArrToStr(color2)})`;
+    t += 0.01;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Starry night animation
+function drawStarSea() {
+    // This function remains unchanged but is called from the main event listener.
+    const canvas = document.getElementById('starryNightCanvas');
+    if (!canvas || canvas._starSeaStarted) return;
+    canvas._starSeaStarted = true;
+
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        W = canvas.width;
+        H = canvas.height;
     }
-    
-    // 分析鼠标轨迹异常
-    if (this.mousePoints.length > 10) {
-      this.analyzeMouseBehavior();
-    }
-  },
-  
-  // 分析鼠标行为
-  analyzeMouseBehavior: function() {
-    const recent = this.mousePoints.slice(-10);
-    let straightLines = 0;
-    let perfectCurves = 0;
-    let unnaturalSpeed = 0;
-    
-    // 检测直线移动（机器人特征）
-    for (let i = 2; i < recent.length; i++) {
-      const p1 = recent[i-2], p2 = recent[i-1], p3 = recent[i];
-      const slope1 = (p2.y - p1.y) / (p2.x - p1.x);
-      const slope2 = (p3.y - p2.y) / (p3.x - p2.x);
-      
-      if (Math.abs(slope1 - slope2) < 0.01 && !isNaN(slope1) && !isNaN(slope2)) {
-        straightLines++;
-      }
-      
-      // 检测不自然的速度
-      const distance = Math.sqrt(Math.pow(p3.x - p2.x, 2) + Math.pow(p3.y - p2.y, 2));
-      const time = p3.timestamp - p2.timestamp;
-      const speed = distance / time;
-      
-      if (speed > 5 || speed < 0.1) {
-        unnaturalSpeed++;
-      }
-    }
-    
-    // 更新可疑活动分数
-    if (straightLines > 8 || unnaturalSpeed > 8) { // 提高阈值
-      securityState.behaviorAnalysis.suspiciousActivity += 1; // 降低分数增加
-      this.logSuspiciousActivity('unnatural_mouse_movement', {
-        straightLines,
-        unnaturalSpeed
-      });
-    }
-  },
-  
-  // 记录点击模式
-  trackClick: function(e) {
-    const now = Date.now();
-    this.clickTimes.push(now);
-    
-    // 检测点击间隔（机器人通常有固定间隔）
-    if (this.clickTimes.length > 5) {
-      const intervals = [];
-      for (let i = 1; i < this.clickTimes.length; i++) {
-        intervals.push(this.clickTimes[i] - this.clickTimes[i-1]);
-      }
-      
-      // 检测间隔是否过于规律
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      const variance = intervals.reduce((acc, val) => acc + Math.pow(val - avgInterval, 2), 0) / intervals.length;
-      
-      if (variance < 50 && avgInterval < 1000) { // 调整阈值，避免误判正常点击
-        securityState.behaviorAnalysis.suspiciousActivity += 2;
-        this.logSuspiciousActivity('robotic_clicking', {
-          variance,
-          avgInterval
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const STAR_COUNT = 800;
+    const CLOUD_CENTER = { x: W / 2, y: H / 2 };
+    const RADIUS_MIN = Math.min(W, H) * 0.18;
+    const RADIUS_MAX = Math.min(W, H) * 0.46;
+    const ROTATE_SPEED = 0.0007;
+    const STAR_COLORS = ["#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"];
+    const stars = [];
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = RADIUS_MIN + Math.pow(Math.random(), 1.7) * (RADIUS_MAX - RADIUS_MIN);
+        stars.push({
+            baseAngle: angle,
+            orbit: r,
+            color: STAR_COLORS[i % STAR_COLORS.length],
+            size: 1.2 + Math.random() * 1.8,
+            cloudOffset: Math.random() * Math.PI * 2,
+            cloudSpeed: 0.0002 + Math.random() * 0.0005
         });
-      }
-      
-      // 保持最近20次点击
-      if (this.clickTimes.length > 20) {
-        this.clickTimes.shift();
-      }
     }
-  },
+
+    let frame = 0;
+    function animate() {
+        frame++;
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = "#0a0c18";
+        ctx.fillRect(0, 0, W, H);
+
+        stars.forEach(star => {
+            const cloudAngle = star.baseAngle + frame * star.cloudSpeed + Math.sin(frame * 0.002 + star.cloudOffset) * 0.12;
+            const angle = cloudAngle + frame * ROTATE_SPEED;
+            star.x = CLOUD_CENTER.x + Math.cos(angle) * star.orbit;
+            star.y = CLOUD_CENTER.y + Math.sin(angle) * star.orbit;
+
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = star.color;
+            ctx.shadowColor = star.color;
+            ctx.shadowBlur = 16;
+            ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+
+// --- Main Event Listener ---
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize security features
+  initializeSecurity();
+
+  // Fetch initial data
+  fetchMalaysiaTimeAndIP();
   
-  // 记录键盘节奏
-  trackKeypress: function(e) {
-    const now = Date.now();
-    this.keyPressTimes.push({
-      key: e.key,
-      timestamp: now
+  // Start pre-verify animation
+  animatePreVerifyBg();
+
+  // --- Element Selectors ---
+  const playButton = document.getElementById('playButton');
+  const audioPlayer = document.getElementById('audioPlayer');
+  const modeBtn = document.getElementById('toggleMode');
+  const navbar = document.querySelector('.navbar');
+  const contentNav = document.getElementById('contentNav');
+  const animationNav = document.getElementById('animationNav');
+  const backHomeBtn = document.getElementById('backHomeBtn');
+  const contentRect = document.querySelector('#contentPage .content-rect');
+
+  // --- Event Bindings ---
+
+  // Audio player
+  if (playButton && audioPlayer) {
+    playButton.onclick = () => audioPlayer.play();
+  }
+
+  // Eye tracking
+  document.addEventListener("mousemove", (e) => {
+    document.querySelectorAll('.eye').forEach(eye => {
+      const pupil = eye.querySelector('.pupil');
+      if (!pupil) return;
+      const rect = eye.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+      const radius = 10;
+      pupil.style.transform = `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px)`;
     });
-    
-    // 分析打字节奏
-    if (this.keyPressTimes.length > 10) {
-      const recent = this.keyPressTimes.slice(-10);
-      const intervals = [];
-      
-      for (let i = 1; i < recent.length; i++) {
-        intervals.push(recent[i].timestamp - recent[i-1].timestamp);
+  });
+
+  // Blinking effect
+  setInterval(() => {
+    document.querySelectorAll('.eye').forEach(eye => {
+      eye.classList.add('blinking');
+      setTimeout(() => eye.classList.remove('blinking'), 250);
+    });
+  }, 4000);
+
+  // Dark mode toggle
+  if (modeBtn) {
+    const updateModeBtn = () => {
+      modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    };
+    if (localStorage.getItem('dark-mode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+    updateModeBtn();
+    modeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+      updateModeBtn();
+    });
+  }
+
+  // Navbar transparency on scroll
+  if (navbar) {
+    const updateNavbarTransparency = () => {
+      navbar.classList.toggle('transparent', window.scrollY > 30);
+    };
+    window.addEventListener('scroll', updateNavbarTransparency, { passive: true });
+    updateNavbarTransparency();
+  }
+
+  // Page navigation
+  const resetPageModes = () => {
+    document.body.classList.remove('content-mode', 'animation-mode');
+    document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
+  };
+
+  if (contentNav) {
+    contentNav.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetPageModes();
+      document.body.classList.add('content-mode');
+      contentNav.classList.add('active');
+      if (contentRect) contentRect.classList.add('collapsed');
+    });
+  }
+
+  if (animationNav) {
+    animationNav.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetPageModes();
+      document.body.classList.add('animation-mode');
+      animationNav.classList.add('active');
+      drawStarSea();
+    });
+  }
+  
+  if (backHomeBtn) {
+    backHomeBtn.addEventListener('click', resetPageModes);
+  }
+  
+  document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
+    if (link.id !== 'contentNav' && link.id !== 'animationNav') {
+      link.addEventListener('click', resetPageModes);
+    }
+  });
+
+  // Content page interaction
+  if (contentRect) {
+    contentRect.addEventListener('click', (e) => {
+      if (contentRect.classList.contains('collapsed')) {
+        contentRect.classList.remove('collapsed');
+        e.stopPropagation();
       }
-      
-      const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+    });
+  }
+});
       const variance = intervals.reduce((acc, val) => acc + Math.pow(val - avgInterval, 2), 0) / intervals.length;
       
       // 检测机器人打字特征
@@ -929,6 +930,8 @@ function addAdditionalVerification() {
 }
 
 // Turnstile回调函数
+// NOTE: This commented-out block is incorrect and has been superseded by the handleTurnstileSuccess function above.
+// It is kept here for reference but should be ignored.
 // window.onTurnstileSuccess = function(token) {
 //   console.log('✅ Turnstile验证成功');
 //   securityState.turnstileVerified = true;
@@ -1584,6 +1587,19 @@ function drawStarSea() {
 }
 
 // 全局导航栏透明效果（所有页面都显示navbar并随滚动变透明）
+// Register Service Worker for caching
+// This is now handled in index.html to work with CSP nonce
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/sw.js')
+//       .then(registration => {
+//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       })
+//       .catch(error => {
+//         console.log('ServiceWorker registration failed: ', error);
+//       });
+//   });
+// }
 document.addEventListener('DOMContentLoaded', function () {
   const navbar = document.querySelector('.navbar');
   let lastScrollY = window.scrollY;
@@ -1626,22 +1642,6 @@ ensureNavbarVisible();
 //       });
 //   });
 // }
-    } else {
-      navbar.classList.remove('transparent');
-    }
-  }
-
-  // 监听所有页面的滚动
-  window.addEventListener('scroll', updateNavbarTransparency, { passive: true });
-
-  // 监听 content/animation 切换时的滚动
-  document.addEventListener('scroll', updateNavbarTransparency, { passive: true });
-
-  // 进入content/animation模式时也保证navbar显示
-  function ensureNavbarVisible() {
-    if (navbar) navbar.style.display = 'flex';
-  }
-  // 监听模式切换
   document.body.addEventListener('classChange', ensureNavbarVisible);
 ensureNavbarVisible();
 
