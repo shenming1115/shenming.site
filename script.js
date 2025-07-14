@@ -115,23 +115,30 @@ function handleTurnstileSuccess(token) {
   
   // 更新时间显示
   if (window._malaysiaTime) {
-    document.getElementById('mainWelcome').textContent = window._malaysiaTime;
+    document.getElementById('mainWelcome').textContent = 'Welcome to MyWebsite'; // Restore welcome message
     document.getElementById('mainDatetime').textContent = 'Malaysia Time: ' + window._malaysiaTime;
   } else {
-    document.getElementById('mainWelcome').textContent = '无法获取马来西亚时间';
+    document.getElementById('mainWelcome').textContent = 'Welcome to MyWebsite';
+    document.getElementById('mainDatetime').textContent = 'Could not fetch Malaysia time';
   }
   
   // 更新IP显示
-  if (window._userIP) {
-    document.getElementById('mainIP').textContent = 'Your IP: ' + window._userIP;
+  if (window._userIPv4 || window._userIPv6) {
+    let ipStr = '';
+    if (window._userIPv4) ipStr += 'IPv4: ' + window._userIPv4;
+    if (window._userIPv6) ipStr += (ipStr ? ' / ' : '') + 'IPv6: ' + window._userIPv6;
+    document.getElementById('mainIP').textContent = 'Your IP: ' + ipStr;
   } else {
-    document.getElementById('mainIP').textContent = 'IP: 获取失败';
+    document.getElementById('mainIP').textContent = 'IP: Not available';
   }
   document.getElementById('mainIP').style.display = 'block';
   
   // 自动滚动到主页
   setTimeout(() => {
-    document.querySelector('#home').scrollIntoView({ behavior: 'smooth' });
+    const homeElement = document.querySelector('#home');
+    if (homeElement) {
+      homeElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }, 100);
 }
 
@@ -949,40 +956,48 @@ function addAdditionalVerification() {
 //};
 
 window.onTurnstileExpired = function() {
-  console.log('⚠️ Turnstile验证已过期');
+  console.log('⚠️ Turnstile verification expired');
   securityState.turnstileVerified = false;
-  document.getElementById('verifyBtn').disabled = true;
-  document.getElementById('verifyBtn').style.opacity = '0.5';
-  document.getElementById('verificationResult').innerHTML = 
-    '<span style="color: #FF9800;">⚠️ 验证已过期，请重新验证</span>';
+  const verifyBtn = document.getElementById('verifyBtn');
+  if(verifyBtn) {
+    verifyBtn.disabled = true;
+    verifyBtn.style.opacity = '0.5';
+  }
+  const verificationResult = document.getElementById('verificationResult');
+  if(verificationResult) {
+    verificationResult.innerHTML = 
+    '<span style="color: #FF9800;">⚠️ Verification has expired, please verify again.</span>';
+  }
 };
 
 window.onTurnstileError = function(error) {
-  console.error('❌ Turnstile验证错误:', error);
+  console.error('❌ Turnstile verification error:', error);
 
   let errorMessage = '';
   switch(error) {
     case 'network-error':
-      errorMessage = '❌ 网络连接错误，请检查网络后重试';
+      errorMessage = '❌ Network connection error, please check your network and try again.';
       break;
     case 'timeout':
-      errorMessage = '❌ 验证超时，请刷新页面重试';
+      errorMessage = '❌ Verification timed out, please refresh the page and try again.';
       break;
     case 'invalid-sitekey':
-      errorMessage = '❌ 站点配置错误，请联系管理员';
+      errorMessage = '❌ Site configuration error, please contact the administrator.';
       break;
     case 'invalid-domain':
-      errorMessage = '❌ 域名不匹配，请检查站点配置';
+      errorMessage = '❌ Domain mismatch, please check the site configuration.';
       break;
     case 'rate-limit':
-      errorMessage = '❌ 请求过于频繁，请稍后再试';
+      errorMessage = '❌ Too many requests, please try again later.';
       break;
     default:
-      errorMessage = '❌ 验证失败: ' + error;
+      errorMessage = '❌ Verification failed: ' + error;
   }
-
-  document.getElementById('verificationResult').innerHTML = 
+  const verificationResult = document.getElementById('verificationResult');
+  if(verificationResult) {
+    verificationResult.innerHTML = 
     '<span style="color: #F44336;">' + errorMessage + '</span>';
+  }
 
   // 记录错误验证
   logTurnstileEvent('turnstile_error', {
@@ -1010,15 +1025,21 @@ window.sendVerificationEmail = function() {
 
 // 🔄 重新加载Turnstile验证
 window.refreshTurnstile = function() {
-  console.log('🔄 重新加载Turnstile验证');
+  console.log('🔄 Reloading Turnstile verification');
   
   try {
     // 重置验证状态
     securityState.turnstileVerified = false;
-    document.getElementById('verifyBtn').disabled = true;
-    document.getElementById('verifyBtn').style.opacity = '0.5';
-    document.getElementById('verificationResult').innerHTML = 
-      '<span style="color: #6c757d;">🔄 正在重新加载验证...</span>';
+    const verifyBtn = document.getElementById('verifyBtn');
+    if(verifyBtn) {
+      verifyBtn.disabled = true;
+      verifyBtn.style.opacity = '0.5';
+    }
+    const verificationResult = document.getElementById('verificationResult');
+    if(verificationResult) {
+      verificationResult.innerHTML = 
+      '<span style="color: #6c757d;">🔄 Reloading verification...</span>';
+    }
     
     // 如果Turnstile已加载，尝试重置
     if (window.turnstile) {
@@ -1038,8 +1059,11 @@ window.refreshTurnstile = function() {
             'error-callback': 'onTurnstileError'
           });
           
-          document.getElementById('verificationResult').innerHTML = 
-            '<span style="color: #4CAF50;">✅ 验证已重新加载</span>';
+          const verificationResult = document.getElementById('verificationResult');
+          if(verificationResult) {
+            verificationResult.innerHTML = 
+            '<span style="color: #4CAF50;">✅ Verification reloaded</span>';
+          }
         }, 500);
       }
     } else {
@@ -1049,14 +1073,20 @@ window.refreshTurnstile = function() {
       script.async = true;
       script.defer = true;
       script.onload = function() {
-        console.log('✅ Turnstile脚本重新加载成功');
-        document.getElementById('verificationResult').innerHTML = 
-          '<span style="color: #4CAF50;">✅ 验证服务已重新加载</span>';
+        console.log('✅ Turnstile script reloaded successfully');
+        const verificationResult = document.getElementById('verificationResult');
+        if(verificationResult) {
+          verificationResult.innerHTML = 
+          '<span style="color: #4CAF50;">✅ Verification service reloaded</span>';
+        }
       };
       script.onerror = function() {
-        console.error('❌ Turnstile脚本重新加载失败');
-        document.getElementById('verificationResult').innerHTML = 
-          '<span style="color: #F44336;">❌ 验证服务重新加载失败</span>';
+        console.error('❌ Turnstile script reload failed');
+        const verificationResult = document.getElementById('verificationResult');
+        if(verificationResult) {
+          verificationResult.innerHTML = 
+          '<span style="color: #F44336;">❌ Failed to reload verification service</span>';
+        }
       };
       document.head.appendChild(script);
     }
@@ -1067,9 +1097,12 @@ window.refreshTurnstile = function() {
     });
     
   } catch (error) {
-    console.error('❌ 重新加载验证时出错:', error);
-    document.getElementById('verificationResult').innerHTML = 
-      '<span style="color: #F44336;">❌ 重新加载失败，请刷新页面</span>';
+    console.error('❌ Error while reloading verification:', error);
+    const verificationResult = document.getElementById('verificationResult');
+    if(verificationResult) {
+      verificationResult.innerHTML = 
+      '<span style="color: #F44336;">❌ Reload failed, please refresh the page</span>';
+    }
   }
 };
 
@@ -1086,9 +1119,12 @@ function autoRetryTurnstile() {
       refreshTurnstile();
     }, 2000 * retryCount); // 递增延迟
   } else {
-    console.log('❌ 达到最大重试次数');
-    document.getElementById('verificationResult').innerHTML = 
-      '<span style="color: #F44336;">❌ 验证服务连接失败，请检查网络后刷新页面</span>';
+    console.log('❌ Reached maximum retry attempts');
+    const verificationResult = document.getElementById('verificationResult');
+    if(verificationResult) {
+      verificationResult.innerHTML = 
+      '<span style="color: #F44336;">❌ Verification service connection failed, please check your network and refresh the page.</span>';
+    }
   }
 }
 
@@ -1247,17 +1283,26 @@ function checkTurnstileStatus() {
 window.addEventListener('load', function() {
   setTimeout(function() {
     if (!checkTurnstileStatus()) {
-      document.getElementById('verificationResult').innerHTML = 
-        '<span style="color: #FF9800;">⚠️ 验证服务加载中，请稍候...</span>';
+      const verificationResult = document.getElementById('verificationResult');
+      if(verificationResult) {
+        verificationResult.innerHTML = 
+        '<span style="color: #FF9800;">⚠️ Verification service is loading, please wait...</span>';
+      }
         
       // 再次检查
       setTimeout(function() {
         if (!checkTurnstileStatus()) {
-          document.getElementById('verificationResult').innerHTML = 
-            '<span style="color: #F44336;">❌ 验证服务加载失败，请检查网络连接</span>';
+          const verificationResult = document.getElementById('verificationResult');
+          if(verificationResult) {
+            verificationResult.innerHTML = 
+            '<span style="color: #F44336;">❌ Failed to load verification service, please check your network connection.</span>';
+          }
         } else {
-          document.getElementById('verificationResult').innerHTML = 
-            '<span style="color: #4CAF50;">✅ 验证服务已就绪</span>';
+          const verificationResult = document.getElementById('verificationResult');
+          if(verificationResult) {
+            verificationResult.innerHTML = 
+            '<span style="color: #4CAF50;">✅ Verification service is ready.</span>';
+          }
         }
       }, 5000);
     }
@@ -1422,7 +1467,7 @@ function drawStarSea() {
     nebulas.push({cx, cy, color, size, speed, phase});
   }
 
-  // 生成星点分布（云状分布，带有随机扰动）
+  // 生成星点分布（云状分布，带有随机扰动）'
   const stars = [];
   for (let i = 0; i < STAR_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
@@ -1566,12 +1611,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.body.addEventListener('classChange', ensureNavbarVisible);
 ensureNavbarVisible();
 
-// 兼容切换页面时重新检测
-updateNavbarTransparency();
-  ensureNavbarVisible();
-
-  // 兼容切换页面时重新检测
-  updateNavbarTransparency();
 });
 
 // Register Service Worker for caching
@@ -1606,10 +1645,18 @@ updateNavbarTransparency();
   document.body.addEventListener('classChange', ensureNavbarVisible);
 ensureNavbarVisible();
 
-// 兼容切换页面时重新检测
-updateNavbarTransparency();
-  ensureNavbarVisible();
-
-  // 兼容切换页面时重新检测
-  updateNavbarTransparency();
 });
+
+// Register Service Worker for caching
+// This is now handled in index.html to work with CSP nonce
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/sw.js')
+//       .then(registration => {
+//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       })
+//       .catch(error => {
+//         console.log('ServiceWorker registration failed: ', error);
+//       });
+//   });
+// }
