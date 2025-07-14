@@ -173,48 +173,8 @@ function animatePreVerifyBg() {
 }
 animatePreVerifyBg();
 // 🚫 增强的DevTools检测和防护
-let devToolsDetected = false;
-
-function antiDevTools() {
-  if (devToolsDetected) return;
-  devToolsDetected = true;
-  // 清除缓存和历史记录，不再跳转google
-  try {
-    // 清除本地存储和session
-    localStorage.clear();
-    sessionStorage.clear();
-    // 清空所有cookie
-    document.cookie.split(';').forEach(function(c) {
-      document.cookie = c.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date(0).toUTCString() + ';path=/');
-    });
-    // 清空历史记录
-    for (let i = 0; i < 20; i++) {
-      window.history.pushState(null, null, window.location.href + '#block' + Math.random());
-    }
-    // 阻止返回（不再跳转）
-    window.onpopstate = function() {
-      // no-op
-    };
-    window.history.pushState = function() {
-      // no-op
-    };
-    window.history.back = function() {
-      // no-op
-    };
-    window.history.go = function() {
-      // no-op
-    };
-    // beforeunload 不再跳转
-    window.addEventListener('beforeunload', function(e) {
-      // no-op
-    });
-    // 可见性变化不再跳转
-    document.addEventListener('visibilitychange', function() {
-      // no-op
-    });
-  } catch(e) {}
-  // 不再立即跳转
-}
+// NOTE: The first, simpler antiDevTools function has been removed to fix a duplicate function error.
+// The more comprehensive version at the end of the file is now used exclusively.
 
 // 全局安全状态
 let securityState = {
@@ -1587,6 +1547,46 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!navbar) return;
     if (window.scrollY > 30) {
       navbar.classList.add('transparent');
+    } else {
+      navbar.classList.remove('transparent');
+    }
+  }
+
+  // 监听所有页面的滚动
+  window.addEventListener('scroll', updateNavbarTransparency, { passive: true });
+
+  // 监听 content/animation 切换时的滚动
+  document.addEventListener('scroll', updateNavbarTransparency, { passive: true });
+
+  // 进入content/animation模式时也保证navbar显示
+  function ensureNavbarVisible() {
+    if (navbar) navbar.style.display = 'flex';
+  }
+  // 监听模式切换
+  document.body.addEventListener('classChange', ensureNavbarVisible);
+ensureNavbarVisible();
+
+// 兼容切换页面时重新检测
+updateNavbarTransparency();
+  ensureNavbarVisible();
+
+  // 兼容切换页面时重新检测
+  updateNavbarTransparency();
+});
+
+// Register Service Worker for caching
+// This is now handled in index.html to work with CSP nonce
+// if ('serviceWorker' in navigator) {
+//   window.addEventListener('load', () => {
+//     navigator.serviceWorker.register('/sw.js')
+//       .then(registration => {
+//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       })
+//       .catch(error => {
+//         console.log('ServiceWorker registration failed: ', error);
+//       });
+//   });
+// }
     } else {
       navbar.classList.remove('transparent');
     }

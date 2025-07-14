@@ -2,6 +2,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 // SQL注入防护中间件（仅示例，实际生产建议使用ORM/参数化查询）
 function sqlInjectionSanitizer(req, res, next) {
@@ -41,6 +42,29 @@ function sqlInjectionSanitizer(req, res, next) {
 }
 
 const server = http.createServer((req, res) => {
+  // Generate a nonce for each request
+  const nonce = crypto.randomBytes(16).toString('base64');
+
+  // Define security headers
+  const securityHeaders = {
+    // Content Security Policy (CSP)
+    'Content-Security-Policy': [
+      `default-src 'self'`,
+      `script-src 'self' https://challenges.cloudflare.com 'nonce-${nonce}' 'unsafe-inline'`, // 'unsafe-inline' is a fallback
+      `style-src 'self' 'unsafe-inline'`, // Allow inline styles
+      `img-src 'self' data: https://upload.wikimedia.org`,
+      `font-src 'self'`,
+      `connect-src 'self' https://timeapi.io https://api.myip.com https://cloudflare.com https://api64.ipify.org https://ipapi.co https://ipinfo.io`,
+      `frame-src 'self' https://challenges.cloudflare.com`,
+      `object-src 'none'`,
+      `base-uri 'self'`,
+      `form-action 'self'`
+    ].join('; '),
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'no-referrer'
+  };
+
   // SQL注入防护
   sqlInjectionSanitizer(req, res, () => {
     let filePath = '.' + req.url;
@@ -80,6 +104,14 @@ const server = http.createServer((req, res) => {
           res.end('Server Error: ' + error.code, 'utf-8');
         }
       } else {
+        // Apply security headers to HTML responses
+        if (contentType === 'text/html') {
+          Object.entries(securityHeaders).forEach(([key, value]) => {
+            res.setHeader(key, value);
+          });
+          // Inject nonce into the HTML
+          content = content.toString().replace(/<script nonce="[^"]*">/g, `<script nonce="${nonce}">`);
+        }
         res.writeHead(200, { 'Content-Type': contentType });
         res.end(content, 'utf-8');
       }
