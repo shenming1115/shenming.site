@@ -340,9 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const navbar = document.querySelector('.navbar');
   const contentNav = document.getElementById('contentNav');
   const animationNav = document.getElementById('animationNav');
+  const gamesNav = document.getElementById('gamesNav');
   const backHomeBtn = document.getElementById('backHomeBtn');
   const backHomeBtnAnim = document.getElementById('backHomeBtnAnim');
+  const backHomeBtnGames = document.getElementById('backHomeBtnGames');
   const contentRect = document.querySelector('#contentPage .content-rect');
+  const gamesRect = document.querySelector('#gamesPage .games-rect');
 
   // --- Event Bindings ---
 
@@ -400,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Page navigation
   const resetPageModes = () => {
-    document.body.classList.remove('content-mode', 'animation-mode');
+    document.body.classList.remove('content-mode', 'animation-mode', 'games-mode');
     document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
   };
 
@@ -423,6 +426,18 @@ document.addEventListener('DOMContentLoaded', function() {
       drawStarSea();
     });
   }
+
+  if (gamesNav) {
+    gamesNav.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetPageModes();
+      document.body.classList.add('games-mode');
+      gamesNav.classList.add('active');
+      // 始终初始化俄罗斯方块游戏，保证每次进入都能重置
+      window.tetrisInstance = new TetrisGame();
+      window.tetrisInstance.init();
+    });
+  }
   
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', resetPageModes);
@@ -431,9 +446,13 @@ document.addEventListener('DOMContentLoaded', function() {
   if (backHomeBtnAnim) {
     backHomeBtnAnim.addEventListener('click', resetPageModes);
   }
+
+  if (backHomeBtnGames) {
+    backHomeBtnGames.addEventListener('click', resetPageModes);
+  }
   
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-    if (link.id !== 'contentNav' && link.id !== 'animationNav') {
+    if (link.id !== 'contentNav' && link.id !== 'animationNav' && link.id !== 'gamesNav') {
       link.addEventListener('click', resetPageModes);
     }
   });
@@ -443,6 +462,19 @@ document.addEventListener('DOMContentLoaded', function() {
     contentRect.addEventListener('click', (e) => {
       if (contentRect.classList.contains('collapsed')) {
         contentRect.classList.remove('collapsed');
+        e.stopPropagation();
+      }
+    });
+  }
+
+  // Games page interaction
+  if (gamesRect) {
+    gamesRect.addEventListener('click', function(e) {
+      if (gamesRect.classList.contains('collapsed')) {
+        gamesRect.classList.remove('collapsed');
+        // 始终初始化俄罗斯方块游戏，保证每次展开都能重置
+        window.tetrisInstance = new TetrisGame();
+        window.tetrisInstance.init();
         e.stopPropagation();
       }
     });
@@ -1390,13 +1422,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var animationPage = document.getElementById('animationPage');
   var animationRect = document.getElementById('animationRect');
   var backHomeBtnAnim = document.getElementById('backHomeBtnAnim');
+  var gamesNav = document.getElementById('gamesNav');
+  var gamesRect = document.querySelector('#gamesPage .games-rect');
+  var backHomeBtnGames = document.getElementById('backHomeBtnGames');
 
   // 切换到content
   if (contentNav) {
     contentNav.addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.add('content-mode');
-      document.body.classList.remove('animation-mode');
+      document.body.classList.remove('animation-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'contentNav');
       });
@@ -1408,7 +1443,7 @@ document.addEventListener('DOMContentLoaded', function() {
     animationNav.addEventListener('click', function(e) {
       e.preventDefault();
       document.body.classList.add('animation-mode');
-      document.body.classList.remove('content-mode');
+      document.body.classList.remove('content-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => {
         a.classList.toggle('active', a.id === 'animationNav');
       });
@@ -1421,27 +1456,47 @@ document.addEventListener('DOMContentLoaded', function() {
       drawStarSea();
     });
   }
+  // 切换到games
+  if (gamesNav) {
+    gamesNav.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.add('games-mode');
+      document.body.classList.remove('content-mode', 'animation-mode');
+      document.querySelectorAll('.navbar-links a').forEach(a => {
+        a.classList.toggle('active', a.id === 'gamesNav');
+      });
+      // 始终初始化俄罗斯方块游戏，保证每次进入都能重置
+      window.tetrisInstance = new TetrisGame();
+      window.tetrisInstance.init();
+    });
+  }
+  
   // 返回主页按钮
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', function() {
-      document.body.classList.remove('content-mode');
-      document.body.classList.remove('animation-mode');
+      document.body.classList.remove('content-mode', 'animation-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
   if (backHomeBtnAnim) {
     backHomeBtnAnim.addEventListener('click', function() {
       document.body.classList.remove('animation-mode');
-      document.body.classList.remove('content-mode');
+      document.body.classList.remove('content-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
-  // 其它导航回主页时关闭 content/animation
+  if (backHomeBtnGames) {
+    backHomeBtnGames.addEventListener('click', function() {
+      document.body.classList.remove('games-mode');
+      document.body.classList.remove('content-mode', 'animation-mode');
+      document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
+    });
+  }
+  // 其它导航回主页时关闭 content/animation/games
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-    if(link.id !== 'contentNav' && link.id !== 'animationNav') {
+    if(link.id !== 'contentNav' && link.id !== 'animationNav' && link.id !== 'gamesNav') {
       link.addEventListener('click', function() {
-        document.body.classList.remove('content-mode');
-        document.body.classList.remove('animation-mode');
+        document.body.classList.remove('content-mode', 'animation-mode', 'games-mode');
         document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
     }
@@ -1462,6 +1517,18 @@ document.addEventListener('DOMContentLoaded', function() {
       if (animationRect.classList.contains('collapsed')) {
         animationRect.classList.remove('collapsed');
         drawStarSea();
+        e.stopPropagation();
+      }
+    });
+  }
+  // 点击 games-rect 展开并显示游戏
+  if (gamesRect) {
+    gamesRect.addEventListener('click', function(e) {
+      if (gamesRect.classList.contains('collapsed')) {
+        gamesRect.classList.remove('collapsed');
+        // 始终初始化俄罗斯方块游戏，保证每次展开都能重置
+        window.tetrisInstance = new TetrisGame();
+        window.tetrisInstance.init();
         e.stopPropagation();
       }
     });
@@ -1699,6 +1766,12 @@ ensureNavbarVisible();
 //     navigator.serviceWorker.register('/sw.js')
 //       .then(registration => {
 //         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//       })
+//       .catch(error => {
+//         console.log('ServiceWorker registration failed: ', error);
+//       });
+//   });
+// }
 //       })
 //       .catch(error => {
 //         console.log('ServiceWorker registration failed: ', error);
