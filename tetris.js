@@ -13,8 +13,8 @@ class TetrisGame {
 
     this.COLS = 10;
     this.ROWS = 20;
-    this.BLOCK_SIZE = 30;
-    this.NEXT_BLOCK_SIZE = 20;
+    this.BLOCK_SIZE = 40; // 更大格子
+    this.NEXT_BLOCK_SIZE = 28;
 
     this.ctx.canvas.width = this.COLS * this.BLOCK_SIZE;
     this.ctx.canvas.height = this.ROWS * this.BLOCK_SIZE;
@@ -61,6 +61,8 @@ class TetrisGame {
     document.getElementById('pauseBtn').addEventListener('click', () => this.pause());
     document.getElementById('resetBtn').addEventListener('click', () => this.reset());
     document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+    // 初始化时创建方块并渲染
+    this.reset();
   }
 
   createBoard() {
@@ -79,14 +81,10 @@ class TetrisGame {
   }
 
   start() {
-    if (this.gameRunning && !this.gamePaused) return;
-    if (this.gamePaused) {
-        this.pause();
-        return;
-    }
+    if (this.gameRunning) return;
     this.gameRunning = true;
     this.gamePaused = false;
-    this.reset();
+    this.gameLoop();
   }
 
   pause() {
@@ -107,10 +105,10 @@ class TetrisGame {
     this.currentPiece = this.createPiece();
     this.nextPiece = this.createPiece();
     this.gameOverEl.style.display = 'none';
-    this.gameRunning = true;
+    this.gameRunning = false;
     this.gamePaused = false;
     if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
-    this.gameLoop();
+    this.draw();
   }
 
   gameLoop(time = 0) {
@@ -304,3 +302,5 @@ function resetGame() {
     window.tetrisInstance.reset();
   }
 }
+  
+
