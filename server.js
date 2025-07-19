@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
     // Content Security Policy (CSP)
     'Content-Security-Policy': [
       `default-src 'self'`,
-      `script-src 'self' https://challenges.cloudflare.com 'nonce-${nonce}' 'unsafe-inline'`, // 'unsafe-inline' is a fallback
+      `script-src 'self' https://challenges.cloudflare.com 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval'`, // 'unsafe-inline' is a fallback, 'unsafe-eval' for anti-debug
       `style-src 'self' 'unsafe-inline'`, // Allow inline styles
       `img-src 'self' data: https://upload.wikimedia.org`,
       `font-src 'self'`,
@@ -70,6 +70,11 @@ const server = http.createServer((req, res) => {
     let filePath = '.' + req.url;
     if (filePath === './') {
       filePath = './index.html';
+    }
+
+    // Correctly handle asset paths
+    if (req.url.startsWith('/Assets/')) {
+      filePath = path.join(__dirname, req.url);
     }
 
     const extname = String(path.extname(filePath)).toLowerCase();

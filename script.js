@@ -71,6 +71,7 @@ async function fetchMalaysiaTimeAndIP() {
 
 // Handle successful Turnstile verification
 function handleTurnstileSuccess(token) {
+  console.log('Turnstile verification successful', token);
   document.getElementById('preVerifyMask').style.display = 'none';
   document.getElementById('mainContent').style.display = 'block';
   document.body.classList.add('after-verify-bg');
@@ -122,52 +123,44 @@ function antiDevTools() {
   if (devToolsDetected) return;
   devToolsDetected = true;
   console.warn("Developer tools detected. Further interaction may be restricted.");
-  // Aggressive action (e.g., redirect) can be added here if needed for production.
-  // For now, it will just log a warning.
-  // Example: window.location.replace("https://www.google.com");
 }
 
 // Security event logger (placeholder)
 function logSecurityEvent(event, data) {
-    // In a real application, this would send data to a logging server.
-    // For now, it just logs to the console for debugging.
-    console.log(`[Security Event] ${event}:`, data);
+  console.log(`[Security Event] ${event}:`, data);
 }
 
 // Initialize all security features
 function initializeSecurity() {
-    // Anti-debugging
-    const antiDebugProtection = (() => {
-        let consoleCount = 0;
-        const originalConsole = { log: console.log, warn: console.warn, error: console.error, info: console.info };
-        console.log = console.warn = console.error = console.info = function() {
-            consoleCount++;
-            if (consoleCount > 20) antiDevTools();
-            return false;
-        };
-        const timeCheck = () => {
-            const start = performance.now();
-            debugger;
-            if (performance.now() - start > 100) antiDevTools();
-        };
-        setInterval(timeCheck, 5000);
-    })();
+  // Anti-debugging
+  let consoleCount = 0;
+  console.log = console.warn = console.error = console.info = function() {
+    consoleCount++;
+    if (consoleCount > 20) antiDevTools();
+    return false;
+  };
+  
+  const timeCheck = () => {
+    const start = performance.now();
+    debugger;
+    if (performance.now() - start > 100) antiDevTools();
+  };
+  setInterval(timeCheck, 5000);
 
-    // Keyboard shortcut detection
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
-            e.preventDefault();
-            antiDevTools();
-        }
-    });
+  // Keyboard shortcut detection
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+      e.preventDefault();
+      antiDevTools();
+    }
+  });
 
-    // Right-click detection
-    document.addEventListener('contextmenu', function(e) {
-        e.preventDefault();
-        antiDevTools();
-    });
+  // Right-click detection
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    antiDevTools();
+  });
 }
-
 
 // --- Page Animations and Interactions ---
 
@@ -185,6 +178,7 @@ function animatePreVerifyBg() {
   function rgbArrToStr(arr) { return `rgb(${arr[0]},${arr[1]},${arr[2]})`; }
 
   function animate() {
+    if (document.getElementById('preVerifyMask').style.display === 'none') return;
     const idx1 = Math.floor(t) % preVerifyColors.length;
     const idx2 = (idx1 + 1) % preVerifyColors.length;
     const frac = t - Math.floor(t);
@@ -208,69 +202,124 @@ function animatePreVerifyBg() {
 
 // Starry night animation
 function drawStarSea() {
-    // This function remains unchanged but is called from the main event listener.
-    const canvas = document.getElementById('starryNightCanvas');
-    if (!canvas || canvas._starSeaStarted) return;
-    canvas._starSeaStarted = true;
+  const canvas = document.getElementById('starryNightCanvas');
+  if (!canvas || canvas._starSeaStarted) return;
+  canvas._starSeaStarted = true;
 
-    const ctx = canvas.getContext('2d');
-    let W, H;
+  const ctx = canvas.getContext('2d');
+  let W, H;
 
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        W = canvas.width;
-        H = canvas.height;
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    W = canvas.width;
+    H = canvas.height;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const STAR_COUNT = 800;
+  const CLOUD_CENTER = { x: W / 2, y: H / 2 };
+  const RADIUS_MIN = Math.min(W, H) * 0.18;
+  const RADIUS_MAX = Math.min(W, H) * 0.46;
+  const ROTATE_SPEED = 0.0007;
+  const STAR_COLORS = ["#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"];
+  const stars = [];
+
+  for (let i = 0; i < STAR_COUNT; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const r = RADIUS_MIN + Math.pow(Math.random(), 1.7) * (RADIUS_MAX - RADIUS_MIN);
+    stars.push({
+      baseAngle: angle,
+      orbit: r,
+      color: STAR_COLORS[i % STAR_COLORS.length],
+      size: 1.2 + Math.random() * 1.8,
+      cloudOffset: Math.random() * Math.PI * 2,
+      cloudSpeed: 0.0002 + Math.random() * 0.0005
+    });
+  }
+
+  let frame = 0;
+  function animate() {
+    if (document.body.classList.contains('animation-mode') === false) {
+      canvas._starSeaStarted = false;
+      return;
     }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    frame++;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#0a0c18";
+    ctx.fillRect(0, 0, W, H);
 
-    const STAR_COUNT = 800;
-    const CLOUD_CENTER = { x: W / 2, y: H / 2 };
-    const RADIUS_MIN = Math.min(W, H) * 0.18;
-    const RADIUS_MAX = Math.min(W, H) * 0.46;
-    const ROTATE_SPEED = 0.0007;
-    const STAR_COLORS = ["#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"];
-    const stars = [];
+    stars.forEach(star => {
+      const cloudAngle = star.baseAngle + frame * star.cloudSpeed + Math.sin(frame * 0.002 + star.cloudOffset) * 0.12;
+      const angle = cloudAngle + frame * ROTATE_SPEED;
+      star.x = CLOUD_CENTER.x + Math.cos(angle) * star.orbit;
+      star.y = CLOUD_CENTER.y + Math.sin(angle) * star.orbit;
 
-    for (let i = 0; i < STAR_COUNT; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const r = RADIUS_MIN + Math.pow(Math.random(), 1.7) * (RADIUS_MAX - RADIUS_MIN);
-        stars.push({
-            baseAngle: angle,
-            orbit: r,
-            color: STAR_COLORS[i % STAR_COLORS.length],
-            size: 1.2 + Math.random() * 1.8,
-            cloudOffset: Math.random() * Math.PI * 2,
-            cloudSpeed: 0.0002 + Math.random() * 0.0005
-        });
-    }
-
-    let frame = 0;
-    function animate() {
-        frame++;
-        ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = "#0a0c18";
-        ctx.fillRect(0, 0, W, H);
-
-        stars.forEach(star => {
-            const cloudAngle = star.baseAngle + frame * star.cloudSpeed + Math.sin(frame * 0.002 + star.cloudOffset) * 0.12;
-            const angle = cloudAngle + frame * ROTATE_SPEED;
-            star.x = CLOUD_CENTER.x + Math.cos(angle) * star.orbit;
-            star.y = CLOUD_CENTER.y + Math.sin(angle) * star.orbit;
-
-            ctx.beginPath();
-            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-            ctx.fillStyle = star.color;
-            ctx.shadowColor = star.color;
-            ctx.shadowBlur = 16;
-            ctx.fill();
-        });
-        requestAnimationFrame(animate);
-    }
-    animate();
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = star.color;
+      ctx.shadowColor = star.color;
+      ctx.shadowBlur = 16;
+      ctx.fill();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
 }
 
+// Refresh Turnstile function
+window.refreshTurnstile = function() {
+  console.log('🔄 Reloading Turnstile verification');
+  
+  try {
+    const verificationResult = document.getElementById('verificationResult');
+    if(verificationResult) {
+      verificationResult.innerHTML = '<span style="color: #6c757d;">🔄 Reloading verification...</span>';
+    }
+    
+    if (window.turnstile) {
+      const turnstileDiv = document.querySelector('.cf-turnstile');
+      if (turnstileDiv) {
+        turnstileDiv.innerHTML = '';
+        setTimeout(() => {
+          window.turnstile.render(turnstileDiv, {
+            sitekey: '0x4AAAAAABjTIyITvZEz6LO_',
+            theme: 'dark',
+            size: 'normal',
+            callback: 'onTurnstileSuccess',
+            'expired-callback': 'onTurnstileExpired',
+            'error-callback': 'onTurnstileError'
+          });
+          
+          if(verificationResult) {
+            verificationResult.innerHTML = '<span style="color: #4CAF50;">✅ Verification reloaded</span>';
+          }
+        }, 500);
+      }
+    } else {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.defer = true;
+      script.onload = function() {
+        console.log('✅ Turnstile script reloaded successfully');
+        if(verificationResult) {
+          verificationResult.innerHTML = '<span style="color: #4CAF50;">✅ Verification service reloaded</span>';
+        }
+      };
+      script.onerror = function() {
+        console.error('❌ Turnstile script reload failed');
+        if(verificationResult) {
+          verificationResult.innerHTML = '<span style="color: #F44336;">❌ Failed to reload verification service</span>';
+        }
+      };
+      document.head.appendChild(script);
+    }
+  } catch (error) {
+    console.error('❌ Error while reloading verification:', error);
+  }
+};
 
 // --- Main Event Listener ---
 
@@ -292,6 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const contentNav = document.getElementById('contentNav');
   const animationNav = document.getElementById('animationNav');
   const backHomeBtn = document.getElementById('backHomeBtn');
+  const backHomeBtnAnim = document.getElementById('backHomeBtnAnim');
   const contentRect = document.querySelector('#contentPage .content-rect');
 
   // --- Event Bindings ---
@@ -377,6 +427,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', resetPageModes);
   }
+
+  if (backHomeBtnAnim) {
+    backHomeBtnAnim.addEventListener('click', resetPageModes);
+  }
   
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
     if (link.id !== 'contentNav' && link.id !== 'animationNav') {
@@ -394,90 +448,83 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-      const variance = intervals.reduce((acc, val) => acc + Math.pow(val - avgInterval, 2), 0) / intervals.length;
+  
+  // Behavior monitoring object
+  const behaviorMonitor = {
+    mousePoints: [],
+    clickTimes: [],
+    keyPressTimes: [],
+    scrollEvents: [],
+    
+    // Track mouse movement
+    trackMouseMovement: function(e) {
+      this.mousePoints.push({
+        x: e.clientX,
+        y: e.clientY,
+        timestamp: Date.now()
+      });
       
-      // 检测机器人打字特征
-      if (variance < 50 || avgInterval < 50) {
-        securityState.behaviorAnalysis.suspiciousActivity += 2;
-        this.logSuspiciousActivity('robotic_typing', {
-          variance,
-          avgInterval
-        });
+      // Keep only recent points
+      if (this.mousePoints.length > 100) {
+        this.mousePoints.shift();
       }
-      
-      // 保持最近50次按键
+    },
+    
+    // Track clicks
+    trackClick: function(e) {
+      this.clickTimes.push(Date.now());
+      if (this.clickTimes.length > 50) {
+        this.clickTimes.shift();
+      }
+    },
+    
+    // Track keyboard
+    trackKeypress: function(e) {
+      this.keyPressTimes.push(Date.now());
       if (this.keyPressTimes.length > 50) {
         this.keyPressTimes.shift();
       }
-    }
-  },
-  
-  // 记录滚动行为
-  trackScroll: function(e) {
-    const now = Date.now();
-    this.scrollEvents.push({
-      scrollY: window.scrollY,
-      timestamp: now
-    });
+    },
     
-    // 检测滚动行为异常
-    if (this.scrollEvents.length > 5) {
-      const recent = this.scrollEvents.slice(-5);
-      let uniformScrolling = 0;
-      
-      for (let i = 1; i < recent.length; i++) {
-        const scrollDiff = Math.abs(recent[i].scrollY - recent[i-1].scrollY);
-        if (scrollDiff > 0 && scrollDiff % 100 === 0) { // 完美的100px滚动
-          uniformScrolling++;
-        }
-      }
-      
-      if (uniformScrolling > 3) {
-        securityState.behaviorAnalysis.suspiciousActivity += 1;
-        this.logSuspiciousActivity('robotic_scrolling', {
-          uniformScrolling
-        });
-      }
-      
-      // 保持最近20次滚动
-      if (this.scrollEvents.length > 20) {
+    // Track scroll
+    trackScroll: function(e) {
+      this.scrollEvents.push(Date.now());
+      if (this.scrollEvents.length > 50) {
         this.scrollEvents.shift();
       }
-    }
-  },
-  
-  // 检测蜜罐陷阱
-  setupHoneyPot: function() {
-    // 创建隐藏的蜜罐元素
-    const honeypot = document.createElement('div');
-    honeypot.style.cssText = `
-      position: absolute;
-      left: -9999px;
-      width: 1px;
-      height: 1px;
-      opacity: 0;
-      pointer-events: none;
-    `;
-    honeypot.innerHTML = '<input type="text" name="bot_trap" tabindex="-1">';
-    document.body.appendChild(honeypot);
+    },
     
-    // 如果有交互说明是机器人
-    honeypot.addEventListener('click', () => {
-      securityState.behaviorAnalysis.suspiciousActivity += 10;
-      this.logSuspiciousActivity('honeypot_interaction', {});
-      antiDevTools();
-    });
+    // Setup honeypot
+    setupHoneyPot: function() {
+      const honeypot = document.createElement('div');
+      honeypot.style.cssText = `
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      `;
+      honeypot.innerHTML = '<input type="text" name="bot_trap" tabindex="-1">';
+      document.body.appendChild(honeypot);
+      
+      // If there's interaction, it's a bot
+      honeypot.addEventListener('click', () => {
+        securityState.behaviorAnalysis.suspiciousActivity += 10;
+        this.logSuspiciousActivity('honeypot_interaction', {});
+        antiDevTools();
+      });
+      
+      const input = honeypot.querySelector('input');
+      input.addEventListener('input', () => {
+        securityState.behaviorAnalysis.suspiciousActivity += 10;
+        this.logSuspiciousActivity('honeypot_input', {});
+        antiDevTools();
+      });
+    },
     
-    const input = honeypot.querySelector('input');
-    input.addEventListener('input', () => {
-      securityState.behaviorAnalysis.suspiciousActivity += 10;
-      this.logSuspiciousActivity('honeypot_input', {});
-      antiDevTools();
-    });
-  },
-  
-  // 记录可疑活动
-  logSuspiciousActivity: function(type, data) {
+    // Record suspicious activity
+    logSuspiciousActivity: function(type, data) {
     console.log(`Suspicious activity detected: ${type}`, data);
     logSecurityEvent('suspicious_behavior', {
       type,
@@ -1624,10 +1671,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (navbar) navbar.style.display = 'flex';
   }
   // 监听模式切换
-  document.body.addEventListener('classChange', ensureNavbarVisible);
+document.body.addEventListener('classChange', ensureNavbarVisible);
 ensureNavbarVisible();
-
-});
 
 // Register Service Worker for caching
 // This is now handled in index.html to work with CSP nonce

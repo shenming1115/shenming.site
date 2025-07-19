@@ -49,6 +49,7 @@
         <a href="#contact">Contact</a>
         <a href="#" id="contentNav" class="active">Content</a>
         <a href="#" id="animationNav">Animation</a>
+        <a href="#" id="gamesNav">Games</a>
       </div>
       <div class="toggle-mode" id="toggleMode">🌙</div>
     </div>
@@ -129,8 +130,60 @@
     </div>
 
     <div id="animationPage" class="animation-page" style="background:#0a0c18;">
+      <button id="backHomeBtnAnim" style="position:fixed;top:18px;right:24px;font-size:2em;z-index:1000;background:none;border:none;cursor:pointer;color:white;">←</button>
       <div class="starsea-bg-canvas-wrap" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;">
         <canvas id="starryNightCanvas" style="width:100vw;height:100vh;display:block;background:#0a0c18;"></canvas>
+      </div>
+    </div>
+
+    <div id="gamesPage" class="games-page" style="background:#1a1a2e;">
+      <button id="backHomeBtnGames" style="position:fixed;top:18px;right:24px;font-size:2em;z-index:1000;background:none;border:none;cursor:pointer;color:white;">←</button>
+      <div class="games-container">
+        <h1 style="text-align:center;color:white;margin-top:50px;font-size:3em;text-shadow:0 0 20px #00ff88;">🎮 TETRIS</h1>
+        <div class="tetris-container">
+          <div class="game-info">
+            <div class="score-panel">
+              <div class="score-item">
+                <span>Score</span>
+                <span id="score">0</span>
+              </div>
+              <div class="score-item">
+                <span>Lines</span>
+                <span id="lines">0</span>
+              </div>
+              <div class="score-item">
+                <span>Level</span>
+                <span id="level">1</span>
+              </div>
+            </div>
+            <div class="next-piece">
+              <h3>Next</h3>
+              <canvas id="nextCanvas" width="120" height="120"></canvas>
+            </div>
+            <div class="game-controls">
+              <button id="startBtn" class="game-btn">Start</button>
+              <button id="pauseBtn" class="game-btn">Pause</button>
+              <button id="resetBtn" class="game-btn">Reset</button>
+            </div>
+          </div>
+          <div class="game-board">
+            <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+            <div class="game-over" id="gameOver" style="display:none;">
+              <h2>Game Over!</h2>
+              <p>Final Score: <span id="finalScore">0</span></p>
+              <button onclick="resetGame()" class="game-btn">Play Again</button>
+            </div>
+          </div>
+        </div>
+        <div class="controls-info">
+          <h3>Controls</h3>
+          <div class="controls-grid">
+            <div>← → : Move</div>
+            <div>↓ : Soft Drop</div>
+            <div>↑ : Rotate</div>
+            <div>Space : Hard Drop</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -139,7 +192,7 @@
   <script nonce="">
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+        navigator.serviceWorker.register('sw.js').then(function(registration) {
           console.log('Service Worker registered with scope:', registration.scope);
         }, function(err) {
           console.log('Service Worker registration failed:', err);
