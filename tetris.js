@@ -13,7 +13,7 @@ class TetrisGame {
 
     this.COLS = 10;
     this.ROWS = 20;
-    this.BLOCK_SIZE = 40; // 更大格子
+    this.BLOCK_SIZE = 40;
     this.NEXT_BLOCK_SIZE = 28;
 
     this.ctx.canvas.width = this.COLS * this.BLOCK_SIZE;
@@ -61,7 +61,8 @@ class TetrisGame {
     document.getElementById('pauseBtn').addEventListener('click', () => this.pause());
     document.getElementById('resetBtn').addEventListener('click', () => this.reset());
     document.addEventListener('keydown', (e) => this.handleKeyPress(e));
-    // 初始化时创建方块并渲染
+    
+    // 初始化时立即重置游戏状态
     this.reset();
   }
 
@@ -81,10 +82,21 @@ class TetrisGame {
   }
 
   start() {
-    if (this.gameRunning) return;
+    if (this.gameRunning && !this.gamePaused) return;
+    
+    if (!this.currentPiece) {
+      this.currentPiece = this.createPiece();
+    }
+    if (!this.nextPiece) {
+      this.nextPiece = this.createPiece();
+    }
+    
     this.gameRunning = true;
     this.gamePaused = false;
+    this.lastTime = performance.now();
+    this.dropCounter = 0;
     this.gameLoop();
+    console.log('Game started!');
   }
 
   pause() {
@@ -107,8 +119,14 @@ class TetrisGame {
     this.gameOverEl.style.display = 'none';
     this.gameRunning = false;
     this.gamePaused = false;
-    if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
+    this.dropCounter = 0;
+    this.lastTime = 0;
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
     this.draw();
+    console.log('Game reset!');
   }
 
   gameLoop(time = 0) {
@@ -274,18 +292,23 @@ class TetrisGame {
   }
 
   handleKeyPress(e) {
-    if (!this.gameRunning || this.gamePaused) return;
+    if (!this.gameRunning || this.gamePaused || !document.body.classList.contains('games-mode')) return;
+    
     switch (e.key) {
       case 'ArrowLeft':
+        e.preventDefault();
         this.movePiece(-1);
         break;
       case 'ArrowRight':
+        e.preventDefault();
         this.movePiece(1);
         break;
       case 'ArrowDown':
+        e.preventDefault();
         this.dropPiece();
         break;
       case 'ArrowUp':
+        e.preventDefault();
         this.rotatePiece();
         break;
       case ' ': // Spacebar
@@ -302,5 +325,5 @@ function resetGame() {
     window.tetrisInstance.reset();
   }
 }
-  
+
 

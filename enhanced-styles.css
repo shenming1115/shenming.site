@@ -1,0 +1,487 @@
+/* Enhanced Modern Styles */
+
+/* 全局字体优化 */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 改进的按钮样式 */
+.button-63 {
+  align-items: center;
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+  color: var(--text-light);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin: 0;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: var(--transition);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.button-63:hover,
+.button-63:focus {
+  background: var(--accent-light);
+  box-shadow: 0 12px 40px rgba(52, 152, 219, 0.3);
+  transform: translateY(-2px);
+}
+
+.button-63:active {
+  background: var(--accent);
+  box-shadow: var(--shadow-light);
+  transform: translateY(0);
+}
+
+/* 改进的卡片样式 */
+.card {
+  background: var(--bg-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-4px);
+}
+
+/* 改进的导航栏活跃状态 */
+.navbar-links a.active {
+  background: var(--accent);
+  color: var(--text-light) !important;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+/* 改进的社交图标 */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 2em;
+}
+
+.social-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: var(--shadow-light);
+  padding: 8px;
+  background: var(--bg-light);
+}
+
+.social-icon:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-medium);
+}
+
+/* 改进的表单样式 */
+#captchaForm {
+  text-align: center;
+  margin-top: 32px;
+  padding: 32px;
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--border-radius);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+#securityStatus {
+  margin-bottom: 24px;
+  text-align: center;
+  padding: 24px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 改进的内容页面样式 */
+.joke-hint {
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: var(--border-radius);
+  padding: 2em;
+}
+
+.joke-hint:hover {
+  background: rgba(52, 152, 219, 0.05);
+  transform: scale(1.02);
+}
+
+/* 改进的游戏界面 */
+.score-panel, .next-piece {
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+
+.controls-info {
+  text-align: center;
+  margin-top: 32px;
+  background: rgba(255,255,255,0.08);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 响应式设计改进 */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+  
+  .navbar-links {
+    gap: 16px;
+  }
+  
+  .navbar a {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+  }
+  
+  .section {
+    padding: 60px 20px;
+  }
+  
+  #preVerifyBox {
+    min-width: 320px;
+    padding: 32px 24px;
+  }
+  
+  .content-rect {
+    padding: 2em 1.5em;
+    margin-top: 4vh;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2em;
+  }
+  
+  .navbar-links {
+    gap: 12px;
+  }
+  
+  .navbar a {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+  
+  .toggle-mode {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* 选择文本样式 */
+::selection {
+  background: var(--accent-light);
+  color: var(--text-light);
+}
+
+::-moz-selection {
+  background: var(--accent-light);
+  color: var(--text-light);
+}
+
+/* 焦点样式改进 */
+button:focus,
+a:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 加载动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 微交互动画 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* 深色模式样式 */
+body.dark-mode {
+  --primary: #E8E8E8;
+  --secondary: #B0B0B0;
+  --accent: #5DADE2;
+  --accent-light: #85C1E9;
+  --text-primary: #E8E8E8;
+  --text-secondary: #B0B0B0;
+  --text-light: #FFFFFF;
+  --bg-light: #1A1A1A;
+  --bg-secondary: #2D2D2D;
+  --bg-gradient: linear-gradient(135deg, #434343 0%, #000000 100%);
+  --shadow-light: 0 2px 20px rgba(255,255,255,0.05);
+  --shadow-medium: 0 8px 30px rgba(255,255,255,0.08);
+}
+
+body.dark-mode .navbar {
+  background: rgba(26, 26, 26, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .card {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode .social-icon {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+body.dark-mode #preVerifyBox {
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-primary);
+}
+
+body.dark-mode .content-rect {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+
+/* 改进的渐变背景 */
+.gradient-bg {
+  background: var(--bg-gradient);
+  background-size: 200% 200%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+/* 玻璃态效果 */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .glass {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 改进的hover效果 */
+.hover-lift {
+  transition: var(--transition);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* 文字渐变效果 */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 改进的按钮组 */
+.button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2em;
+}
+
+.button-group .button-63 {
+  min-width: 120px;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-indicator.online {
+  background: var(--success);
+  box-shadow: 0 0 8px rgba(39, 174, 96, 0.5);
+}
+
+.status-indicator.offline {
+  background: var(--error);
+  box-shadow: 0 0 8px rgba(231, 76, 60, 0.5);
+}
+
+/* 改进的加载动画 */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(52, 152, 219, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 工具提示样式 */
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary);
+  color: var(--text-light);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
+
+/* 改进的表格样式 */
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-light);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+}
+
+.modern-table th,
+.modern-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.modern-table th {
+  background: var(--bg-secondary);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.modern-table tr:hover {
+  background: rgba(52, 152, 219, 0.05);
+}
+
+/* 改进的输入框样式 */
+.modern-input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-family: inherit;
+  background: var(--bg-light);
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.modern-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+body.dark-mode .modern-input {
+  background: var(--bg-secondary);
+  border-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .modern-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(93, 173, 226, 0.2);
+}

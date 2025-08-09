@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to MyWebsite</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhanced-styles.css">
+  <link rel="stylesheet" href="final-polish.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
@@ -55,10 +60,10 @@
     </div>
 
     <div class="content home-page" id="home">
-      <h1 id="mainWelcome">Welcome to MyWebsite</h1>
-      <div id="mainDatetime" style="margin: 10px 0; font-size: 1.1em;"></div>
-      <div id="mainIP" style="margin: 10px 0; font-size: 1.1em;"></div>
-      <p>Click below to play an awesome sound!</p>
+      <h1 id="mainWelcome" class="fade-in-up">Welcome to MyWebsite</h1>
+      <div id="mainDatetime" class="fade-in-up" style="margin: 10px 0; font-size: 1.1em; animation-delay: 0.2s;"></div>
+      <div id="mainIP" class="fade-in-up" style="margin: 10px 0; font-size: 1.1em; animation-delay: 0.4s;"></div>
+      <p class="fade-in-up" style="animation-delay: 0.6s;">Click below to play an awesome sound!</p>
       <div class="character-wrapper">
         <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
         <div class="eyes-container">
@@ -67,7 +72,7 @@
         </div>
       </div>
       <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
-      <button id="playButton" class="button-63">Play Sound</button>
+      <button id="playButton" class="button-63 fade-in-up pulse" style="animation-delay: 0.8s;">Play Sound</button>
     </div>
 
     <div id="contentPage" class="content-page">
@@ -99,9 +104,9 @@
       </div>
     </div>
 
-    <div class="section" id="about">
+    <div class="section card" id="about">
       <h2>About</h2>
-      <p>Hello! My name is Shen Ming, and I am currently a Year 2 Semester 1 student pursuing a degree in Computer Science at Sunway University. Through the development of this website, I have gained valuable experience in frontend technologies such as HTML, CSS, and JavaScript, as well as some foundational backend skills.</p>
+      <p>Hello! My name is <strong>Shen Ming</strong>, and I am currently a Year 2 Semester 1 student pursuing a degree in <strong>Computer Science</strong> at Sunway University. Through the development of this website, I have gained valuable experience in frontend technologies such as HTML, CSS, and JavaScript, as well as some foundational backend skills.</p>
       <p>This project has been a great opportunity for me to explore web development, improve my problem-solving abilities, and understand how to create interactive and secure web applications. I am passionate about learning new technologies and continuously improving my skills in the field of computer science.</p>
       <div class="social-icons">
         <a href="https://wa.me/your-phone-number" target="_blank">
@@ -116,7 +121,7 @@
       </div>
     </div>
 
-    <div class="section" id="contact">
+    <div class="section card" id="contact">
       <h2>Contact</h2>
       <p>Feel free to contact me. You can reach me through the following platforms:</p>
       <div class="social-icons">
@@ -189,6 +194,7 @@
   </div>
 
   <script src="script.js"></script>
+  <script src="enhanced-ui.js"></script>
   <script nonce="">
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {

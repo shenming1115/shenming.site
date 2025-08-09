@@ -1,0 +1,180 @@
+/* 最终样式优化 */
+
+/* 游戏页面优化 */
+.games-page h1 {
+    color: var(--text-light);
+    text-shadow: 0 0 20px var(--accent);
+    font-weight: 600;
+}
+
+.score-item span:first-child { 
+    color: var(--accent); 
+}
+
+.next-piece h3 { 
+    color: var(--accent); 
+}
+
+.controls-info h3 { 
+    color: var(--accent); 
+}
+
+.controls-grid div { 
+    background: rgba(52, 152, 219, 0.1); 
+    border: 1px solid rgba(52, 152, 219, 0.3); 
+}
+
+.game-over h2 { 
+    color: var(--error); 
+    text-shadow: 0 0 10px var(--error); 
+}
+
+/* 内容页面优化 */
+.joke-content h2 {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.joke-content p {
+    color: var(--text-primary);
+    font-weight: 400;
+}
+
+/* 导航栏内容模式优化 */
+.navbar.content-mode {
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: var(--shadow-light);
+}
+
+.navbar.content-mode .navbar-links a {
+    color: var(--text-primary) !important;
+    font-weight: 500;
+}
+
+.navbar.content-mode .navbar-links a.active, 
+.navbar.content-mode .navbar-links a:hover {
+    background: var(--accent);
+    color: var(--text-light) !important;
+}
+
+.navbar.content-mode .toggle-mode {
+    color: var(--text-primary) !important;
+}
+
+/* 动画页面优化 */
+#animationPage .content-rect {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
+}
+
+#animationPage .animation-hint span,
+#animationPage .animation-content h2 {
+    color: var(--primary) !important;
+}
+
+#animationPage .content-rect.collapsed {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+#animationPage .content-rect.collapsed:hover {
+    background: var(--bg-light);
+    color: var(--accent);
+}
+
+/* 星空背景优化 */
+#starryNightCanvas {
+    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%) !important;
+}
+
+/* 验证页面时间显示优化 */
+#preVerifyDatetime {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+#contentDatetime,
+#contentIP {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .games-page h1 {
+        font-size: 2em;
+        margin-top: 20px;
+    }
+    
+    .tetris-container {
+        gap: 20px;
+    }
+    
+    .content-rect {
+        margin-top: 4vh;
+        padding: 2em 1.5em;
+    }
+    
+    #preVerifyBox {
+        min-width: 300px;
+        padding: 32px 20px;
+    }
+}
+
+/* 性能优化 */
+* {
+    will-change: auto;
+}
+
+.navbar,
+.button-63,
+.card,
+.content-rect {
+    will-change: transform;
+}
+
+/* 可访问性优化 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    :root {
+        --shadow-light: 0 2px 20px rgba(0,0,0,0.3);
+        --shadow-medium: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    
+    .card,
+    .content-rect,
+    #preVerifyBox {
+        border: 2px solid var(--primary);
+    }
+}
+
+/* 打印样式 */
+@media print {
+    .navbar,
+    .toggle-mode,
+    .games-page,
+    #animationPage,
+    button {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .section,
+    .content-rect {
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+    }
+}

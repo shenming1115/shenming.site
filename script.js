@@ -224,6 +224,7 @@ function drawStarSea() {
   const RADIUS_MAX = Math.min(W, H) * 0.46;
   const ROTATE_SPEED = 0.0007;
   const STAR_COLORS = ["#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"];
+  
   const stars = [];
 
   for (let i = 0; i < STAR_COUNT; i++) {
@@ -1563,7 +1564,7 @@ function drawStarSea() {
   const STAR_COLORS = [
     "#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"
   ];
-
+  
   // 极限多星云
   const NEBULA_COUNT = 32; // 极限数量，建议不要再高
   const NEBULA_COLORS = [
