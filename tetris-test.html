@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game - Shen Ming Portfolio | shenming.site</title>
+    <meta name="description" content="Play Tetris game created by Shen Ming - Computer Science student at Sunway University. Modern JavaScript implementation with enhanced features.">
+    <meta name="keywords" content="Shen Ming, Tetris Game, JavaScript Game, Computer Science Project, shenming.site">
+    <meta name="author" content="Shen Ming">
+    <link rel="canonical" href="https://shenming.site/tetris-test.html">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="enhanced-styles.css">
+    <link rel="stylesheet" href="final-polish.css">
+    <link rel="stylesheet" href="modern-dark-theme.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .test-header {
+            margin-bottom: 2em;
+        }
+
+        .test-header h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            background: linear-gradient(135deg, #3498DB, #5DADE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tetris-game {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .game-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 200px;
+        }
+
+        .score-panel,
+        .next-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .score-panel h3,
+        .next-panel h3 {
+            margin: 0 0 15px 0;
+            color: #3498DB;
+            font-size: 1.2em;
+        }
+
+        .score-display {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-label {
+            color: #BDC3C7;
+        }
+
+        .score-value {
+            color: #3498DB;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .game-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .game-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .game-btn.primary {
+            background: #3498DB;
+            color: white;
+        }
+
+        .game-btn.secondary {
+            background: #95A5A6;
+            color: white;
+        }
+
+        .game-btn.danger {
+            background: #E74C3C;
+            color: white;
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-main {
+            position: relative;
+        }
+
+        .game-board {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #3498DB;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+
+        #tetrisCanvas {
+            border: 2px solid #3498DB;
+            border-radius: 8px;
+            background: #000;
+            display: block;
+        }
+
+        #nextCanvas {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: #000;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .game-over-content {
+            text-align: center;
+            background: rgba(44, 62, 80, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #E74C3C;
+        }
+
+        .game-over-content h2 {
+            color: #E74C3C;
+            margin: 0 0 15px 0;
+            font-size: 2em;
+        }
+
+        .controls-guide {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .controls-guide h3 {
+            color: #3498DB;
+            margin-bottom: 15px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        kbd {
+            background: #34495E;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #5D6D7E;
+        }
+
+        @media (max-width: 768px) {
+            .tetris-game {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .game-sidebar {
+                order: 2;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                min-width: auto;
+            }
+
+            .score-panel,
+            .next-panel,
+            .game-controls {
+                flex: 1;
+                min-width: 150px;
+            }
+
+            #tetrisCanvas {
+                width: 250px;
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🎮 Tetris Game Test</h1>
+            <p>Testing the enhanced Tetris game with spin functionality and increasing speed</p>
+        </div>
+
+        <div class="tetris-game">
+            <div class="game-sidebar">
+                <div class="score-panel">
+                    <h3>Score</h3>
+                    <div class="score-display">
+                        <div class="score-item">
+                            <span class="score-label">Score</span>
+                            <span id="score" class="score-value">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Lines</span>
+                            <span id="lines" class="score-value">0</span>
+                        </div>
+                        <div class="score-item">
+                            <span class="score-label">Level</span>
+                            <span id="level" class="score-value">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-panel">
+                    <h3>Next Piece</h3>
+                    <canvas id="nextCanvas" width="120" height="120"></canvas>
+                </div>
+
+                <div class="game-controls">
+                    <button id="startBtn" class="game-btn primary">Start Game</button>
+                    <button id="pauseBtn" class="game-btn secondary">Pause</button>
+                    <button id="resetBtn" class="game-btn danger">Reset</button>
+                </div>
+            </div>
+
+            <div class="game-main">
+                <div class="game-board">
+                    <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+                    <div class="game-overlay" id="gameOver">
+                        <div class="game-over-content">
+                            <h2>Game Over!</h2>
+                            <p>Final Score: <span id="finalScore">0</span></p>
+                            <button id="playAgainBtn" class="game-btn primary">Play Again</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-guide">
+            <h3>How to Play</h3>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <kbd>←</kbd><kbd>→</kbd>
+                    <span>Move Left/Right</span>
+                </div>
+                <div class="control-item">
+                    <kbd>↓</kbd>
+                    <span>Soft Drop (+1 point)</span>
+                </div>
+                <div class="control-item">
+                    <kbd>↑</kbd>
+                    <span>Rotate Piece (with wall kicks)</span>
+                </div>
+                <div class="control-item">
+                    <kbd>Space</kbd>
+                    <span>Hard Drop (+2 points per row)</span>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(52, 152, 219, 0.1); border-radius: 8px;">
+                <h4 style="color: #3498DB; margin: 0 0 10px 0;">Game Features:</h4>
+                <ul style="text-align: left; margin: 0; padding-left: 20px;">
+                    <li>Speed increases every 10 lines cleared</li>
+                    <li>Ghost piece shows where your piece will land</li>
+                    <li>Wall kick system for better rotation</li>
+                    <li>Key repeat for smooth movement</li>
+                    <li>Line clear animations and feedback</li>
+                    <li>Classic Tetris scoring system</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="tetris-game.js"></script>
+</body>
+
+</html>

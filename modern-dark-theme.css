@@ -1,0 +1,310 @@
+/* Modern Dark Theme Enhancements */
+
+/* 深色主题的高级配色 */
+body.dark-mode {
+  --primary: #F8F9FA;
+  --secondary: #E9ECEF;
+  --accent: #4DABF7;
+  --accent-light: #74C0FC;
+  --text-primary: #F8F9FA;
+  --text-secondary: #ADB5BD;
+  --text-light: #FFFFFF;
+  --bg-light: #212529;
+  --bg-secondary: #343A40;
+  --bg-gradient: linear-gradient(135deg, #495057 0%, #212529 100%);
+  --shadow-light: 0 2px 20px rgba(0,0,0,0.3);
+  --shadow-medium: 0 8px 30px rgba(0,0,0,0.4);
+  --border-color: rgba(255,255,255,0.1);
+}
+
+/* 深色模式下的导航栏 */
+body.dark-mode .navbar {
+  background: rgba(33, 37, 41, 0.95);
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(20px);
+}
+
+body.dark-mode .navbar a {
+  color: var(--text-primary);
+}
+
+body.dark-mode .navbar a:hover {
+  background: var(--bg-secondary);
+  color: var(--accent);
+}
+
+body.dark-mode .navbar.content-mode {
+  background: rgba(33, 37, 41, 0.95) !important;
+}
+
+body.dark-mode .navbar.content-mode .navbar-links a {
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的卡片和内容 */
+body.dark-mode .card,
+body.dark-mode .content-rect {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .section h2 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .section p {
+  color: var(--text-secondary);
+}
+
+/* 深色模式下的按钮 */
+body.dark-mode .button-63,
+body.dark-mode button {
+  background: var(--accent);
+  color: var(--text-light);
+  border: 1px solid var(--accent);
+}
+
+body.dark-mode .button-63:hover,
+body.dark-mode button:hover {
+  background: var(--accent-light);
+  box-shadow: 0 12px 40px rgba(74, 171, 247, 0.3);
+}
+
+/* 深色模式下的验证页面 */
+body.dark-mode #preVerifyMask {
+  background: linear-gradient(135deg, #495057 0%, #212529 100%);
+}
+
+body.dark-mode #preVerifyBox {
+  background: rgba(33, 37, 41, 0.95);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode #preVerifyBox h2 {
+  color: var(--text-primary);
+}
+
+/* 深色模式下的游戏页面 */
+body.dark-mode .games-page {
+  background: linear-gradient(135deg, #212529 0%, #495057 100%);
+}
+
+body.dark-mode .score-panel,
+body.dark-mode .next-piece,
+body.dark-mode .controls-info {
+  background: rgba(52, 58, 64, 0.8);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .game-board {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--accent);
+}
+
+body.dark-mode .score-item span:first-child,
+body.dark-mode .next-piece h3,
+body.dark-mode .controls-info h3 {
+  color: var(--accent);
+}
+
+/* 深色模式下的动画页面 */
+body.dark-mode #animationPage {
+  background: linear-gradient(135deg, #212529 0%, #495057 100%) !important;
+}
+
+body.dark-mode #animationPage .content-rect {
+  background: rgba(52, 58, 64, 0.9);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode #animationPage .animation-hint span,
+body.dark-mode #animationPage .animation-content h2 {
+  color: var(--text-primary) !important;
+}
+
+/* 深色模式下的表单元素 */
+body.dark-mode .modern-input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+body.dark-mode .modern-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(74, 171, 247, 0.2);
+}
+
+/* 深色模式下的社交图标 */
+body.dark-mode .social-icon {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  filter: brightness(0.9);
+}
+
+body.dark-mode .social-icon:hover {
+  filter: brightness(1.1);
+  border-color: var(--accent);
+}
+
+/* 深色模式下的滚动条 */
+body.dark-mode ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-light);
+}
+
+/* 深色模式下的选择文本 */
+body.dark-mode ::selection {
+  background: var(--accent);
+  color: var(--text-light);
+}
+
+body.dark-mode ::-moz-selection {
+  background: var(--accent);
+  color: var(--text-light);
+}
+
+/* 深色模式下的工具提示 */
+body.dark-mode .tooltip::after {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* 深色模式下的表格 */
+body.dark-mode .modern-table {
+  background: var(--bg-secondary);
+}
+
+body.dark-mode .modern-table th {
+  background: var(--bg-light);
+  color: var(--text-primary);
+}
+
+body.dark-mode .modern-table td {
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .modern-table tr:hover {
+  background: rgba(74, 171, 247, 0.1);
+}
+
+/* 深色模式下的状态指示器 */
+body.dark-mode .status-indicator.online {
+  box-shadow: 0 0 8px rgba(74, 171, 247, 0.5);
+}
+
+/* 深色模式下的加载动画 */
+body.dark-mode .loading {
+  border-color: rgba(74, 171, 247, 0.3);
+  border-top-color: var(--accent);
+}
+
+/* 深色模式下的游戏over屏幕 */
+body.dark-mode .game-over {
+  background: rgba(33, 37, 41, 0.95);
+  border: 2px solid var(--accent);
+  color: var(--text-primary);
+}
+
+body.dark-mode .game-over h2 {
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
+}
+
+/* 深色模式下的内容页面背景 */
+body.dark-mode .content-bg-sky {
+  background: linear-gradient(135deg, #495057 0%, #343A40 100%);
+}
+
+/* 深色模式下的joke内容 */
+body.dark-mode .joke-content h2 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .joke-content p {
+  color: var(--text-secondary);
+}
+
+body.dark-mode #contentDatetime,
+body.dark-mode #contentIP {
+  color: var(--accent);
+}
+
+/* 深色模式切换动画 */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar,
+.card,
+.content-rect,
+.button-63,
+button {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 深色模式下的特殊效果 */
+body.dark-mode .glass {
+  background: rgba(52, 58, 64, 0.3);
+  border: 1px solid var(--border-color);
+}
+
+body.dark-mode .gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 深色模式下的hover效果增强 */
+body.dark-mode .hover-lift:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+/* 深色模式下的焦点样式 */
+body.dark-mode button:focus,
+body.dark-mode a:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 深色模式下的配置检查页面 */
+body.dark-mode .check.success {
+  background: rgba(74, 171, 247, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(74, 171, 247, 0.3);
+}
+
+body.dark-mode .check.error {
+  background: rgba(248, 81, 73, 0.1);
+  color: #F85149;
+  border: 1px solid rgba(248, 81, 73, 0.3);
+}
+
+body.dark-mode .check.warning {
+  background: rgba(255, 212, 59, 0.1);
+  color: #FFD43B;
+  border: 1px solid rgba(255, 212, 59, 0.3);
+}
+
+/* 深色模式下的响应式优化 */
+@media (max-width: 768px) {
+  body.dark-mode .navbar {
+    background: rgba(33, 37, 41, 0.98);
+  }
+  
+  body.dark-mode #preVerifyBox {
+    background: rgba(33, 37, 41, 0.98);
+  }
+}

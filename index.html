@@ -3,45 +3,146 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to MyWebsite</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="enhanced-styles.css">
-  <link rel="stylesheet" href="final-polish.css">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Shen Ming - Computer Science Student | Web Developer | shenming.site</title>
+  <meta name="title" content="Shen Ming - Computer Science Student | Web Developer | shenming.site">
+  <meta name="description" content="Shen Ming - Year 2 Computer Science student at Sunway University. Passionate web developer specializing in HTML, CSS, JavaScript, and secure web applications. Explore my portfolio, projects, and interactive games.">
+  <meta name="keywords" content="Shen Ming, shenming, Computer Science, Web Developer, Sunway University, HTML, CSS, JavaScript, Portfolio, Tetris Game, Web Security, Student Developer, Malaysia">
+  <meta name="author" content="Shen Ming">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="7 days">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shenming.site/">
+  <meta property="og:title" content="Shen Ming - Computer Science Student | Web Developer">
+  <meta property="og:description" content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies and secure applications.">
+  <meta property="og:image" content="https://shenming.site/Assets/shenming-preview.jpg">
+  <meta property="og:site_name" content="Shen Ming Portfolio">
+  <meta property="og:locale" content="en_US">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://shenming.site/">
+  <meta property="twitter:title" content="Shen Ming - Computer Science Student | Web Developer">
+  <meta property="twitter:description" content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies.">
+  <meta property="twitter:image" content="https://shenming.site/Assets/shenming-preview.jpg">
+  
+  <!-- Additional SEO Meta Tags -->
+  <meta name="theme-color" content="#3498DB">
+  <meta name="msapplication-TileColor" content="#3498DB">
+  <meta name="application-name" content="Shen Ming Portfolio">
+  <meta name="apple-mobile-web-app-title" content="Shen Ming">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://shenming.site/">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Security and External Scripts -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  
+  <!-- Structured Data for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Shen Ming",
+    "alternateName": "shenming",
+    "url": "https://shenming.site",
+    "image": "https://shenming.site/Assets/shenming-preview.jpg",
+    "sameAs": [
+      "https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/",
+      "https://www.instagram.com/your-profile/",
+      "https://wa.me/your-phone-number"
+    ],
+    "jobTitle": "Computer Science Student",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Sunway University"
+    },
+    "alumniOf": {
+      "@type": "Organization",
+      "name": "Sunway University"
+    },
+    "knowsAbout": [
+      "Web Development",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Computer Science",
+      "Web Security",
+      "Frontend Development"
+    ],
+    "description": "Year 2 Computer Science student at Sunway University, passionate about web development and creating secure, interactive web applications."
+  }
+  </script>
 </head>
 <body>
 
-  <div id="preVerifyMask">
-    <div id="preVerifyBox">
-      <h2>🔒 Security Verification Before Entry</h2>
-      <form action="/validate" method="POST" id="captchaForm">
-        <div id="securityStatus" style="margin-bottom: 20px; text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-          <p id="preVerifyDatetime">Loading Malaysia time...</p>
-          <div id="ipInfo" style="font-size: 14px; color: #ccc;"></div>
-          <div id="riskLevel" style="margin: 10px 0; font-weight: bold;"></div>
+  <div id="preVerifyMask" class="security-overlay">
+    <div class="security-container">
+      <div class="security-header">
+        <div class="security-icon">🛡️</div>
+        <h1>Security Verification</h1>
+        <p>Please complete verification to continue</p>
+      </div>
+      
+      <div class="security-info">
+        <div class="info-card">
+          <div class="info-label">Current Time (Malaysia)</div>
+          <div id="preVerifyDatetime" class="info-value">Loading...</div>
         </div>
-        <div class="cf-turnstile" 
-             data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
-             data-theme="dark" 
-             data-size="normal"
-             data-callback="onTurnstileSuccess"
-             data-expired-callback="onTurnstileExpired"
-             data-error-callback="onTurnstileError">
+        <div class="info-card">
+          <div class="info-label">Your IP Address</div>
+          <div id="ipInfo" class="info-value">Detecting...</div>
         </div>
-        <div style="margin-top: 10px;">
-          <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" 
-                  style="padding: 6px 12px; background: #6c757d; color: white; border: none; border-radius: 4px; font-size: 12px; margin-right: 10px;">
-            🔄 Reload Verification
+        <div class="info-card">
+          <div class="info-label">Security Level</div>
+          <div id="riskLevel" class="info-value">Analyzing...</div>
+        </div>
+      </div>
+
+      <form action="/validate" method="POST" id="captchaForm" class="verification-form">
+        <div class="turnstile-container">
+          <div class="cf-turnstile" 
+               data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
+               data-theme="dark" 
+               data-size="normal"
+               data-callback="onTurnstileSuccess"
+               data-expired-callback="onTurnstileExpired"
+               data-error-callback="onTurnstileError">
+          </div>
+        </div>
+        
+        <div class="verification-actions">
+          <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" class="btn-secondary">
+            <span>🔄</span> Reload Verification
           </button>
-          <small style="color: #999;">If the verification is stuck, click reload</small>
+          <button type="submit" id="verifyBtn" disabled class="btn-primary">
+            <span>✓</span> Verify & Continue
+          </button>
         </div>
-        <button type="submit" id="verifyBtn" disabled style="margin-top: 15px; opacity: 0.5;">
-          🛡️ Verify I'm Human
-        </button>
-        <div id="verificationResult" style="margin-top: 15px; font-size: 14px;"></div>
+        
+        <div id="verificationResult" class="verification-result"></div>
       </form>
     </div>
   </div>
@@ -60,77 +161,226 @@
     </div>
 
     <div class="content home-page" id="home">
-      <h1 id="mainWelcome" class="fade-in-up">Welcome to MyWebsite</h1>
-      <div id="mainDatetime" class="fade-in-up" style="margin: 10px 0; font-size: 1.1em; animation-delay: 0.2s;"></div>
-      <div id="mainIP" class="fade-in-up" style="margin: 10px 0; font-size: 1.1em; animation-delay: 0.4s;"></div>
-      <p class="fade-in-up" style="animation-delay: 0.6s;">Click below to play an awesome sound!</p>
-      <div class="character-wrapper">
-        <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Minion">
-        <div class="eyes-container">
-          <div class="eye"><div class="pupil"></div></div>
-          <div class="eye"><div class="pupil"></div></div>
+      <div class="hero-section">
+        <div class="hero-content">
+          <h1 id="mainWelcome" class="hero-title">Shen Ming</h1>
+          <p class="hero-subtitle">Computer Science Student & Web Developer</p>
+          <div class="hero-info">
+            <div id="mainDatetime" class="info-item"></div>
+            <div id="mainIP" class="info-item"></div>
+          </div>
+        </div>
+        
+        <div class="interactive-demo">
+          <div class="demo-card">
+            <h3>Interactive Demo</h3>
+            <p>Experience the interactive character with eye tracking</p>
+            <div class="character-wrapper">
+              <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Interactive Character">
+              <div class="eyes-container">
+                <div class="eye"><div class="pupil"></div></div>
+                <div class="eye"><div class="pupil"></div></div>
+              </div>
+            </div>
+            <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
+            <button id="playButton" class="btn-interactive">
+              <span>🎵</span> Play Sound
+            </button>
+          </div>
         </div>
       </div>
-      <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
-      <button id="playButton" class="button-63 fade-in-up pulse" style="animation-delay: 0.8s;">Play Sound</button>
     </div>
 
     <div id="contentPage" class="content-page">
-      <div class="content-bg-sky"></div>
-      <div class="content-sky-message">
-        <div class="content-rect collapsed" style="margin-top:0;max-width:600px;min-width:320px;position:relative;">
-          <button id="backHomeBtn" style="position:absolute;top:18px;right:24px;font-size:2em;z-index:10;background:none;border:none;cursor:pointer;">←</button>
-          <div class="joke-hint" style="display:flex;align-items:center;justify-content:center;min-height:180px;">
-            <span style="font-size:3.2em;line-height:1;margin-right:24px;">🌀</span>
-            <span style="font-size:1.5em;font-weight:700;color:#3a5a8c;">Joke 1</span>
+      <button id="backHomeBtn" class="back-btn">← Back to Home</button>
+      <div class="content-container">
+        <div class="content-header">
+          <h1>My Projects & Skills</h1>
+          <p>Explore my technical journey and development projects</p>
+        </div>
+        
+        <div class="projects-grid">
+          <div class="project-card">
+            <div class="project-icon">🌐</div>
+            <h3>Web Development</h3>
+            <p>Modern responsive websites using HTML5, CSS3, and JavaScript. Focus on user experience and performance optimization.</p>
+            <div class="tech-stack">
+              <span class="tech-tag">HTML5</span>
+              <span class="tech-tag">CSS3</span>
+              <span class="tech-tag">JavaScript</span>
+            </div>
           </div>
-          <div class="joke-content">
-            <h2 style="font-size:2em;margin-bottom:0.5em;">Joke Time<br><span style="font-size:0.7em;font-weight:normal;">Boring Joke Time</span></h2>
-            <div id="contentDatetime" style="font-size:1.1em;color:#3a5a8c;font-weight:bold;margin-bottom:8px;"></div>
-            <div id="contentIP" style="font-size:1.1em;color:#3a5a8c;font-weight:bold;margin-bottom:16px;"></div>
-            <p style="font-size:1.15em;line-height:1.7;color:#2d3a4a;font-weight:600;text-align:center;">
-              One day, a dog said to a cat: "Let's compete to see who can spin faster!"<br>
-              The dog said: "Alright!"<br>
-              So they started spinning in circles.<br>
-              The cat spun and spun, the dog spun and spun, and the cat asked: "Are you dizzy yet?"<br>
-              The dog said: "Not yet, what about you?"<br>
-              The cat said: "Me neither, let's keep spinning!"<br>
-              So they spun and spun again, until finally, the cat stopped and asked: "Why aren't you dizzy yet?"<br>
-              The dog replied: "Because I'm already 'no dizzy'."<br>
-              <span style="display:inline-block;transform:rotate(0deg);animation:spin 2s linear infinite;">🙃</span>
-            </p>
+          
+          <div class="project-card">
+            <div class="project-icon">🔒</div>
+            <h3>Security Systems</h3>
+            <p>Implementation of advanced security features including device fingerprinting and behavior analysis.</p>
+            <div class="tech-stack">
+              <span class="tech-tag">Security</span>
+              <span class="tech-tag">Analytics</span>
+              <span class="tech-tag">Encryption</span>
+            </div>
           </div>
+          
+          <div class="project-card">
+            <div class="project-icon">🎮</div>
+            <h3>Game Development</h3>
+            <p>Interactive games and animations using Canvas API and modern JavaScript techniques.</p>
+            <div class="tech-stack">
+              <span class="tech-tag">Canvas</span>
+              <span class="tech-tag">Animation</span>
+              <span class="tech-tag">Game Logic</span>
+            </div>
+          </div>
+          
+          <div class="project-card">
+            <div class="project-icon">📱</div>
+            <h3>Responsive Design</h3>
+            <p>Mobile-first approach with modern CSS Grid and Flexbox for optimal user experience across devices.</p>
+            <div class="tech-stack">
+              <span class="tech-tag">Mobile-First</span>
+              <span class="tech-tag">CSS Grid</span>
+              <span class="tech-tag">Flexbox</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="status-info">
+          <div id="contentDatetime" class="status-item"></div>
+          <div id="contentIP" class="status-item"></div>
         </div>
       </div>
     </div>
 
-    <div class="section card" id="about">
-      <h2>About</h2>
-      <p>Hello! My name is <strong>Shen Ming</strong>, and I am currently a Year 2 Semester 1 student pursuing a degree in <strong>Computer Science</strong> at Sunway University. Through the development of this website, I have gained valuable experience in frontend technologies such as HTML, CSS, and JavaScript, as well as some foundational backend skills.</p>
-      <p>This project has been a great opportunity for me to explore web development, improve my problem-solving abilities, and understand how to create interactive and secure web applications. I am passionate about learning new technologies and continuously improving my skills in the field of computer science.</p>
-      <div class="social-icons">
-        <a href="https://wa.me/your-phone-number" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
-        </a>
-        <a href="https://www.instagram.com/your-profile/" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
-        </a>
-        <a href="https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" class="social-icon" style="width:40px;height:40px;">
-        </a>
+    <div class="section" id="about">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>About Me</h2>
+          <div class="section-line"></div>
+        </div>
+        
+        <div class="about-content">
+          <div class="about-text">
+            <p class="intro-text">Hello! I'm <strong>Shen Ming</strong>, a passionate Computer Science student at Sunway University, currently in my second year.</p>
+            
+            <div class="about-details">
+              <div class="detail-item">
+                <div class="detail-icon">🎓</div>
+                <div class="detail-content">
+                  <h4>Education</h4>
+                  <p>Year 2 Computer Science Student at Sunway University</p>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">💻</div>
+                <div class="detail-content">
+                  <h4>Specialization</h4>
+                  <p>Frontend Development, Web Security, Interactive Applications</p>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-icon">🚀</div>
+                <div class="detail-content">
+                  <h4>Passion</h4>
+                  <p>Creating secure, interactive, and user-friendly web experiences</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="skills-section">
+            <h3>Technical Skills</h3>
+            <div class="skills-grid">
+              <div class="skill-item">
+                <div class="skill-name">HTML5 & CSS3</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 90%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">JavaScript</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">Web Security</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 75%"></div>
+                </div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">Responsive Design</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 88%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="social-links">
+          <a href="https://wa.me/your-phone-number" target="_blank" class="social-link whatsapp">
+            <span class="social-icon">📱</span>
+            <span class="social-text">WhatsApp</span>
+          </a>
+          <a href="https://www.instagram.com/your-profile/" target="_blank" class="social-link instagram">
+            <span class="social-icon">📷</span>
+            <span class="social-text">Instagram</span>
+          </a>
+          <a href="https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/" target="_blank" class="social-link linkedin">
+            <span class="social-icon">💼</span>
+            <span class="social-text">LinkedIn</span>
+          </a>
+        </div>
       </div>
     </div>
 
-    <div class="section card" id="contact">
-      <h2>Contact</h2>
-      <p>Feel free to contact me. You can reach me through the following platforms:</p>
-      <div class="social-icons">
-        <a href="https://wa.me/your-phone-number" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="social-icon">
-        </a>
-        <a href="https://www.instagram.com/your-profile/" target="_blank">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="social-icon">
-        </a>
+    <div class="section" id="contact">
+      <div class="section-container">
+        <div class="section-header">
+          <h2>Get In Touch</h2>
+          <div class="section-line"></div>
+          <p>Let's connect and discuss opportunities, projects, or just have a chat!</p>
+        </div>
+        
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-icon">📧</div>
+            <h3>Email</h3>
+            <p>For professional inquiries and collaborations</p>
+            <a href="mailto:shenming@example.com" class="contact-link">shenming@example.com</a>
+          </div>
+          
+          <div class="contact-card">
+            <div class="contact-icon">📱</div>
+            <h3>WhatsApp</h3>
+            <p>Quick messages and instant communication</p>
+            <a href="https://wa.me/your-phone-number" target="_blank" class="contact-link">Send Message</a>
+          </div>
+          
+          <div class="contact-card">
+            <div class="contact-icon">💼</div>
+            <h3>LinkedIn</h3>
+            <p>Professional networking and career opportunities</p>
+            <a href="https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/" target="_blank" class="contact-link">Connect</a>
+          </div>
+          
+          <div class="contact-card">
+            <div class="contact-icon">📷</div>
+            <h3>Instagram</h3>
+            <p>Follow my journey and daily updates</p>
+            <a href="https://www.instagram.com/your-profile/" target="_blank" class="contact-link">Follow</a>
+          </div>
+        </div>
+        
+        <div class="contact-cta">
+          <h3>Ready to start a conversation?</h3>
+          <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
+          <a href="mailto:shenming@example.com" class="btn-primary">Start a Conversation</a>
+        </div>
       </div>
     </div>
 
@@ -141,60 +391,87 @@
       </div>
     </div>
 
-    <div id="gamesPage" class="games-page" style="background:#1a1a2e;">
-      <button id="backHomeBtnGames" style="position:fixed;top:18px;right:24px;font-size:2em;z-index:1000;background:none;border:none;cursor:pointer;color:white;">←</button>
+    <div id="gamesPage" class="games-page">
+      <button id="backHomeBtnGames" class="back-btn">← Back to Home</button>
+      
       <div class="games-container">
-        <h1 style="text-align:center;color:white;margin-top:50px;font-size:3em;text-shadow:0 0 20px #00ff88;">🎮 TETRIS</h1>
-        <div class="tetris-container">
-          <div class="game-info">
+        <div class="game-header">
+          <h1>🎮 Tetris Game</h1>
+          <p>Classic puzzle game built with modern JavaScript</p>
+        </div>
+        
+        <div class="tetris-game">
+          <div class="game-sidebar">
             <div class="score-panel">
-              <div class="score-item">
-                <span>Score</span>
-                <span id="score">0</span>
-              </div>
-              <div class="score-item">
-                <span>Lines</span>
-                <span id="lines">0</span>
-              </div>
-              <div class="score-item">
-                <span>Level</span>
-                <span id="level">1</span>
+              <h3>Score</h3>
+              <div class="score-display">
+                <div class="score-item">
+                  <span class="score-label">Score</span>
+                  <span id="score" class="score-value">0</span>
+                </div>
+                <div class="score-item">
+                  <span class="score-label">Lines</span>
+                  <span id="lines" class="score-value">0</span>
+                </div>
+                <div class="score-item">
+                  <span class="score-label">Level</span>
+                  <span id="level" class="score-value">1</span>
+                </div>
               </div>
             </div>
-            <div class="next-piece">
-              <h3>Next</h3>
+            
+            <div class="next-panel">
+              <h3>Next Piece</h3>
               <canvas id="nextCanvas" width="120" height="120"></canvas>
             </div>
+            
             <div class="game-controls">
-              <button id="startBtn" class="game-btn">Start</button>
-              <button id="pauseBtn" class="game-btn">Pause</button>
-              <button id="resetBtn" class="game-btn">Reset</button>
+              <button id="startBtn" class="game-btn primary">Start Game</button>
+              <button id="pauseBtn" class="game-btn secondary">Pause</button>
+              <button id="resetBtn" class="game-btn danger">Reset</button>
             </div>
           </div>
-          <div class="game-board">
-            <canvas id="tetrisCanvas" width="300" height="600"></canvas>
-            <div class="game-over" id="gameOver" style="display:none;">
-              <h2>Game Over!</h2>
-              <p>Final Score: <span id="finalScore">0</span></p>
-              <button onclick="resetGame()" class="game-btn">Play Again</button>
+          
+          <div class="game-main">
+            <div class="game-board">
+              <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+              <div class="game-overlay" id="gameOver">
+                <div class="game-over-content">
+                  <h2>Game Over!</h2>
+                  <p>Final Score: <span id="finalScore">0</span></p>
+                  <button id="playAgainBtn" class="game-btn primary">Play Again</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="controls-info">
-          <h3>Controls</h3>
+        
+        <div class="controls-guide">
+          <h3>How to Play</h3>
           <div class="controls-grid">
-            <div>← → : Move</div>
-            <div>↓ : Soft Drop</div>
-            <div>↑ : Rotate</div>
-            <div>Space : Hard Drop</div>
+            <div class="control-item">
+              <kbd>←</kbd><kbd>→</kbd>
+              <span>Move Left/Right</span>
+            </div>
+            <div class="control-item">
+              <kbd>↓</kbd>
+              <span>Soft Drop</span>
+            </div>
+            <div class="control-item">
+              <kbd>↑</kbd>
+              <span>Rotate Piece</span>
+            </div>
+            <div class="control-item">
+              <kbd>Space</kbd>
+              <span>Hard Drop</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="script.js"></script>
-  <script src="enhanced-ui.js"></script>
+  <script type="module" src="js/main.js"></script>
   <script nonce="">
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {

@@ -1,0 +1,37 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://shenming.site/sitemap.xml
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Disallow certain files and directories
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /.git/
+Disallow: /obfuscate.js
+Disallow: /obfuscate.config.js
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Additional directives
+Allow: /Assets/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.html
