@@ -1,35 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <!-- Primary SEO Meta Tags -->
   <title>Shen Ming - Computer Science Student | Web Developer | shenming.site</title>
   <meta name="title" content="Shen Ming - Computer Science Student | Web Developer | shenming.site">
-  <meta name="description" content="Shen Ming - Year 2 Computer Science student at Sunway University. Passionate web developer specializing in HTML, CSS, JavaScript, and secure web applications. Explore my portfolio, projects, and interactive games.">
-  <meta name="keywords" content="Shen Ming, shenming, Computer Science, Web Developer, Sunway University, HTML, CSS, JavaScript, Portfolio, Tetris Game, Web Security, Student Developer, Malaysia">
+  <meta name="description"
+    content="Shen Ming - Year 2 Computer Science student at Sunway University. Passionate web developer specializing in HTML, CSS, JavaScript, and secure web applications. Explore my portfolio, projects, and interactive games.">
+  <meta name="keywords"
+    content="Shen Ming, shenming, Computer Science, Web Developer, Sunway University, HTML, CSS, JavaScript, Portfolio, Tetris Game, Web Security, Student Developer, Malaysia">
   <meta name="author" content="Shen Ming">
   <meta name="robots" content="index, follow">
   <meta name="language" content="English">
   <meta name="revisit-after" content="7 days">
-  
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shenming.site/">
   <meta property="og:title" content="Shen Ming - Computer Science Student | Web Developer">
-  <meta property="og:description" content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies and secure applications.">
+  <meta property="og:description"
+    content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies and secure applications.">
   <meta property="og:image" content="https://shenming.site/Assets/shenming-preview.jpg">
   <meta property="og:site_name" content="Shen Ming Portfolio">
   <meta property="og:locale" content="en_US">
-  
+
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://shenming.site/">
   <meta property="twitter:title" content="Shen Ming - Computer Science Student | Web Developer">
-  <meta property="twitter:description" content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies.">
+  <meta property="twitter:description"
+    content="Year 2 Computer Science student at Sunway University. Passionate web developer specializing in modern web technologies.">
   <meta property="twitter:image" content="https://shenming.site/Assets/shenming-preview.jpg">
-  
+
   <!-- Additional SEO Meta Tags -->
   <meta name="theme-color" content="#3498DB">
   <meta name="msapplication-TileColor" content="#3498DB">
@@ -37,10 +42,10 @@
   <meta name="apple-mobile-web-app-title" content="Shen Ming">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  
+
   <!-- Canonical URL -->
   <link rel="canonical" href="https://shenming.site/">
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -48,18 +53,23 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
   <link rel="manifest" href="/site.webmanifest">
-  
+
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/main.css">
-  
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="enhanced-styles.css">
+  <link rel="stylesheet" href="final-polish.css">
+  <link rel="stylesheet" href="modern-dark-theme.css">
+
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
   <!-- Security and External Scripts -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  
+
   <!-- Structured Data for Google -->
   <script type="application/ld+json">
   {
@@ -96,6 +106,7 @@
   }
   </script>
 </head>
+
 <body>
 
   <div id="preVerifyMask" class="security-overlay">
@@ -105,7 +116,7 @@
         <h1>Security Verification</h1>
         <p>Please complete verification to continue</p>
       </div>
-      
+
       <div class="security-info">
         <div class="info-card">
           <div class="info-label">Current Time (Malaysia)</div>
@@ -123,18 +134,14 @@
 
       <form action="/validate" method="POST" id="captchaForm" class="verification-form">
         <div class="turnstile-container">
-          <div class="cf-turnstile" 
-               data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" 
-               data-theme="dark" 
-               data-size="normal"
-               data-callback="onTurnstileSuccess"
-               data-expired-callback="onTurnstileExpired"
-               data-error-callback="onTurnstileError">
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" data-theme="dark" data-size="normal"
+            data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"
+            data-error-callback="onTurnstileError">
           </div>
         </div>
-        
+
         <div class="verification-actions">
-          <button type="button" id="refreshTurnstile" onclick="refreshTurnstile()" class="btn-secondary">
+          <button type="button" id="refreshTurnstile" onclick="handleRefreshClick()" class="btn-secondary">
             <span>🔄</span> Reload Verification
           </button>
           <button type="submit" id="verifyBtn" disabled class="btn-primary">
@@ -142,6 +149,56 @@
           </button>
         </div>
         
+        <script>
+        // Safe inline refresh handler
+        function handleRefreshClick() {
+            console.log('🔄 Refresh button clicked (safe handler)');
+            
+            // Show immediate feedback
+            const result = document.getElementById('verificationResult');
+            if (result) {
+                result.innerHTML = '<span style="color: #3498DB;">🔄 Refreshing verification...</span>';
+            }
+            
+            // Reset verify button
+            const verifyBtn = document.getElementById('verifyBtn');
+            if (verifyBtn) {
+                verifyBtn.disabled = true;
+                verifyBtn.style.opacity = '0.5';
+                verifyBtn.innerHTML = '<span>🛡️</span> Verify I\'m Human';
+            }
+            
+            // Safe approach: show reload option
+            setTimeout(() => {
+                if (result) {
+                    result.innerHTML = `
+                        <div style="color: #3498DB; text-align: center; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 8px;">
+                            <p style="margin: 0 0 10px 0;">🔄 Verification refresh requested</p>
+                            <p style="margin: 0 0 15px 0; font-size: 14px; opacity: 0.8;">For the best experience, please reload the page to get a fresh verification challenge.</p>
+                            <button onclick="location.reload()" style="
+                                padding: 10px 20px; 
+                                background: #27AE60; 
+                                color: white; 
+                                border: none; 
+                                border-radius: 6px; 
+                                cursor: pointer;
+                                font-weight: 600;
+                                transition: all 0.3s ease;
+                            " onmouseover="this.style.background='#2ECC71'" onmouseout="this.style.background='#27AE60'">
+                                🔄 Reload Page
+                            </button>
+                        </div>
+                    `;
+                }
+            }, 1000);
+            
+            console.log('✅ Safe refresh handler completed');
+        }
+        
+        // Make it globally available
+        window.handleRefreshClick = handleRefreshClick;
+        </script>
+
         <div id="verificationResult" class="verification-result"></div>
       </form>
     </div>
@@ -170,7 +227,7 @@
             <div id="mainIP" class="info-item"></div>
           </div>
         </div>
-        
+
         <div class="interactive-demo">
           <div class="demo-card">
             <h3>Interactive Demo</h3>
@@ -178,8 +235,12 @@
             <div class="character-wrapper">
               <img src="Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg" alt="Interactive Character">
               <div class="eyes-container">
-                <div class="eye"><div class="pupil"></div></div>
-                <div class="eye"><div class="pupil"></div></div>
+                <div class="eye">
+                  <div class="pupil"></div>
+                </div>
+                <div class="eye">
+                  <div class="pupil"></div>
+                </div>
               </div>
             </div>
             <audio id="audioPlayer" src="Assets/burp-1.mp3" preload="auto"></audio>
@@ -198,19 +259,20 @@
           <h1>My Projects & Skills</h1>
           <p>Explore my technical journey and development projects</p>
         </div>
-        
+
         <div class="projects-grid">
           <div class="project-card">
             <div class="project-icon">🌐</div>
             <h3>Web Development</h3>
-            <p>Modern responsive websites using HTML5, CSS3, and JavaScript. Focus on user experience and performance optimization.</p>
+            <p>Modern responsive websites using HTML5, CSS3, and JavaScript. Focus on user experience and performance
+              optimization.</p>
             <div class="tech-stack">
               <span class="tech-tag">HTML5</span>
               <span class="tech-tag">CSS3</span>
               <span class="tech-tag">JavaScript</span>
             </div>
           </div>
-          
+
           <div class="project-card">
             <div class="project-icon">🔒</div>
             <h3>Security Systems</h3>
@@ -221,7 +283,7 @@
               <span class="tech-tag">Encryption</span>
             </div>
           </div>
-          
+
           <div class="project-card">
             <div class="project-icon">🎮</div>
             <h3>Game Development</h3>
@@ -232,7 +294,7 @@
               <span class="tech-tag">Game Logic</span>
             </div>
           </div>
-          
+
           <div class="project-card">
             <div class="project-icon">📱</div>
             <h3>Responsive Design</h3>
@@ -244,7 +306,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="status-info">
           <div id="contentDatetime" class="status-item"></div>
           <div id="contentIP" class="status-item"></div>
@@ -258,11 +320,12 @@
           <h2>About Me</h2>
           <div class="section-line"></div>
         </div>
-        
+
         <div class="about-content">
           <div class="about-text">
-            <p class="intro-text">Hello! I'm <strong>Shen Ming</strong>, a passionate Computer Science student at Sunway University, currently in my second year.</p>
-            
+            <p class="intro-text">Hello! I'm <strong>Shen Ming</strong>, a passionate Computer Science student at Sunway
+              University, currently in my second year.</p>
+
             <div class="about-details">
               <div class="detail-item">
                 <div class="detail-icon">🎓</div>
@@ -271,7 +334,7 @@
                   <p>Year 2 Computer Science Student at Sunway University</p>
                 </div>
               </div>
-              
+
               <div class="detail-item">
                 <div class="detail-icon">💻</div>
                 <div class="detail-content">
@@ -279,7 +342,7 @@
                   <p>Frontend Development, Web Security, Interactive Applications</p>
                 </div>
               </div>
-              
+
               <div class="detail-item">
                 <div class="detail-icon">🚀</div>
                 <div class="detail-content">
@@ -289,7 +352,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="skills-section">
             <h3>Technical Skills</h3>
             <div class="skills-grid">
@@ -320,7 +383,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="social-links">
           <a href="https://wa.me/your-phone-number" target="_blank" class="social-link whatsapp">
             <span class="social-icon">📱</span>
@@ -345,7 +408,7 @@
           <div class="section-line"></div>
           <p>Let's connect and discuss opportunities, projects, or just have a chat!</p>
         </div>
-        
+
         <div class="contact-grid">
           <div class="contact-card">
             <div class="contact-icon">📧</div>
@@ -353,21 +416,22 @@
             <p>For professional inquiries and collaborations</p>
             <a href="mailto:shenming@example.com" class="contact-link">shenming@example.com</a>
           </div>
-          
+
           <div class="contact-card">
             <div class="contact-icon">📱</div>
             <h3>WhatsApp</h3>
             <p>Quick messages and instant communication</p>
             <a href="https://wa.me/your-phone-number" target="_blank" class="contact-link">Send Message</a>
           </div>
-          
+
           <div class="contact-card">
             <div class="contact-icon">💼</div>
             <h3>LinkedIn</h3>
             <p>Professional networking and career opportunities</p>
-            <a href="https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/" target="_blank" class="contact-link">Connect</a>
+            <a href="https://www.linkedin.com/in/ch-ng-shen-ming-8bb526317/" target="_blank"
+              class="contact-link">Connect</a>
           </div>
-          
+
           <div class="contact-card">
             <div class="contact-icon">📷</div>
             <h3>Instagram</h3>
@@ -375,7 +439,7 @@
             <a href="https://www.instagram.com/your-profile/" target="_blank" class="contact-link">Follow</a>
           </div>
         </div>
-        
+
         <div class="contact-cta">
           <h3>Ready to start a conversation?</h3>
           <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.</p>
@@ -385,21 +449,23 @@
     </div>
 
     <div id="animationPage" class="animation-page" style="background:#0a0c18;">
-      <button id="backHomeBtnAnim" style="position:fixed;top:18px;right:24px;font-size:2em;z-index:1000;background:none;border:none;cursor:pointer;color:white;">←</button>
-      <div class="starsea-bg-canvas-wrap" style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;">
+      <button id="backHomeBtnAnim"
+        style="position:fixed;top:18px;right:24px;font-size:2em;z-index:1000;background:none;border:none;cursor:pointer;color:white;">←</button>
+      <div class="starsea-bg-canvas-wrap"
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none;">
         <canvas id="starryNightCanvas" style="width:100vw;height:100vh;display:block;background:#0a0c18;"></canvas>
       </div>
     </div>
 
     <div id="gamesPage" class="games-page">
       <button id="backHomeBtnGames" class="back-btn">← Back to Home</button>
-      
+
       <div class="games-container">
         <div class="game-header">
           <h1>🎮 Tetris Game</h1>
           <p>Classic puzzle game built with modern JavaScript</p>
         </div>
-        
+
         <div class="tetris-game">
           <div class="game-sidebar">
             <div class="score-panel">
@@ -419,19 +485,19 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="next-panel">
               <h3>Next Piece</h3>
               <canvas id="nextCanvas" width="120" height="120"></canvas>
             </div>
-            
+
             <div class="game-controls">
               <button id="startBtn" class="game-btn primary">Start Game</button>
               <button id="pauseBtn" class="game-btn secondary">Pause</button>
               <button id="resetBtn" class="game-btn danger">Reset</button>
             </div>
           </div>
-          
+
           <div class="game-main">
             <div class="game-board">
               <canvas id="tetrisCanvas" width="300" height="600"></canvas>
@@ -445,7 +511,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="controls-guide">
           <h3>How to Play</h3>
           <div class="controls-grid">
@@ -471,17 +537,23 @@
     </div>
   </div>
 
-  <script type="module" src="js/main.js"></script>
+  <script src="debug-verification.js"></script>
+  <script src="quick-fix.js"></script>
+  <script src="script.js"></script>
+  <script src="enhanced-ui.js"></script>
+  <script src="tetris-game.js"></script>
+  <script src="analytics-setup.js"></script>
   <script nonce="">
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('sw.js').then(function(registration) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').then(function (registration) {
           console.log('Service Worker registered with scope:', registration.scope);
-        }, function(err) {
+        }, function (err) {
           console.log('Service Worker registration failed:', err);
         });
       });
     }
   </script>
 </body>
+
 </html>

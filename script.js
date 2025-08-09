@@ -97,10 +97,54 @@ function handleTurnstileSuccess(token) {
   }, 100);
 }
 
+// Refresh Turnstile verification - Safe version
+function refreshTurnstile() {
+  console.log('🔄 Refreshing Turnstile verification...');
+
+  // Show immediate feedback
+  const verificationResult = document.getElementById('verificationResult');
+  if (verificationResult) {
+    verificationResult.innerHTML = '<span style="color: #3498DB;">🔄 Refreshing verification...</span>';
+  }
+
+  // Reset verify button
+  const verifyBtn = document.getElementById('verifyBtn');
+  if (verifyBtn) {
+    verifyBtn.disabled = true;
+    verifyBtn.style.opacity = '0.5';
+    verifyBtn.innerHTML = '<span>🛡️</span> Verify I\'m Human';
+  }
+
+  // Simple and safe approach: just show a message and suggest page reload
+  setTimeout(() => {
+    if (verificationResult) {
+      verificationResult.innerHTML = `
+        <div style="color: #F39C12; text-align: center; padding: 10px;">
+          ⚠️ To refresh the verification, please reload this page.<br>
+          <button onclick="location.reload()" style="
+            margin-top: 10px; 
+            padding: 8px 16px; 
+            background: #3498DB; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+          ">🔄 Reload Page</button>
+        </div>
+      `;
+    }
+  }, 1000);
+
+  console.log('✅ Refresh message displayed');
+}
+
+// Make refreshTurnstile globally available
+window.refreshTurnstile = refreshTurnstile;
+
 // Set Turnstile callbacks
 window.onTurnstileSuccess = handleTurnstileSuccess;
 
-window.onTurnstileExpired = function() {
+window.onTurnstileExpired = function () {
   console.log('⚠️ Turnstile verification expired');
   const verificationResult = document.getElementById('verificationResult');
   if (verificationResult) {
@@ -108,7 +152,7 @@ window.onTurnstileExpired = function() {
   }
 };
 
-window.onTurnstileError = function(error) {
+window.onTurnstileError = function (error) {
   console.error('❌ Turnstile verification error:', error);
   const verificationResult = document.getElementById('verificationResult');
   if (verificationResult) {
@@ -134,12 +178,12 @@ function logSecurityEvent(event, data) {
 function initializeSecurity() {
   // Anti-debugging
   let consoleCount = 0;
-  console.log = console.warn = console.error = console.info = function() {
+  console.log = console.warn = console.error = console.info = function () {
     consoleCount++;
     if (consoleCount > 20) antiDevTools();
     return false;
   };
-  
+
   const timeCheck = () => {
     const start = performance.now();
     debugger;
@@ -148,7 +192,7 @@ function initializeSecurity() {
   setInterval(timeCheck, 5000);
 
   // Keyboard shortcut detection
-  document.addEventListener('keydown', function(e) {
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
       e.preventDefault();
       antiDevTools();
@@ -156,7 +200,7 @@ function initializeSecurity() {
   });
 
   // Right-click detection
-  document.addEventListener('contextmenu', function(e) {
+  document.addEventListener('contextmenu', function (e) {
     e.preventDefault();
     antiDevTools();
   });
@@ -224,7 +268,7 @@ function drawStarSea() {
   const RADIUS_MAX = Math.min(W, H) * 0.46;
   const ROTATE_SPEED = 0.0007;
   const STAR_COLORS = ["#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"];
-  
+
   const stars = [];
 
   for (let i = 0; i < STAR_COUNT; i++) {
@@ -270,15 +314,15 @@ function drawStarSea() {
 }
 
 // Refresh Turnstile function
-window.refreshTurnstile = function() {
+window.refreshTurnstile = function () {
   console.log('🔄 Reloading Turnstile verification');
-  
+
   try {
     const verificationResult = document.getElementById('verificationResult');
-    if(verificationResult) {
+    if (verificationResult) {
       verificationResult.innerHTML = '<span style="color: #6c757d;">🔄 Reloading verification...</span>';
     }
-    
+
     if (window.turnstile) {
       const turnstileDiv = document.querySelector('.cf-turnstile');
       if (turnstileDiv) {
@@ -292,8 +336,8 @@ window.refreshTurnstile = function() {
             'expired-callback': 'onTurnstileExpired',
             'error-callback': 'onTurnstileError'
           });
-          
-          if(verificationResult) {
+
+          if (verificationResult) {
             verificationResult.innerHTML = '<span style="color: #4CAF50;">✅ Verification reloaded</span>';
           }
         }, 500);
@@ -303,15 +347,15 @@ window.refreshTurnstile = function() {
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
       script.async = true;
       script.defer = true;
-      script.onload = function() {
+      script.onload = function () {
         console.log('✅ Turnstile script reloaded successfully');
-        if(verificationResult) {
+        if (verificationResult) {
           verificationResult.innerHTML = '<span style="color: #4CAF50;">✅ Verification service reloaded</span>';
         }
       };
-      script.onerror = function() {
+      script.onerror = function () {
         console.error('❌ Turnstile script reload failed');
-        if(verificationResult) {
+        if (verificationResult) {
           verificationResult.innerHTML = '<span style="color: #F44336;">❌ Failed to reload verification service</span>';
         }
       };
@@ -324,13 +368,13 @@ window.refreshTurnstile = function() {
 
 // --- Main Event Listener ---
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Initialize security features
   initializeSecurity();
 
   // Fetch initial data
   fetchMalaysiaTimeAndIP();
-  
+
   // Start pre-verify animation
   animatePreVerifyBg();
 
@@ -439,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function() {
       window.tetrisInstance.init();
     });
   }
-  
+
   if (backHomeBtn) {
     backHomeBtn.addEventListener('click', resetPageModes);
   }
@@ -451,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (backHomeBtnGames) {
     backHomeBtnGames.addEventListener('click', resetPageModes);
   }
-  
+
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
     if (link.id !== 'contentNav' && link.id !== 'animationNav' && link.id !== 'gamesNav') {
       link.addEventListener('click', resetPageModes);
@@ -470,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Games page interaction
   if (gamesRect) {
-    gamesRect.addEventListener('click', function(e) {
+    gamesRect.addEventListener('click', function (e) {
       if (gamesRect.classList.contains('collapsed')) {
         gamesRect.classList.remove('collapsed');
         // 始终初始化俄罗斯方块游戏，保证每次展开都能重置
@@ -481,56 +525,56 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
-  
-  // Behavior monitoring object
-  const behaviorMonitor = {
-    mousePoints: [],
-    clickTimes: [],
-    keyPressTimes: [],
-    scrollEvents: [],
-    
-    // Track mouse movement
-    trackMouseMovement: function(e) {
-      this.mousePoints.push({
-        x: e.clientX,
-        y: e.clientY,
-        timestamp: Date.now()
-      });
-      
-      // Keep only recent points
-      if (this.mousePoints.length > 100) {
-        this.mousePoints.shift();
-      }
-    },
-    
-    // Track clicks
-    trackClick: function(e) {
-      this.clickTimes.push(Date.now());
-      if (this.clickTimes.length > 50) {
-        this.clickTimes.shift();
-      }
-    },
-    
-    // Track keyboard
-    trackKeypress: function(e) {
-      this.keyPressTimes.push(Date.now());
-      if (this.keyPressTimes.length > 50) {
-        this.keyPressTimes.shift();
-      }
-    },
-    
-    // Track scroll
-    trackScroll: function(e) {
-      this.scrollEvents.push(Date.now());
-      if (this.scrollEvents.length > 50) {
-        this.scrollEvents.shift();
-      }
-    },
-    
-    // Setup honeypot
-    setupHoneyPot: function() {
-      const honeypot = document.createElement('div');
-      honeypot.style.cssText = `
+
+// Behavior monitoring object
+const behaviorMonitor = {
+  mousePoints: [],
+  clickTimes: [],
+  keyPressTimes: [],
+  scrollEvents: [],
+
+  // Track mouse movement
+  trackMouseMovement: function (e) {
+    this.mousePoints.push({
+      x: e.clientX,
+      y: e.clientY,
+      timestamp: Date.now()
+    });
+
+    // Keep only recent points
+    if (this.mousePoints.length > 100) {
+      this.mousePoints.shift();
+    }
+  },
+
+  // Track clicks
+  trackClick: function (e) {
+    this.clickTimes.push(Date.now());
+    if (this.clickTimes.length > 50) {
+      this.clickTimes.shift();
+    }
+  },
+
+  // Track keyboard
+  trackKeypress: function (e) {
+    this.keyPressTimes.push(Date.now());
+    if (this.keyPressTimes.length > 50) {
+      this.keyPressTimes.shift();
+    }
+  },
+
+  // Track scroll
+  trackScroll: function (e) {
+    this.scrollEvents.push(Date.now());
+    if (this.scrollEvents.length > 50) {
+      this.scrollEvents.shift();
+    }
+  },
+
+  // Setup honeypot
+  setupHoneyPot: function () {
+    const honeypot = document.createElement('div');
+    honeypot.style.cssText = `
         position: absolute;
         left: -9999px;
         width: 1px;
@@ -538,26 +582,26 @@ document.addEventListener('DOMContentLoaded', function() {
         opacity: 0;
         pointer-events: none;
       `;
-      honeypot.innerHTML = '<input type="text" name="bot_trap" tabindex="-1">';
-      document.body.appendChild(honeypot);
-      
-      // If there's interaction, it's a bot
-      honeypot.addEventListener('click', () => {
-        securityState.behaviorAnalysis.suspiciousActivity += 10;
-        this.logSuspiciousActivity('honeypot_interaction', {});
-        antiDevTools();
-      });
-      
-      const input = honeypot.querySelector('input');
-      input.addEventListener('input', () => {
-        securityState.behaviorAnalysis.suspiciousActivity += 10;
-        this.logSuspiciousActivity('honeypot_input', {});
-        antiDevTools();
-      });
-    },
-    
-    // Record suspicious activity
-    logSuspiciousActivity: function(type, data) {
+    honeypot.innerHTML = '<input type="text" name="bot_trap" tabindex="-1">';
+    document.body.appendChild(honeypot);
+
+    // If there's interaction, it's a bot
+    honeypot.addEventListener('click', () => {
+      securityState.behaviorAnalysis.suspiciousActivity += 10;
+      this.logSuspiciousActivity('honeypot_interaction', {});
+      antiDevTools();
+    });
+
+    const input = honeypot.querySelector('input');
+    input.addEventListener('input', () => {
+      securityState.behaviorAnalysis.suspiciousActivity += 10;
+      this.logSuspiciousActivity('honeypot_input', {});
+      antiDevTools();
+    });
+  },
+
+  // Record suspicious activity
+  logSuspiciousActivity: function (type, data) {
     console.log(`Suspicious activity detected: ${type}`, data);
     logSecurityEvent('suspicious_behavior', {
       type,
@@ -565,30 +609,30 @@ document.addEventListener('DOMContentLoaded', function() {
       totalSuspiciousScore: securityState.behaviorAnalysis.suspiciousActivity,
       timestamp: new Date().toISOString()
     });
-    
+
     // 如果可疑分数过高，提高风险等级
     if (securityState.behaviorAnalysis.suspiciousActivity > 20) { // 提高阈值
       securityState.riskLevel = 'high';
       updateRiskDisplay(['机器人行为']);
     }
   },
-  
+
   // 初始化行为监控
-  init: function() {
+  init: function () {
     document.addEventListener('mousemove', this.trackMouseMovement.bind(this));
     document.addEventListener('click', this.trackClick.bind(this));
     document.addEventListener('keypress', this.trackKeypress.bind(this));
     document.addEventListener('scroll', this.trackScroll.bind(this));
     this.setupHoneyPot();
-    
+
     // 定期分析行为模式
     setInterval(() => {
       this.analyzeBehaviorPattern();
     }, 30000);
   },
-  
+
   // 综合行为模式分析
-  analyzeBehaviorPattern: function() {
+  analyzeBehaviorPattern: function () {
     const analysis = {
       mouseActivity: this.mousePoints.length,
       clickActivity: this.clickTimes.length,
@@ -596,13 +640,13 @@ document.addEventListener('DOMContentLoaded', function() {
       scrollActivity: this.scrollEvents.length,
       suspiciousScore: securityState.behaviorAnalysis.suspiciousActivity
     };
-    
+
     // 检测完全没有人类行为的情况
     if (analysis.mouseActivity === 0 && analysis.clickActivity === 0) {
       securityState.behaviorAnalysis.suspiciousActivity += 5;
       this.logSuspiciousActivity('no_human_interaction', analysis);
     }
-    
+
     // 记录行为分析结果
     logSecurityEvent('behavior_analysis', analysis);
   }
@@ -615,7 +659,7 @@ async function getUserIPInfo() {
       'https://ipinfo.io/json',
       'https://api.ipify.org?format=json'
     ];
-    
+
     let ipData = null;
     for (let service of ipServices) {
       try {
@@ -628,7 +672,7 @@ async function getUserIPInfo() {
         continue;
       }
     }
-    
+
     if (ipData) {
       securityState.ipInfo = ipData;
       displayIPInfo(ipData);
@@ -710,7 +754,7 @@ function calculateRiskLevel(ipData) {
 // 🔍 增强的设备指纹生成
 function generateAdvancedDeviceFingerprint() {
   const fingerprint = {};
-  
+
   try {
     // 基础信息
     fingerprint.screen = {
@@ -721,13 +765,13 @@ function generateAdvancedDeviceFingerprint() {
       availWidth: screen.availWidth,
       availHeight: screen.availHeight
     };
-    
+
     // Canvas指纹
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = 200;
     canvas.height = 50;
-    
+
     ctx.textBaseline = 'top';
     ctx.font = '14px Arial, sans-serif';
     ctx.fillStyle = '#f60';
@@ -736,9 +780,9 @@ function generateAdvancedDeviceFingerprint() {
     ctx.fillText('🌈 Device Fingerprint 🔒', 2, 15);
     ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
     ctx.fillText('Advanced Security System', 4, 35);
-    
+
     fingerprint.canvas = canvas.toDataURL();
-    
+
     // WebGL指纹
     try {
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -754,7 +798,7 @@ function generateAdvancedDeviceFingerprint() {
     } catch (e) {
       fingerprint.webgl = 'blocked';
     }
-    
+
     // 音频指纹
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -762,32 +806,32 @@ function generateAdvancedDeviceFingerprint() {
       const analyser = audioCtx.createAnalyser();
       const gain = audioCtx.createGain();
       const scriptProcessor = audioCtx.createScriptProcessor(4096, 1, 1);
-      
+
       gain.gain.value = 0;
       oscillator.type = 'triangle';
       oscillator.frequency.setValueAtTime(10000, audioCtx.currentTime);
-      
+
       oscillator.connect(analyser);
       analyser.connect(scriptProcessor);
       scriptProcessor.connect(gain);
       gain.connect(audioCtx.destination);
-      
+
       oscillator.start(0);
-      
+
       const audioData = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(audioData);
       fingerprint.audio = Array.from(audioData).join(',');
-      
+
       oscillator.stop();
       audioCtx.close();
     } catch (e) {
       fingerprint.audio = 'blocked';
     }
-    
+
     // 字体检测
     const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 'Impact'];
     fingerprint.fonts = [];
-    
+
     fonts.forEach(font => {
       const span = document.createElement('span');
       span.style.fontFamily = font;
@@ -796,17 +840,17 @@ function generateAdvancedDeviceFingerprint() {
       span.style.position = 'absolute';
       span.style.left = '-9999px';
       document.body.appendChild(span);
-      
+
       const width = span.offsetWidth;
       const height = span.offsetHeight;
       document.body.removeChild(span);
-      
+
       fingerprint.fonts.push({
         font: font,
         dimensions: `${width}x${height}`
       });
     });
-    
+
     // 硬件信息
     fingerprint.hardware = {
       cores: navigator.hardwareConcurrency || 'unknown',
@@ -816,7 +860,7 @@ function generateAdvancedDeviceFingerprint() {
       doNotTrack: navigator.doNotTrack,
       languages: navigator.languages || [navigator.language]
     };
-    
+
     // 时区和地理信息
     fingerprint.locale = {
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -824,7 +868,7 @@ function generateAdvancedDeviceFingerprint() {
       language: navigator.language,
       languages: navigator.languages
     };
-    
+
     // 传感器检测（移动设备）
     if ('DeviceMotionEvent' in window) {
       fingerprint.sensors = {
@@ -832,7 +876,7 @@ function generateAdvancedDeviceFingerprint() {
         deviceOrientation: 'DeviceOrientationEvent' in window
       };
     }
-    
+
     // 电池信息（如果可用）
     if ('getBattery' in navigator) {
       navigator.getBattery().then(battery => {
@@ -844,7 +888,7 @@ function generateAdvancedDeviceFingerprint() {
         };
       });
     }
-    
+
     // 网络信息
     if ('connection' in navigator) {
       const conn = navigator.connection;
@@ -856,11 +900,11 @@ function generateAdvancedDeviceFingerprint() {
         downlink: conn.downlink
       };
     }
-    
+
   } catch (error) {
     fingerprint.error = error.message;
   }
-  
+
   securityState.advancedFingerprint = fingerprint;
   return btoa(JSON.stringify(fingerprint));
 }
@@ -873,9 +917,9 @@ function generateDeviceFingerprint() {
 // 🔧 自动化工具检测
 const automationDetector = {
   detected: false,
-  
+
   // 检测Selenium
-  detectSelenium: function() {
+  detectSelenium: function () {
     return !!(
       window.webdriver ||
       window.navigator.webdriver ||
@@ -888,43 +932,43 @@ const automationDetector = {
       window.outerHeight === 0
     );
   },
-  
+
   // 检测Puppeteer
-  detectPuppeteer: function() {
+  detectPuppeteer: function () {
     return !!(
       window.navigator.webdriver ||
       (window.navigator.plugins.length === 0 && window.navigator.languages.length === 0)
     );
   },
-  
+
   // 检测Playwright
-  detectPlaywright: function() {
+  detectPlaywright: function () {
     return !!(
       window.playwright ||
       navigator.userAgent.includes('Playwright') ||
       window.navigator.webdriver
     );
   },
-  
+
   // 检测Chrome headless
-  detectHeadless: function() {
+  detectHeadless: function () {
     return !!(
       (window.navigator.plugins.length === 0 && window.navigator.languages.length === 0) ||
       (window.outerWidth === 0 && window.outerHeight === 0)
     );
   },
-  
+
   // 综合检测
-  detect: function() {
+  detect: function () {
     const selenium = this.detectSelenium();
     const puppeteer = this.detectPuppeteer();
     const playwright = this.detectPlaywright();
     const headless = this.detectHeadless();
-    
+
     if (selenium || puppeteer || playwright || headless) {
       this.detected = true;
       securityState.behaviorAnalysis.suspiciousActivity += 10;
-      
+
       logSecurityEvent('automation_detected', {
         selenium,
         puppeteer,
@@ -934,12 +978,12 @@ const automationDetector = {
         plugins: navigator.plugins.length,
         languages: navigator.languages.length
       });
-      
+
       // 自动化工具检测到后延迟跳转，给用户更多时间
       setTimeout(() => {
         antiDevTools();
       }, 5000); // 延长到5秒
-      
+
       return true;
     }
     return false;
@@ -949,11 +993,11 @@ function updateRiskDisplay(riskFactors = []) {
   const riskDiv = document.getElementById('riskLevel');
   const colors = {
     low: '#4CAF50',
-    medium: '#FF9800', 
+    medium: '#FF9800',
     high: '#F44336',
     unknown: '#9E9E9E'
   };
-  
+
   const icons = {
     low: '🟢',
     medium: '🟡',
@@ -971,7 +1015,7 @@ function updateRiskDisplay(riskFactors = []) {
 // 根据风险等级配置Turnstile
 function updateTurnstileConfiguration() {
   const turnstileDiv = document.querySelector('.cf-turnstile');
-  
+
   // 根据风险等级调整验证难度
   switch (securityState.riskLevel) {
     case 'high':
@@ -1038,26 +1082,26 @@ function addAdditionalVerification() {
 //   }
 //};
 
-window.onTurnstileExpired = function() {
+window.onTurnstileExpired = function () {
   console.log('⚠️ Turnstile verification expired');
   securityState.turnstileVerified = false;
   const verifyBtn = document.getElementById('verifyBtn');
-  if(verifyBtn) {
+  if (verifyBtn) {
     verifyBtn.disabled = true;
     verifyBtn.style.opacity = '0.5';
   }
   const verificationResult = document.getElementById('verificationResult');
-  if(verificationResult) {
-    verificationResult.innerHTML = 
-    '<span style="color: #FF9800;">⚠️ Verification has expired, please verify again.</span>';
+  if (verificationResult) {
+    verificationResult.innerHTML =
+      '<span style="color: #FF9800;">⚠️ Verification has expired, please verify again.</span>';
   }
 };
 
-window.onTurnstileError = function(error) {
+window.onTurnstileError = function (error) {
   console.error('❌ Turnstile verification error:', error);
 
   let errorMessage = '';
-  switch(error) {
+  switch (error) {
     case 'network-error':
       errorMessage = '❌ Network connection error, please check your network and try again.';
       break;
@@ -1077,9 +1121,9 @@ window.onTurnstileError = function(error) {
       errorMessage = '❌ Verification failed: ' + error;
   }
   const verificationResult = document.getElementById('verificationResult');
-  if(verificationResult) {
-    verificationResult.innerHTML = 
-    '<span style="color: #F44336;">' + errorMessage + '</span>';
+  if (verificationResult) {
+    verificationResult.innerHTML =
+      '<span style="color: #F44336;">' + errorMessage + '</span>';
   }
 
   // 记录错误验证
@@ -1090,13 +1134,13 @@ window.onTurnstileError = function(error) {
 };
 
 // 发送验证邮件 (高风险用户)
-window.sendVerificationEmail = function() {
+window.sendVerificationEmail = function () {
   const email = document.getElementById('verifyEmail').value;
   if (!email) {
     alert('请输入有效的邮箱地址');
     return;
   }
-  
+
   // 这里应该调用后端API发送验证邮件
   alert('验证码已发送到 ' + email);
   logSecurityEvent('email_verification_sent', {
@@ -1107,30 +1151,30 @@ window.sendVerificationEmail = function() {
 };
 
 // 🔄 重新加载Turnstile验证
-window.refreshTurnstile = function() {
+window.refreshTurnstile = function () {
   console.log('🔄 Reloading Turnstile verification');
-  
+
   try {
     // 重置验证状态
     securityState.turnstileVerified = false;
     const verifyBtn = document.getElementById('verifyBtn');
-    if(verifyBtn) {
+    if (verifyBtn) {
       verifyBtn.disabled = true;
       verifyBtn.style.opacity = '0.5';
     }
     const verificationResult = document.getElementById('verificationResult');
-    if(verificationResult) {
-      verificationResult.innerHTML = 
-      '<span style="color: #6c757d;">🔄 Reloading verification...</span>';
+    if (verificationResult) {
+      verificationResult.innerHTML =
+        '<span style="color: #6c757d;">🔄 Reloading verification...</span>';
     }
-    
+
     // 如果Turnstile已加载，尝试重置
     if (window.turnstile) {
       const turnstileDiv = document.querySelector('.cf-turnstile');
       if (turnstileDiv) {
         // 清除现有的widget
         turnstileDiv.innerHTML = '';
-        
+
         // 重新渲染
         setTimeout(() => {
           window.turnstile.render(turnstileDiv, {
@@ -1141,11 +1185,11 @@ window.refreshTurnstile = function() {
             'expired-callback': 'onTurnstileExpired',
             'error-callback': 'onTurnstileError'
           });
-          
+
           const verificationResult = document.getElementById('verificationResult');
-          if(verificationResult) {
-            verificationResult.innerHTML = 
-            '<span style="color: #4CAF50;">✅ Verification reloaded</span>';
+          if (verificationResult) {
+            verificationResult.innerHTML =
+              '<span style="color: #4CAF50;">✅ Verification reloaded</span>';
           }
         }, 500);
       }
@@ -1155,36 +1199,36 @@ window.refreshTurnstile = function() {
       script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
       script.async = true;
       script.defer = true;
-      script.onload = function() {
+      script.onload = function () {
         console.log('✅ Turnstile script reloaded successfully');
         const verificationResult = document.getElementById('verificationResult');
-        if(verificationResult) {
-          verificationResult.innerHTML = 
-          '<span style="color: #4CAF50;">✅ Verification service reloaded</span>';
+        if (verificationResult) {
+          verificationResult.innerHTML =
+            '<span style="color: #4CAF50;">✅ Verification service reloaded</span>';
         }
       };
-      script.onerror = function() {
+      script.onerror = function () {
         console.error('❌ Turnstile script reload failed');
         const verificationResult = document.getElementById('verificationResult');
-        if(verificationResult) {
-          verificationResult.innerHTML = 
-          '<span style="color: #F44336;">❌ Failed to reload verification service</span>';
+        if (verificationResult) {
+          verificationResult.innerHTML =
+            '<span style="color: #F44336;">❌ Failed to reload verification service</span>';
         }
       };
       document.head.appendChild(script);
     }
-    
+
     logSecurityEvent('turnstile_refresh', {
       timestamp: new Date().toISOString(),
       reason: 'manual_refresh'
     });
-    
+
   } catch (error) {
     console.error('❌ Error while reloading verification:', error);
     const verificationResult = document.getElementById('verificationResult');
-    if(verificationResult) {
-      verificationResult.innerHTML = 
-      '<span style="color: #F44336;">❌ Reload failed, please refresh the page</span>';
+    if (verificationResult) {
+      verificationResult.innerHTML =
+        '<span style="color: #F44336;">❌ Reload failed, please refresh the page</span>';
     }
   }
 };
@@ -1197,16 +1241,16 @@ function autoRetryTurnstile() {
   if (retryCount < maxRetries) {
     retryCount++;
     console.log(`🔄 自动重试Turnstile (${retryCount}/${maxRetries})`);
-    
+
     setTimeout(() => {
       refreshTurnstile();
     }, 2000 * retryCount); // 递增延迟
   } else {
     console.log('❌ Reached maximum retry attempts');
     const verificationResult = document.getElementById('verificationResult');
-    if(verificationResult) {
-      verificationResult.innerHTML = 
-      '<span style="color: #F44336;">❌ Verification service connection failed, please check your network and refresh the page.</span>';
+    if (verificationResult) {
+      verificationResult.innerHTML =
+        '<span style="color: #F44336;">❌ Verification service connection failed, please check your network and refresh the page.</span>';
     }
   }
 }
@@ -1215,39 +1259,39 @@ function autoRetryTurnstile() {
 function validateDomain() {
   const currentDomain = window.location.hostname;
   const allowedDomains = ['localhost', '127.0.0.1', 'shenming.site']; // 添加你的域名
-  
+
   console.log('当前域名:', currentDomain);
-  
+
   if (currentDomain === 'localhost' || currentDomain === '127.0.0.1' || currentDomain.includes('github.io')) {
     console.log('✅ 在本地或GitHub Pages环境中运行');
     return true;
   }
-  
+
   // 检查是否在允许的域名中
-  const isAllowed = allowedDomains.some(domain => 
+  const isAllowed = allowedDomains.some(domain =>
     currentDomain === domain || currentDomain.endsWith('.' + domain)
   );
-  
+
   if (!isAllowed) {
     console.warn('⚠️ 当前域名可能不在Turnstile配置的域名列表中');
   }
-  
+
   return isAllowed;
 }
 
 // 页面加载时进行检查
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('🔍 开始Turnstile配置检查...');
-  
+
   // 检查域名
   validateDomain();
-  
+
   // 检查sitekey
   const turnstileDiv = document.querySelector('.cf-turnstile');
   if (turnstileDiv) {
     const sitekey = turnstileDiv.getAttribute('data-sitekey');
     console.log('Sitekey:', sitekey);
-    
+
     if (sitekey === '0x4AAAAAAAYourSiteKeyHere') {
       console.error('❌ 仍在使用占位符sitekey');
     } else if (sitekey && sitekey.length > 10) {
@@ -1257,7 +1301,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 基本页面功能
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // 音频播放功能
   const playButton = document.getElementById('playButton');
   if (playButton) {
@@ -1300,28 +1344,38 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 4000);
 
   // 夜间模式切换（全局应用到每个页面）
-document.addEventListener('DOMContentLoaded', function() {
-  const modeBtn = document.getElementById('toggleMode');
-  // 初始化按钮状态和body类
-  function updateModeBtn() {
-    modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-  }
-  // 检查本地存储
-  if (localStorage.getItem('dark-mode') === 'true') {
-    document.body.classList.add('dark-mode');
-  }
-  updateModeBtn();
-  // 切换深色模式
-  modeBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+  document.addEventListener('DOMContentLoaded', function () {
+    const modeBtn = document.getElementById('toggleMode');
+    // 初始化按钮状态和body类
+    function updateModeBtn() {
+      modeBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+    }
+    // 检查本地存储
+    if (localStorage.getItem('dark-mode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
     updateModeBtn();
-  });
-  // 监听模式变化，确保所有页面都应用
-  const observer = new MutationObserver(() => {
-    localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-    updateModeBtn();
-    // 额外：同步所有主要内容区的深色样式
+    // 切换深色模式
+    modeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+      updateModeBtn();
+    });
+    // 监听模式变化，确保所有页面都应用
+    const observer = new MutationObserver(() => {
+      localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
+      updateModeBtn();
+      // 额外：同步所有主要内容区的深色样式
+      document.querySelectorAll('.content, .content-page, .section, .animation-page').forEach(el => {
+        if (document.body.classList.contains('dark-mode')) {
+          el.classList.add('dark-mode');
+        } else {
+          el.classList.remove('dark-mode');
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // 首次加载时同步
     document.querySelectorAll('.content, .content-page, .section, .animation-page').forEach(el => {
       if (document.body.classList.contains('dark-mode')) {
         el.classList.add('dark-mode');
@@ -1330,21 +1384,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
-  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  // 首次加载时同步
-  document.querySelectorAll('.content, .content-page, .section, .animation-page').forEach(el => {
-    if (document.body.classList.contains('dark-mode')) {
-      el.classList.add('dark-mode');
-    } else {
-      el.classList.remove('dark-mode');
-    }
-  });
-});
 
 });
 
 // 安全仪表板控制函数
-window.toggleSecurityDashboard = function() {
+window.toggleSecurityDashboard = function () {
   const dashboard = document.getElementById('securityDashboard');
   if (dashboard) {
     dashboard.style.display = dashboard.style.display === 'none' ? 'block' : 'none';
@@ -1357,34 +1401,34 @@ function checkTurnstileStatus() {
     console.log('⏳ Turnstile脚本尚未加载');
     return false;
   }
-  
+
   console.log('✅ Turnstile脚本已加载');
   return true;
 }
 
 // 监听Turnstile脚本加载
-window.addEventListener('load', function() {
-  setTimeout(function() {
+window.addEventListener('load', function () {
+  setTimeout(function () {
     if (!checkTurnstileStatus()) {
       const verificationResult = document.getElementById('verificationResult');
-      if(verificationResult) {
-        verificationResult.innerHTML = 
-        '<span style="color: #FF9800;">⚠️ Verification service is loading, please wait...</span>';
+      if (verificationResult) {
+        verificationResult.innerHTML =
+          '<span style="color: #FF9800;">⚠️ Verification service is loading, please wait...</span>';
       }
-        
+
       // 再次检查
-      setTimeout(function() {
+      setTimeout(function () {
         if (!checkTurnstileStatus()) {
           const verificationResult = document.getElementById('verificationResult');
-          if(verificationResult) {
-            verificationResult.innerHTML = 
-            '<span style="color: #F44336;">❌ Failed to load verification service, please check your network connection.</span>';
+          if (verificationResult) {
+            verificationResult.innerHTML =
+              '<span style="color: #F44336;">❌ Failed to load verification service, please check your network connection.</span>';
           }
         } else {
           const verificationResult = document.getElementById('verificationResult');
-          if(verificationResult) {
-            verificationResult.innerHTML = 
-            '<span style="color: #4CAF50;">✅ Verification service is ready.</span>';
+          if (verificationResult) {
+            verificationResult.innerHTML =
+              '<span style="color: #4CAF50;">✅ Verification service is ready.</span>';
           }
         }
       }, 5000);
@@ -1414,7 +1458,7 @@ async function logTurnstileEvent(eventType, eventData) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Content导航切换
   var contentNav = document.getElementById('contentNav');
   var contentRect = document.querySelector('#contentPage .content-rect');
@@ -1429,7 +1473,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 切换到content
   if (contentNav) {
-    contentNav.addEventListener('click', function(e) {
+    contentNav.addEventListener('click', function (e) {
       e.preventDefault();
       document.body.classList.add('content-mode');
       document.body.classList.remove('animation-mode', 'games-mode');
@@ -1441,7 +1485,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 切换到animation
   if (animationNav) {
-    animationNav.addEventListener('click', function(e) {
+    animationNav.addEventListener('click', function (e) {
       e.preventDefault();
       document.body.classList.add('animation-mode');
       document.body.classList.remove('content-mode', 'games-mode');
@@ -1459,7 +1503,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 切换到games
   if (gamesNav) {
-    gamesNav.addEventListener('click', function(e) {
+    gamesNav.addEventListener('click', function (e) {
       e.preventDefault();
       document.body.classList.add('games-mode');
       document.body.classList.remove('content-mode', 'animation-mode');
@@ -1471,23 +1515,23 @@ document.addEventListener('DOMContentLoaded', function() {
       window.tetrisInstance.init();
     });
   }
-  
+
   // 返回主页按钮
   if (backHomeBtn) {
-    backHomeBtn.addEventListener('click', function() {
+    backHomeBtn.addEventListener('click', function () {
       document.body.classList.remove('content-mode', 'animation-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
   if (backHomeBtnAnim) {
-    backHomeBtnAnim.addEventListener('click', function() {
+    backHomeBtnAnim.addEventListener('click', function () {
       document.body.classList.remove('animation-mode');
       document.body.classList.remove('content-mode', 'games-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
     });
   }
   if (backHomeBtnGames) {
-    backHomeBtnGames.addEventListener('click', function() {
+    backHomeBtnGames.addEventListener('click', function () {
       document.body.classList.remove('games-mode');
       document.body.classList.remove('content-mode', 'animation-mode');
       document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
@@ -1495,8 +1539,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 其它导航回主页时关闭 content/animation/games
   document.querySelectorAll('.navbar-links a[href^="#"]').forEach(link => {
-    if(link.id !== 'contentNav' && link.id !== 'animationNav' && link.id !== 'gamesNav') {
-      link.addEventListener('click', function() {
+    if (link.id !== 'contentNav' && link.id !== 'animationNav' && link.id !== 'gamesNav') {
+      link.addEventListener('click', function () {
         document.body.classList.remove('content-mode', 'animation-mode', 'games-mode');
         document.querySelectorAll('.navbar-links a').forEach(a => a.classList.remove('active'));
       });
@@ -1505,7 +1549,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 点击 content-rect 展开冷笑话内容
   if (contentRect) {
-    contentRect.addEventListener('click', function(e) {
+    contentRect.addEventListener('click', function (e) {
       if (contentRect.classList.contains('collapsed')) {
         contentRect.classList.remove('collapsed');
         e.stopPropagation();
@@ -1514,7 +1558,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 点击 animation-rect 展开并绘制星空
   if (animationRect) {
-    animationRect.addEventListener('click', function(e) {
+    animationRect.addEventListener('click', function (e) {
       if (animationRect.classList.contains('collapsed')) {
         animationRect.classList.remove('collapsed');
         drawStarSea();
@@ -1524,7 +1568,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // 点击 games-rect 展开并显示游戏
   if (gamesRect) {
-    gamesRect.addEventListener('click', function(e) {
+    gamesRect.addEventListener('click', function (e) {
       if (gamesRect.classList.contains('collapsed')) {
         gamesRect.classList.remove('collapsed');
         // 始终初始化俄罗斯方块游戏，保证每次展开都能重置
@@ -1564,7 +1608,7 @@ function drawStarSea() {
   const STAR_COLORS = [
     "#fffbe7", "#ffe066", "#fff", "#f9f871", "#b3e0ff", "#6ec6ff", "#3a5aee"
   ];
-  
+
   // 极限多星云
   const NEBULA_COUNT = 32; // 极限数量，建议不要再高
   const NEBULA_COLORS = [
@@ -1582,7 +1626,7 @@ function drawStarSea() {
     const size = 160 + Math.random() * 180;
     const speed = 0.00013 + Math.random() * 0.00025;
     const phase = Math.random() * Math.PI * 2;
-    nebulas.push({cx, cy, color, size, speed, phase});
+    nebulas.push({ cx, cy, color, size, speed, phase });
   }
 
   // 生成星点分布（云状分布，带有随机扰动）'
@@ -1739,24 +1783,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if (navbar) navbar.style.display = 'flex';
   }
   // 监听模式切换
-document.body.addEventListener('classChange', ensureNavbarVisible);
-ensureNavbarVisible();
-
-// Register Service Worker for caching
-// This is now handled in index.html to work with CSP nonce
-// if ('serviceWorker' in navigator) {
-//   window.addEventListener('load', () => {
-//     navigator.serviceWorker.register('/sw.js')
-//       .then(registration => {
-//         console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//       })
-//       .catch(error => {
-//         console.log('ServiceWorker registration failed: ', error);
-//       });
-//   });
-// }
   document.body.addEventListener('classChange', ensureNavbarVisible);
-ensureNavbarVisible();
+  ensureNavbarVisible();
+
+  // Register Service Worker for caching
+  // This is now handled in index.html to work with CSP nonce
+  // if ('serviceWorker' in navigator) {
+  //   window.addEventListener('load', () => {
+  //     navigator.serviceWorker.register('/sw.js')
+  //       .then(registration => {
+  //         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+  //       })
+  //       .catch(error => {
+  //         console.log('ServiceWorker registration failed: ', error);
+  //       });
+  //   });
+  // }
+  document.body.addEventListener('classChange', ensureNavbarVisible);
+  ensureNavbarVisible();
 
 });
 
