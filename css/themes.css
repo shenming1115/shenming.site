@@ -1,3 +1,46 @@
+/* Theme Styles - Chinese Traditional Colors Theme */
+
+/* Chinese Traditional Colors Theme */
+:root {
+  /* 青灰蓝 - Qing Hui Lan */
+  --chinese-blue: #39506B;
+  --chinese-blue-light: #4A6280;
+  --chinese-blue-dark: #2A3D52;
+  
+  /* 溥香橙 - Pu Xiang Cheng */
+  --chinese-orange: #D4956B;
+  --chinese-orange-light: #E0A67D;
+  --chinese-orange-dark: #C8845A;
+  
+  /* 飞泉青 - Fei Quan Qing */
+  --chinese-green: #4A6741;
+  --chinese-green-light: #5A7A50;
+  --chinese-green-dark: #3A5432;
+  
+  /* 主色调 */
+  --primary: #39506B;
+  --secondary: #D4956B;
+  --accent: #4A6741;
+  --accent-light: #5A7A50;
+  --text-primary: #2A3D52;
+  --text-secondary: #39506B;
+  --text-light: #FFFFFF;
+  --bg-light: #F5F3F0;
+  --bg-secondary: rgba(217, 149, 107, 0.1);
+  --bg-gradient: linear-gradient(135deg, #39506B 0%, #D4956B 50%, #4A6741 100%);
+  --shadow-light: 0 2px 20px rgba(57, 80, 107, 0.15);
+  --shadow-medium: 0 8px 30px rgba(57, 80, 107, 0.25);
+  --border-color: rgba(57, 80, 107, 0.2);
+}
+
+/* Apply Chinese theme to body */
+body {
+  background: var(--bg-gradient);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  color: var(--text-primary);
+}
+
 /* Theme Styles - Dark mode and theme variations */
 
 /* Dark Mode Theme */

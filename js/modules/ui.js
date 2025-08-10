@@ -86,17 +86,84 @@ function initializeThemeToggle() {
 }
 
 function initializeScrollEffects() {
-    // Parallax effect for gradient backgrounds
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const parallax = document.querySelector('.gradient-bg');
-        if (parallax) {
-            const speed = scrolled * 0.5;
-            parallax.style.transform = `translateY(${speed}px)`;
+    let lastScrollY = window.scrollY;
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        
+        // Smart navbar hide/show with smooth transition
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            navbar.classList.add('hidden');
+        } else {
+            navbar.classList.remove('hidden');
         }
+        
+        // Add transparent background when scrolling
+        if (currentScrollY > 50) {
+            navbar.classList.add('transparent');
+        } else {
+            navbar.classList.remove('transparent');
+        }
+        
+        lastScrollY = currentScrollY;
+        
+        // Parallax effect for hero section
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            const scrolled = window.pageYOffset;
+            const parallax = scrolled * 0.5;
+            hero.style.transform = `translateY(${parallax}px)`;
+        }
+        
+        // Scroll reveal animations
+        const revealElements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+        revealElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('revealed');
+            }
+        });
+        
+        // Stagger animations for grouped elements
+      const staggerContainers = document.querySelectorAll('.projects-grid, .about-details, .skills-grid, .contact-grid, .social-links');
+      staggerContainers.forEach(container => {
+        const containerTop = container.getBoundingClientRect().top;
+        if (containerTop < window.innerHeight - 100) {
+          const staggerItems = container.querySelectorAll('.stagger-item');
+          staggerItems.forEach((item, index) => {
+            setTimeout(() => {
+              item.classList.add('revealed');
+            }, index * 100);
+          });
+        }
+      });
+        
+        // Fade in elements on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('visible');
+            }
+        });
     });
     
-    // Fade in elements on scroll
+    // Parallax effect for gradient backgrounds
+    const parallax = document.querySelector('.gradient-bg');
+    if (parallax) {
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+    }
+    
+    // Intersection Observer for loading elements
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
