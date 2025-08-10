@@ -53,7 +53,12 @@ function setupTurnstile() {
         }
         
         // Show success feedback
-        showVerificationResult('success', '✅ Verification successful! You can now continue.');
+        showVerificationResult('success', '✅ Verification successful! Redirecting to home page...');
+        
+        // Auto redirect after successful verification
+        setTimeout(() => {
+            hideVerificationMask();
+        }, 1500);
     };
     
     // Turnstile error callback
@@ -259,7 +264,27 @@ function hideVerificationMask() {
         setTimeout(() => {
             mask.style.display = 'none';
             document.body.classList.add('after-verify-bg');
-            console.log('✅ Verification completed - Access granted');
+            
+            // Main content will be shown via CSS when after-verify-bg class is added
+            
+            // Auto navigate to home page
+            setTimeout(() => {
+                const homeSection = document.getElementById('home');
+                if (homeSection) {
+                    homeSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                // Update navigation to show home as active
+                const navLinks = document.querySelectorAll('.navbar a');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#home') {
+                        link.classList.add('active');
+                    }
+                });
+            }, 500);
+            
+            console.log('✅ Verification completed - Access granted, redirecting to home page');
         }, 1200);
     }
 }
