@@ -17,6 +17,12 @@ export function initializeUI() {
     // Initialize page transitions
     initializePageTransitions();
     
+    // Initialize interactive elements
+    initializeInteractiveElements();
+    
+    // Initialize starry night animation
+    initializeStarryNight();
+    
     console.log('✅ UI module initialized');
 }
 
@@ -312,3 +318,130 @@ document.addEventListener('visibilitychange', function() {
 window.addEventListener('error', function(e) {
     console.error('UI Error:', e.error);
 });
+
+function initializeInteractiveElements() {
+    // Initialize play button
+    const playButton = document.getElementById('playButton');
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    if (playButton && audioPlayer) {
+        playButton.addEventListener('click', function() {
+            audioPlayer.play().catch(e => {
+                console.log('Audio play failed:', e);
+                // Show user feedback
+                playButton.innerHTML = '<span>🔇</span> Audio Unavailable';
+                setTimeout(() => {
+                    playButton.innerHTML = '<span>🎵</span> Play Sound';
+                }, 2000);
+            });
+        });
+    }
+    
+    // Initialize eye tracking
+    initializeEyeTracking();
+}
+
+function initializeEyeTracking() {
+    const eyes = document.querySelectorAll('.eye');
+    const pupils = document.querySelectorAll('.pupil');
+    
+    if (eyes.length === 0 || pupils.length === 0) return;
+    
+    document.addEventListener('mousemove', function(e) {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        pupils.forEach((pupil, index) => {
+            const eye = eyes[index];
+            if (!eye) return;
+            
+            const eyeRect = eye.getBoundingClientRect();
+            const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+            const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+            
+            const deltaX = mouseX - eyeCenterX;
+            const deltaY = mouseY - eyeCenterY;
+            const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            const maxDistance = 15; // Maximum pupil movement
+            const moveX = (deltaX / distance) * Math.min(distance, maxDistance);
+            const moveY = (deltaY / distance) * Math.min(distance, maxDistance);
+            
+            pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+    });
+}
+
+function initializeStarryNight() {
+    const canvas = document.getElementById('starryNightCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const stars = [];
+    const numStars = 200;
+    
+    // Set canvas size
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Create stars
+    for (let i = 0; i < numStars; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2 + 0.5,
+            opacity: Math.random() * 0.8 + 0.2,
+            twinkleSpeed: Math.random() * 0.02 + 0.01,
+            drift: {
+                x: (Math.random() - 0.5) * 0.2,
+                y: (Math.random() - 0.5) * 0.2
+            }
+        });
+    }
+    
+    function animate() {
+        // Clear canvas with dark blue background
+        ctx.fillStyle = '#0a0c18';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw and animate stars
+        stars.forEach(star => {
+            // Update position
+            star.x += star.drift.x;
+            star.y += star.drift.y;
+            
+            // Wrap around edges
+            if (star.x < 0) star.x = canvas.width;
+            if (star.x > canvas.width) star.x = 0;
+            if (star.y < 0) star.y = canvas.height;
+            if (star.y > canvas.height) star.y = 0;
+            
+            // Twinkle effect
+            star.opacity += Math.sin(Date.now() * star.twinkleSpeed) * 0.01;
+            star.opacity = Math.max(0.1, Math.min(1, star.opacity));
+            
+            // Draw star
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+            ctx.fill();
+            
+            // Add glow effect for brighter stars
+            if (star.opacity > 0.7) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * 0.1})`;
+                ctx.fill();
+            }
+        });
+        
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+}
