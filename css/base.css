@@ -277,6 +277,18 @@ select:focus {
   display: none;
 }
 
+/* Ensure main content is visible by default */
+body:not(.games-mode):not(.animation-mode):not(.content-mode) .section,
+body:not(.games-mode):not(.animation-mode):not(.content-mode) .content {
+  display: block !important;
+}
+
+body:not(.games-mode):not(.animation-mode):not(.content-mode) .games-page,
+body:not(.games-mode):not(.animation-mode):not(.content-mode) .animation-page,
+body:not(.games-mode):not(.animation-mode):not(.content-mode) #contentPage {
+  display: none !important;
+}
+
 /* Games mode */
 body.games-mode .section,
 body.games-mode .content,
