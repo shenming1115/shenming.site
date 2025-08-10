@@ -31,6 +31,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 0.5em;
+  text-align: center;
 }
 
 h1 {
@@ -40,6 +41,7 @@ h1 {
   text-shadow: 0 2px 20px rgba(0,0,0,0.1);
   margin-bottom: 0.5em;
   letter-spacing: -0.02em;
+  text-align: center;
 }
 
 h2 {
@@ -54,6 +56,7 @@ h3 {
   font-size: 1.5em;
   color: var(--accent);
   margin-bottom: 0.75em;
+  text-align: center;
 }
 
 p {
@@ -62,6 +65,7 @@ p {
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto 1.5em auto;
+  text-align: center;
 }
 
 /* Links */
@@ -263,9 +267,14 @@ select:focus {
   display: none;
 }
 
+#contentPage {
+  display: none;
+}
+
 /* Games mode */
 body.games-mode .section,
-body.games-mode .content {
+body.games-mode .content,
+body.games-mode #contentPage {
   display: none;
 }
 
@@ -275,7 +284,8 @@ body.games-mode .games-page {
 
 /* Animation mode */
 body.animation-mode .section,
-body.animation-mode .content {
+body.animation-mode .content,
+body.animation-mode #contentPage {
   display: none;
 }
 
@@ -284,12 +294,13 @@ body.animation-mode .animation-page {
 }
 
 /* Content mode */
-body.content-mode .section:not(#content),
+body.content-mode .section,
+body.content-mode .content,
 body.content-mode .games-page,
 body.content-mode .animation-page {
   display: none;
 }
 
-body.content-mode #content {
+body.content-mode #contentPage {
   display: block;
 }
