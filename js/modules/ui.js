@@ -237,6 +237,9 @@ function initializePageTransitions() {
             } else if (href === '#content') {
                 e.preventDefault();
                 showContentPage();
+            } else if (href === '#home' || href === '#') {
+                e.preventDefault();
+                showHomePage();
             }
             
             // Update active state
@@ -244,6 +247,18 @@ function initializePageTransitions() {
             this.classList.add('active');
         });
     });
+    
+    // Back to home buttons
+    const backHomeBtnAnim = document.getElementById('backHomeBtnAnim');
+    const backHomeBtnGames = document.getElementById('backHomeBtnGames');
+    
+    if (backHomeBtnAnim) {
+        backHomeBtnAnim.addEventListener('click', showHomePage);
+    }
+    
+    if (backHomeBtnGames) {
+        backHomeBtnGames.addEventListener('click', showHomePage);
+    }
 }
 
 function showGamesPage() {
@@ -259,6 +274,18 @@ function showAnimationPage() {
 function showContentPage() {
     document.body.classList.add('content-mode');
     document.body.classList.remove('games-mode', 'animation-mode');
+}
+
+function showHomePage() {
+    document.body.classList.remove('games-mode', 'animation-mode', 'content-mode');
+    
+    // Update navbar active state
+    const navLinks = document.querySelectorAll('.navbar a');
+    navLinks.forEach(l => l.classList.remove('active'));
+    const homeLink = document.querySelector('.navbar a[href="#home"], .navbar a[href="#"]');
+    if (homeLink) {
+        homeLink.classList.add('active');
+    }
 }
 
 // Keyboard navigation support

@@ -252,3 +252,44 @@ select:focus {
     font-size: 1em;
   }
 }
+
+/* Page Mode Controls */
+/* Default state - show main content */
+.section, .content {
+  display: block;
+}
+
+.games-page, .animation-page {
+  display: none;
+}
+
+/* Games mode */
+body.games-mode .section,
+body.games-mode .content {
+  display: none;
+}
+
+body.games-mode .games-page {
+  display: block;
+}
+
+/* Animation mode */
+body.animation-mode .section,
+body.animation-mode .content {
+  display: none;
+}
+
+body.animation-mode .animation-page {
+  display: block;
+}
+
+/* Content mode */
+body.content-mode .section:not(#content),
+body.content-mode .games-page,
+body.content-mode .animation-page {
+  display: none;
+}
+
+body.content-mode #content {
+  display: block;
+}
