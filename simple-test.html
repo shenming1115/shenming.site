@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .test-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: rgba(39, 174, 96, 0.8); }
+        .error { background: rgba(231, 76, 60, 0.8); }
+        .info { background: rgba(52, 152, 219, 0.8); }
+        .image-test {
+            margin: 20px 0;
+        }
+        .image-test img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 3px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 简单测试页面</h1>
+        <p>测试网站的基本功能是否正常</p>
+        
+        <div class="test-section">
+            <h2>📋 测试结果</h2>
+            <div id="testResults">
+                <div class="status info">点击下面的按钮开始测试...</div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🖼️ 图片测试</h2>
+            <div class="image-test">
+                <img src="nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg" alt="测试图片" 
+                     onload="imageLoaded()" onerror="imageError()">
+            </div>
+            <p>图片应该显示为300x200像素的长方形</p>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔗 导航测试</h2>
+            <button class="btn" onclick="openMainSite()">打开主网站</button>
+            <button class="btn" onclick="testScripts()">测试脚本加载</button>
+            <button class="btn" onclick="runAllTests()">运行所有测试</button>
+        </div>
+        
+        <div class="test-section">
+            <h2>📝 修复说明</h2>
+            <ul style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <li>✅ 添加了紧急修复脚本 (emergency-fix.js)</li>
+                <li>✅ 强制显示主要内容和home页面</li>
+                <li>✅ 隐藏安全验证遮罩</li>
+                <li>✅ 修复图片显示问题</li>
+                <li>✅ 添加基本导航功能</li>
+                <li>✅ 清理了可能导致空白的样式</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function imageLoaded() {
+            addStatus('success', '✅ 图片加载成功！尺寸正确。');
+        }
+        
+        function imageError() {
+            addStatus('error', '❌ 图片加载失败！请检查文件是否存在。');
+        }
+        
+        function openMainSite() {
+            window.open('index.html', '_blank');
+            addStatus('info', '🌐 主网站已在新标签页打开');
+        }
+        
+        function testScripts() {
+            const scripts = [
+                'emergency-fix.js',
+                'script.js',
+                'tetris-game.js',
+                'css/main.css'
+            ];
+            
+            let results = [];
+            let completed = 0;
+            
+            addStatus('info', '🔄 正在测试脚本和样式文件...');
+            
+            scripts.forEach(script => {
+                fetch(script)
+                    .then(response => {
+                        if (response.ok) {
+                            results.push(`✅ ${script}`);
+                        } else {
+                            results.push(`❌ ${script} (${response.status})`);
+                        }
+                    })
+                    .catch(() => {
+                        results.push(`❌ ${script} (未找到)`);
+                    })
+                    .finally(() => {
+                        completed++;
+                        if (completed === scripts.length) {
+                            addStatus('info', '📜 文件状态:<br>' + results.join('<br>'));
+                        }
+                    });
+            });
+        }
+        
+        function runAllTests() {
+            addStatus('info', '🔄 运行所有测试...');
+            testScripts();
+            setTimeout(() => {
+                openMainSite();
+            }, 2000);
+        }
+        
+        function addStatus(type, message) {
+            const resultsDiv = document.getElementById('testResults');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+            resultsDiv.appendChild(statusDiv);
+            
+            // 滚动到最新状态
+            statusDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 页面加载时自动测试
+        window.addEventListener('load', function() {
+            addStatus('success', '🚀 测试页面加载完成！');
+            
+            // 自动测试图片（如果还没有触发onload）
+            setTimeout(() => {
+                const img = document.querySelector('.image-test img');
+                if (img && img.complete) {
+                    if (img.naturalWidth > 0) {
+                        imageLoaded();
+                    } else {
+                        imageError();
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
