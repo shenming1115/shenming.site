@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test - Shen Ming Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #2980B9;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Navigation & Games Test</h1>
+        <p>This page tests the navigation and games functionality of the main site.</p>
+        
+        <div class="test-item">
+            <h3>📋 Test Checklist</h3>
+            <div id="testResults">
+                <div class="status info">Click the buttons below to run tests...</div>
+            </div>
+        </div>
+        
+        <div class="test-item">
+            <h3>🔗 Quick Tests</h3>
+            <button class="test-button" onclick="testMainSite()">Open Main Site</button>
+            <button class="test-button" onclick="testImageLoad()">Test Image Loading</button>
+            <button class="test-button" onclick="testScripts()">Test Script Loading</button>
+            <button class="test-button" onclick="runAllTests()">Run All Tests</button>
+        </div>
+        
+        <div class="test-item">
+            <h3>📝 Expected Results</h3>
+            <ul>
+                <li>✅ Home page displays with rectangular image (300x200px)</li>
+                <li>✅ Games navigation link works</li>
+                <li>✅ Tetris game loads and is playable</li>
+                <li>✅ Back to home navigation works</li>
+                <li>✅ Test button appears in top-right corner</li>
+            </ul>
+        </div>
+        
+        <div class="test-item">
+            <h3>🎮 Manual Test Instructions</h3>
+            <ol>
+                <li>Open the main site using the button above</li>
+                <li>Verify the home page image is rectangular and properly sized</li>
+                <li>Click the "Games" link in the navigation</li>
+                <li>Verify the Tetris game appears</li>
+                <li>Click "Start Game" and test with arrow keys</li>
+                <li>Use the "Back to Home" button to return</li>
+                <li>Try the purple "🎮 Test Games Page" button in the top-right</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function testMainSite() {
+            window.open('index.html', '_blank');
+            updateStatus('info', '🌐 Main site opened in new tab');
+        }
+        
+        function testImageLoad() {
+            const img = new Image();
+            img.onload = function() {
+                updateStatus('success', '✅ Image loaded successfully: ' + this.naturalWidth + 'x' + this.naturalHeight);
+            };
+            img.onerror = function() {
+                updateStatus('error', '❌ Image failed to load');
+            };
+            img.src = 'nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg';
+        }
+        
+        function testScripts() {
+            const scripts = [
+                'navigation-fix.js',
+                'final-fixes.js',
+                'tetris-game.js',
+                'script.js'
+            ];
+            
+            let results = [];
+            let completed = 0;
+            
+            scripts.forEach(script => {
+                fetch(script)
+                    .then(response => {
+                        if (response.ok) {
+                            results.push(`✅ ${script}`);
+                        } else {
+                            results.push(`❌ ${script} (${response.status})`);
+                        }
+                    })
+                    .catch(() => {
+                        results.push(`❌ ${script} (not found)`);
+                    })
+                    .finally(() => {
+                        completed++;
+                        if (completed === scripts.length) {
+                            updateStatus('info', '📜 Script Status:<br>' + results.join('<br>'));
+                        }
+                    });
+            });
+        }
+        
+        function runAllTests() {
+            updateStatus('info', '🔄 Running all tests...');
+            testImageLoad();
+            setTimeout(() => {
+                testScripts();
+            }, 1000);
+            setTimeout(() => {
+                testMainSite();
+            }, 2000);
+        }
+        
+        function updateStatus(type, message) {
+            const resultsDiv = document.getElementById('testResults');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+            resultsDiv.appendChild(statusDiv);
+        }
+        
+        // Auto-run basic tests on load
+        window.addEventListener('load', function() {
+            updateStatus('info', '🚀 Test page loaded. Ready to run tests.');
+        });
+    </script>
+</body>
+</html>
