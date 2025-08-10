@@ -198,7 +198,150 @@ body.dark-mode .loading-spinner {
 body.dark-mode .game-over {
   background: rgba(33, 37, 41, 0.95);
   border: 2px solid var(--accent);
-  color: var(--text-primary);
+}
+
+/* Content Mode Styles */
+.navbar.content-mode {
+  background: rgba(207, 222, 243, 0.95) !important;
+  box-shadow: 0 2px 16px rgba(180,200,230,0.10);
+}
+
+.navbar.content-mode .navbar-links a {
+  color: #3a5a8c !important;
+  background: rgba(255,255,255,0.0);
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+}
+
+.navbar.content-mode .navbar-links a.active, 
+.navbar.content-mode .navbar-links a:hover {
+  background: rgba(224,234,252,0.7);
+  color: #1e3c72 !important;
+  border-radius: 6px;
+}
+
+.navbar.content-mode .toggle-mode {
+  color: #3a5a8c !important;
+}
+
+/* Content Page Sky/Cloud Flowing Background */
+.content-bg-sky {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(120deg, #b3d8f6 0%, #e0eafc 40%, #cfdef3 70%, #f5fafd 100%);
+  background-image: url('https://cdn.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/sky/clouds.png'), linear-gradient(120deg, #b3d8f6 0%, #e0eafc 40%, #cfdef3 70%, #f5fafd 100%);
+  background-repeat: repeat-x, no-repeat;
+  background-size: 1200px 300px, 200% 200%;
+  background-position: 0 40px, 0% 50%;
+  animation: skyCloudFlow 18s linear infinite, cloudMove 60s linear infinite;
+  opacity: 1;
+  filter: brightness(1.08) saturate(1.08);
+}
+
+@keyframes skyCloudFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@keyframes cloudMove {
+  0% { background-position: 0 40px, 0% 50%; }
+  100% { background-position: 1200px 40px, 100% 50%; }
+}
+
+/* Content section sky/cloud flowing background */
+.content-bg {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+  animation: skyFlow 12s linear infinite;
+  opacity: 0.95;
+}
+
+@keyframes skyFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* After verify background animation */
+body.after-verify-bg {
+  background: var(--bg-gradient) !important;
+  background-size: 200% 200%;
+  animation: gradientFlow 8s ease infinite;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Games page optimizations */
+.games-page h1 {
+    color: var(--text-light);
+    text-shadow: 0 0 20px var(--accent);
+    font-weight: 600;
+}
+
+.score-item span:first-child { 
+    color: var(--accent); 
+}
+
+.next-piece h3 { 
+    color: var(--accent); 
+}
+
+.controls-info h3 { 
+    color: var(--accent); 
+}
+
+.controls-grid div { 
+    background: rgba(52, 152, 219, 0.1); 
+    border: 1px solid rgba(52, 152, 219, 0.3); 
+}
+
+.game-over h2 { 
+    color: #e74c3c; 
+    text-shadow: 0 0 10px #e74c3c; 
+}
+
+/* Content page optimizations */
+.joke-content h2 {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.joke-content p {
+    color: var(--text-primary);
+    font-weight: 400;
+}
+
+/* Animation page optimizations */
+#animationPage .content-rect {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
+}
+
+#animationPage .animation-hint span,
+#animationPage .animation-content h2 {
+    color: var(--primary) !important;
+}
+
+#animationPage .content-rect.collapsed {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+#animationPage .content-rect.collapsed:hover {
+    background: var(--bg-light);
+    color: var(--accent);
+}
+
+/* Starry night canvas */
+#starryNightCanvas {
+    background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%) !important;
 }
 
 body.dark-mode .game-over h2 {

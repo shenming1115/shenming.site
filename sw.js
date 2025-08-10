@@ -1,9 +1,14 @@
-const CACHE_NAME = 'shenming-site-cache-v1';
+const CACHE_NAME = 'shenming-site-cache-v3';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/styles.css',
-  '/script.js',
+  '/css/main.css',
+  '/js/main.js',
+  '/js/modules/ui.js',
+  '/js/modules/analytics.js',
+  '/js/modules/security.js',
+  '/js/modules/tetris.js',
+  '/js/utils/checker.js',
   '/Assets/psycho-kev-9uYCEzNYZ2A-unsplash.jpg',
   '/Assets/burp-1.mp3',
   'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
