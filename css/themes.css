@@ -322,7 +322,87 @@ body.after-verify-bg {
   100% { background-position: 0% 50%; }
 }
 
+/* Main content sections */
+.section {
+    padding: 4em 2em;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.section-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3em;
+}
+
+.hero {
+    text-align: center;
+    padding: 4em 2em;
+    margin: 0 auto;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2em;
+    margin: 3em auto;
+    max-width: 800px;
+}
+
+.contact-card {
+    text-align: center;
+    padding: 2em;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    margin: 0 auto;
+}
+
+.contact-cta {
+    text-align: center;
+    margin-top: 4em;
+}
+
 /* Games page optimizations */
+.games-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.games-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.tetris-game {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2em;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.controls-guide {
+    text-align: center;
+    margin-top: 2em;
+}
+
 .games-page h1 {
     color: var(--text-light);
     text-shadow: 0 0 20px var(--accent);
@@ -363,9 +443,20 @@ body.after-verify-bg {
 }
 
 /* Animation page optimizations */
+#animationPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
 #animationPage .content-rect {
     background: rgba(255, 255, 255, 0.95);
     color: var(--text-primary);
+    margin: 0 auto;
+    text-align: center;
 }
 
 #animationPage .animation-hint span,
