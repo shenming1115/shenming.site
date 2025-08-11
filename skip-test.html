@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跳过验证测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: #27AE60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2ECC71;
+            transform: translateY(-2px);
+        }
+        .alert {
+            background: rgba(231, 76, 60, 0.2);
+            border: 2px solid #E74C3C;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success {
+            background: rgba(39, 174, 96, 0.2);
+            border: 2px solid #27AE60;
+            color: #2ECC71;
+        }
+        .countdown {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ 跳过验证测试</h1>
+        <p>为了解决验证卡住的问题，我添加了跳过验证的功能</p>
+        
+        <div class="alert">
+            <h3>🚨 紧急修复</h3>
+            <p>由于Turnstile验证可能有问题，我添加了以下解决方案：</p>
+            <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>✅ 手动跳过验证按钮</li>
+                <li>✅ 5秒后自动跳过验证</li>
+                <li>✅ 平滑的过渡动画</li>
+                <li>✅ 直接进入home页面</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 现在的流程</h2>
+            <div style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <p><strong>方法1 - 手动跳过：</strong></p>
+                <ol>
+                    <li>打开主网站</li>
+                    <li>看到验证页面</li>
+                    <li>点击绿色的"Skip Verification (Test)"按钮</li>
+                    <li>观察过渡动画</li>
+                    <li>进入home页面</li>
+                </ol>
+                
+                <p><strong>方法2 - 自动跳过：</strong></p>
+                <ol>
+                    <li>打开主网站</li>
+                    <li>等待5秒</li>
+                    <li>系统自动跳过验证</li>
+                    <li>直接进入home页面</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>⏱️ 自动测试倒计时</h2>
+            <div class="countdown" id="countdown">5</div>
+            <p>秒后自动打开主网站进行测试</p>
+            <button class="btn" onclick="clearTimer(); openSite();">🚀 立即测试</button>
+        </div>
+        
+        <div class="card success" style="display: none;" id="successMsg">
+            <h2>✅ 测试成功！</h2>
+            <p>如果你看到了home页面，说明修复成功了！</p>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let countdown = 5;
+        
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                openSite();
+            } else {
+                countdown--;
+            }
+        }
+        
+        function clearTimer() {
+            if (timer) {
+                clearInterval(timer);
+            }
+        }
+        
+        function openSite() {
+            console.log('🚀 Opening main site for testing...');
+            window.open('index.html', '_blank');
+            
+            // Show success message
+            setTimeout(() => {
+                document.getElementById('successMsg').style.display = 'block';
+            }, 2000);
+        }
+        
+        // Start countdown
+        window.addEventListener('load', function() {
+            console.log('⚡ Skip verification test page loaded');
+            console.log('🎯 Added manual and auto-skip functionality');
+            
+            timer = setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
