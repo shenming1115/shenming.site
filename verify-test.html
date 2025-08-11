@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>验证流程测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #39506B 0%, #D4956B 50%, #4A6741 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+        }
+        .btn.success {
+            background: #27AE60;
+        }
+        .btn.success:hover {
+            background: #2ECC71;
+        }
+        .flow-step {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498DB;
+        }
+        .code {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: left;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 验证流程修复测试</h1>
+        <p>测试验证完成后自动跳转到home页面的功能</p>
+        
+        <div class="card">
+            <h2>✅ 修复内容</h2>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <div class="flow-step">
+                    <strong>1. 创建了完整的 script.js</strong><br>
+                    包含验证成功回调和页面跳转逻辑
+                </div>
+                <div class="flow-step">
+                    <strong>2. 验证成功后的流程</strong><br>
+                    Turnstile验证 → 启用按钮 → 点击继续 → 淡出动画 → 显示home页面
+                </div>
+                <div class="flow-step">
+                    <strong>3. 平滑过渡动画</strong><br>
+                    验证页面1.5秒淡出 → home页面1秒淡入
+                </div>
+                <div class="flow-step">
+                    <strong>4. 完整的导航系统</strong><br>
+                    Games、Animation、Content页面导航和返回功能
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🧪 测试步骤</h2>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <ol>
+                    <li><strong>打开主网站</strong> - 应该看到验证页面</li>
+                    <li><strong>完成Turnstile验证</strong> - 勾选"我不是机器人"</li>
+                    <li><strong>点击"Verification Complete - Continue"</strong></li>
+                    <li><strong>观察过渡动画</strong> - 验证页面应该慢慢消失</li>
+                    <li><strong>确认home页面显示</strong> - 应该看到完整的home内容</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🎯 预期行为</h2>
+            <div class="code">
+✅ Turnstile verification successful
+🎯 Starting transition to main site...
+✅ Transition to main site complete
+🏠 Initializing main site features...
+✅ Main site initialization complete
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🚀 开始测试</h2>
+            <a href="index.html" class="btn success" target="_blank">🌐 打开主网站测试</a>
+            <button class="btn" onclick="showTips()">💡 显示调试提示</button>
+        </div>
+        
+        <div id="tips" class="card" style="display: none;">
+            <h2>🔍 调试提示</h2>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <p><strong>如果验证后没有跳转：</strong></p>
+                <ul>
+                    <li>打开浏览器开发者工具 (F12)</li>
+                    <li>查看Console标签页的日志消息</li>
+                    <li>确认看到 "✅ Turnstile verification successful"</li>
+                    <li>检查是否有JavaScript错误</li>
+                </ul>
+                <p><strong>如果Turnstile不显示：</strong></p>
+                <ul>
+                    <li>检查网络连接</li>
+                    <li>确认Cloudflare服务可访问</li>
+                    <li>尝试刷新页面</li>
+                </ul>
+                <p><strong>手动跳过验证（测试用）：</strong></p>
+                <div class="code">
+// 在浏览器控制台中运行：
+document.getElementById('preVerifyMask').style.display = 'none';
+document.getElementById('mainContent').style.display = 'block';
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTips() {
+            const tips = document.getElementById('tips');
+            if (tips.style.display === 'none') {
+                tips.style.display = 'block';
+            } else {
+                tips.style.display = 'none';
+            }
+        }
+        
+        // 页面加载时显示状态
+        window.addEventListener('load', function() {
+            console.log('🧪 验证流程测试页面加载完成');
+            console.log('📋 script.js 已创建，包含完整的验证和跳转逻辑');
+            console.log('🎯 现在可以测试验证完成后的自动跳转功能');
+        });
+    </script>
+</body>
+</html>
