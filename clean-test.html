@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清理后测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #39506B 0%, #D4956B 50%, #4A6741 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+        }
+        .success { color: #2ECC71; }
+        .error { color: #E74C3C; }
+        .info { color: #3498DB; }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 清理完成测试</h1>
+        <p>所有多余的修复脚本和样式已删除</p>
+        
+        <div class="card">
+            <h2>✅ 已清理的内容</h2>
+            <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>❌ 删除了内联CSS样式</li>
+                <li>❌ 删除了 emergency-fix.js</li>
+                <li>❌ 删除了 navigation-fix.js</li>
+                <li>❌ 删除了 final-fixes.js</li>
+                <li>❌ 删除了其他调试脚本</li>
+                <li>✅ 保留了 script.js (主要功能)</li>
+                <li>✅ 保留了 tetris-game.js (游戏)</li>
+                <li>✅ 保留了图片设置 (300x200px)</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h2>🧪 测试主网站</h2>
+            <p>现在网站应该使用原始的CSS样式，没有强制覆盖</p>
+            <a href="index.html" class="btn" target="_blank">🌐 打开主网站</a>
+            <button class="btn" onclick="testImage()">🖼️ 测试图片</button>
+        </div>
+        
+        <div class="card">
+            <h2>📋 预期结果</h2>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <p><strong>现在应该看到：</strong></p>
+                <ul>
+                    <li>🏠 Home页面正常显示（使用原始CSS样式）</li>
+                    <li>🖼️ 长方形图片 (300x200px)</li>
+                    <li>🧭 正常的导航功能</li>
+                    <li>🎮 Games页面可以访问</li>
+                    <li>🎨 原始的设计样式，没有强制覆盖</li>
+                </ul>
+                <p><strong>如果还有问题：</strong></p>
+                <ul>
+                    <li>检查浏览器控制台是否有错误</li>
+                    <li>确认CSS文件是否正确加载</li>
+                    <li>检查图片文件是否存在</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="testResults" class="card" style="display: none;">
+            <h2>🔍 测试结果</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        function testImage() {
+            const resultsDiv = document.getElementById('testResults');
+            const results = document.getElementById('results');
+            
+            resultsDiv.style.display = 'block';
+            results.innerHTML = '<div class="status info">🔄 正在测试图片...</div>';
+            
+            const img = new Image();
+            img.onload = function() {
+                results.innerHTML = `
+                    <div class="status success">
+                        ✅ 图片加载成功！<br>
+                        尺寸: ${this.naturalWidth} x ${this.naturalHeight} 像素
+                    </div>
+                `;
+            };
+            img.onerror = function() {
+                results.innerHTML = `
+                    <div class="status error">
+                        ❌ 图片加载失败！<br>
+                        请检查 nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg 文件是否存在
+                    </div>
+                `;
+            };
+            img.src = 'nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg';
+        }
+        
+        // 页面加载时显示状态
+        window.addEventListener('load', function() {
+            console.log('✅ 清理测试页面加载完成');
+            console.log('📋 已删除所有修复脚本和内联样式');
+            console.log('🌐 现在可以测试主网站的原始功能');
+        });
+    </script>
+</body>
+</html>

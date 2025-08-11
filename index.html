@@ -57,121 +57,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
 
-  <!-- 紧急修复样式 - 确保内容可见 -->
-  <style>
-    /* 强制显示主要内容 */
-    #mainContent {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
 
-    /* 强制显示home页面 */
-    .home-page {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    }
-
-    /* 隐藏安全验证遮罩 */
-    #preVerifyMask {
-      display: none !important;
-    }
-
-    /* 确保hero section可见 */
-    .hero-section {
-      display: flex !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: space-between;
-      padding: 2rem;
-      gap: 2rem;
-      background: linear-gradient(135deg, #39506B 0%, #D4956B 50%, #4A6741 100%);
-    }
-
-    /* 确保导航栏可见 */
-    .navbar {
-      display: flex !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 1rem 2rem;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* 确保图片正确显示 */
-    .character-wrapper img {
-      display: block !important;
-      width: 300px !important;
-      height: 200px !important;
-      object-fit: cover !important;
-      border-radius: 12px !important;
-      border: 3px solid white;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    /* 基本文字样式 */
-    .hero-title {
-      font-size: 3rem;
-      font-weight: 700;
-      color: white;
-      margin: 0;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .hero-subtitle {
-      font-size: 1.5rem;
-      color: rgba(255, 255, 255, 0.9);
-      margin: 1rem 0;
-    }
-
-    /* 导航链接样式 */
-    .navbar a {
-      color: #39506B;
-      text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .navbar a:hover {
-      background: rgba(57, 80, 107, 0.1);
-      color: #2A3D52;
-    }
-
-    /* 确保games和animation页面默认隐藏 */
-    .games-page,
-    .animation-page {
-      display: none !important;
-    }
-
-    /* games模式时的显示 */
-    body.games-mode .games-page {
-      display: flex !important;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 100;
-      background: #1a1a2e;
-    }
-
-    body.games-mode .home-page,
-    body.games-mode .section {
-      display: none !important;
-    }
-  </style>
 
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -623,16 +509,8 @@
     </div>
   </div>
 
-  <script src="emergency-fix.js"></script>
-  <script src="debug-verification.js"></script>
-  <script src="quick-fix.js"></script>
   <script src="script.js"></script>
-  <script src="enhanced-ui.js"></script>
   <script src="tetris-game.js"></script>
-  <script src="navigation-fix.js"></script>
-  <script src="final-fixes.js"></script>
-  <script src="analytics-setup.js"></script>
-  <script src="final-check.js"></script>
   <script nonce=""></script>
   if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
