@@ -161,6 +161,31 @@ function initializeScrollReveal() {
     console.log('✅ Scroll reveal effects initialized');
 }
 
+// 动画页面交互函数
+function toggleStars() {
+    console.log('✨ Toggling stars visibility');
+    const canvas = document.getElementById('starryNightCanvas');
+    if (canvas) {
+        canvas.style.opacity = canvas.style.opacity === '0' ? '1' : '0';
+    }
+}
+
+function changeStarColor() {
+    console.log('🎨 Changing star colors');
+    // 这个函数会被starry night canvas脚本使用
+    if (window.starryNight && window.starryNight.changeColors) {
+        window.starryNight.changeColors();
+    }
+}
+
+function addShootingStar() {
+    console.log('💫 Adding shooting star');
+    // 这个函数会被starry night canvas脚本使用
+    if (window.starryNight && window.starryNight.addShootingStar) {
+        window.starryNight.addShootingStar();
+    }
+}
+
 // 更新时间显示
 function updateDateTime() {
     const now = new Date();
@@ -353,14 +378,7 @@ function initializeInteractions() {
         });
     }
     
-    // 主题切换
-    const toggleMode = document.getElementById('toggleMode');
-    if (toggleMode) {
-        toggleMode.addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
-    }
+    // 主题切换功能已移至 js/modules/ui.js 中的 initializeThemeToggle()
 }
 
 // 页面加载完成后初始化

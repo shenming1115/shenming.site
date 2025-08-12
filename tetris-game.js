@@ -256,6 +256,7 @@ class TetrisGame {
     while (this.movePiece(0, 1)) {
       this.score += 2;
     }
+    this.showHardDropEffect();
     this.placePiece();
   }
   
@@ -599,6 +600,30 @@ class TetrisGame {
     setTimeout(() => {
       startBtn.textContent = originalText;
     }, 1000);
+  }
+  
+  showHardDropEffect() {
+    // Visual feedback for hard drops
+    const canvas = this.canvas;
+    const ctx = this.ctx;
+    
+    // Blue flash effect for hard drop
+    ctx.fillStyle = 'rgba(52, 152, 219, 0.4)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    setTimeout(() => {
+      this.draw();
+    }, 80);
+    
+    // Update button text temporarily
+    const pauseBtn = document.getElementById('pauseBtn');
+    const originalText = pauseBtn.textContent;
+    
+    pauseBtn.textContent = 'SLAM!';
+    
+    setTimeout(() => {
+      pauseBtn.textContent = originalText;
+    }, 500);
   }
   
   gameLoop() {
