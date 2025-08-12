@@ -5,6 +5,8 @@ class TetrisGame {
     this.ctx = this.canvas.getContext('2d');
     this.nextCanvas = document.getElementById('nextCanvas');
     this.nextCtx = this.nextCanvas.getContext('2d');
+    this.holdCanvas = document.getElementById('holdCanvas');
+    this.holdCtx = this.holdCanvas.getContext('2d');
     
     // Game settings
     this.BOARD_WIDTH = 10;
@@ -15,6 +17,8 @@ class TetrisGame {
     this.board = this.createBoard();
     this.currentPiece = null;
     this.nextPiece = null;
+    this.heldPiece = null;
+    this.canHold = true;
     this.score = 0;
     this.lines = 0;
     this.level = 1;
@@ -50,6 +54,8 @@ class TetrisGame {
     this.canvas.height = this.BOARD_HEIGHT * this.BLOCK_SIZE;
     this.nextCanvas.width = 120;
     this.nextCanvas.height = 120;
+    this.holdCanvas.width = 120;
+    this.holdCanvas.height = 120;
   }
   
   setupControls() {
@@ -124,6 +130,10 @@ class TetrisGame {
       case 'Space':
         this.hardDrop();
         break;
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        this.holdPiece();
+        break;
     }
   }
   
@@ -146,10 +156,49 @@ class TetrisGame {
       y: 0
     };
     this.generateNextPiece();
+    this.canHold = true; // Reset hold ability for new piece
     
     if (this.checkCollision(this.currentPiece, 0, 0)) {
       this.endGame();
     }
+  }
+  
+  holdPiece() {
+    if (!this.canHold) return;
+    
+    this.canHold = false;
+    
+    if (this.heldPiece === null) {
+      // First time holding - store current piece and spawn next
+      this.heldPiece = {
+        shape: this.currentPiece.shape.map(row => [...row]),
+        color: this.currentPiece.color
+      };
+      this.spawnPiece();
+    } else {
+      // Swap current piece with held piece
+      const temp = {
+        shape: this.currentPiece.shape.map(row => [...row]),
+        color: this.currentPiece.color
+      };
+      
+      this.currentPiece = {
+        ...this.heldPiece,
+        x: Math.floor(this.BOARD_WIDTH / 2) - 1,
+        y: 0
+      };
+      
+      this.heldPiece = temp;
+      
+      // Check if swapped piece can be placed
+      if (this.checkCollision(this.currentPiece, 0, 0)) {
+        this.endGame();
+        return;
+      }
+    }
+    
+    this.draw();
+    this.drawHeld();
   }
   
   movePiece(dx, dy) {
@@ -311,8 +360,9 @@ class TetrisGame {
       this.drawPiece(this.currentPiece, this.ctx);
     }
     
-    // Draw next piece
+    // Draw next piece and held piece
     this.drawNextPiece();
+    this.drawHeld();
   }
   
   drawGhostPiece() {
@@ -402,6 +452,36 @@ class TetrisGame {
             this.nextCtx.fillRect(pixelX, pixelY, 20, 20);
             this.nextCtx.strokeStyle = '#FFF';
             this.nextCtx.strokeRect(pixelX, pixelY, 20, 20);
+          }
+        }
+      }
+    }
+  }
+  
+  drawHeld() {
+    this.holdCtx.fillStyle = '#000';
+    this.holdCtx.fillRect(0, 0, this.holdCanvas.width, this.holdCanvas.height);
+    
+    if (this.heldPiece) {
+      const offsetX = (this.holdCanvas.width - this.heldPiece.shape[0].length * 20) / 2;
+      const offsetY = (this.holdCanvas.height - this.heldPiece.shape.length * 20) / 2;
+      
+      for (let y = 0; y < this.heldPiece.shape.length; y++) {
+        for (let x = 0; x < this.heldPiece.shape[y].length; x++) {
+          if (this.heldPiece.shape[y][x]) {
+            const pixelX = offsetX + x * 20;
+            const pixelY = offsetY + y * 20;
+            
+            // Dim the held piece if can't hold
+            const alpha = this.canHold ? 1.0 : 0.5;
+            this.holdCtx.globalAlpha = alpha;
+            
+            this.holdCtx.fillStyle = this.heldPiece.color;
+            this.holdCtx.fillRect(pixelX, pixelY, 20, 20);
+            this.holdCtx.strokeStyle = '#FFF';
+            this.holdCtx.strokeRect(pixelX, pixelY, 20, 20);
+            
+            this.holdCtx.globalAlpha = 1.0;
           }
         }
       }

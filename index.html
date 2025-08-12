@@ -478,8 +478,8 @@
       </div>
     </div>
 
-    <div id="gamesPage" class="games-page">
-      <button id="backHomeBtnGames" class="back-btn">← Back to Home</button>
+    <div id="gamesPage" class="games-page" style="padding-top: 80px;">
+      <button id="backHomeBtnGames" class="back-btn" style="top: 80px;">← Back to Home</button>
 
       <div class="games-container">
         <div class="game-header">
@@ -512,6 +512,11 @@
               <canvas id="nextCanvas" width="120" height="120"></canvas>
             </div>
 
+            <div class="hold-panel">
+              <h3>Hold Piece</h3>
+              <canvas id="holdCanvas" width="120" height="120"></canvas>
+            </div>
+
             <div class="game-controls">
               <button id="startBtn" class="game-btn primary">Start Game</button>
               <button id="pauseBtn" class="game-btn secondary">Pause</button>
@@ -533,24 +538,28 @@
           </div>
         </div>
 
-        <div class="controls-guide">
-          <h3>How to Play</h3>
+        <div class="controls-guide" style="color: #ffffff; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+          <h3 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">How to Play</h3>
           <div class="controls-grid">
-            <div class="control-item">
-              <kbd>←</kbd><kbd>→</kbd>
-              <span>Move Left/Right</span>
+            <div class="control-item" style="color: #ffffff;">
+              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">←</kbd><kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">→</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Move Left/Right</span>
             </div>
-            <div class="control-item">
-              <kbd>↓</kbd>
-              <span>Soft Drop</span>
+            <div class="control-item" style="color: #ffffff;">
+              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↓</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Soft Drop</span>
             </div>
-            <div class="control-item">
-              <kbd>↑</kbd>
-              <span>Rotate Piece</span>
+            <div class="control-item" style="color: #ffffff;">
+              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↑</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Rotate Piece</span>
             </div>
-            <div class="control-item">
-              <kbd>Space</kbd>
-              <span>Hard Drop</span>
+            <div class="control-item" style="color: #ffffff;">
+              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Space</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Hard Drop</span>
+            </div>
+            <div class="control-item" style="color: #ffffff;">
+              <kbd style="background: #9B59B6; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Shift</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Hold Piece</span>
             </div>
           </div>
         </div>
@@ -560,16 +569,19 @@
 
   <script src="script.js"></script>
   <script src="tetris-game.js"></script>
-  <script nonce=""></script>
-  if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-  navigator.serviceWorker.register('sw.js').then(function (registration) {
-  console.log('Service Worker registered with scope:', registration.scope);
-  }, function (err) {
-  console.log('Service Worker registration failed:', err);
-  });
-  });
-  }
+
+  <script>
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').then(function (registration) {
+          console.log('Service Worker registered with scope:', registration.scope);
+        }, function (err) {
+          console.log('Service Worker registration failed:', err);
+        });
+      });
+    }
+  </script>
   </script>
 </body>
 
