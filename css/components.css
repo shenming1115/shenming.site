@@ -1289,6 +1289,10 @@ body.games-mode .games-page {
   display: flex !important;
 }
 
+body.games-mode .navbar {
+  display: none !important;
+}
+
 body.games-mode .home-page,
 body.games-mode .section,
 body.games-mode .animation-page,

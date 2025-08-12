@@ -22,7 +22,7 @@ function setupTurnstile() {
     if (turnstileContainer && window.turnstile) {
         try {
             window.turnstile.render('#turnstile-container', {
-                sitekey: '1x00000000000000000000AA', // Test site key - always passes
+                sitekey: '0x4AAAAAAAjTIyITvZEz6LO_', // Production site key
                 callback: function(token) {
                     console.log('✅ Turnstile verification completed');
                     handleTurnstileSuccess(token);

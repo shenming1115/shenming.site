@@ -65,15 +65,47 @@ function setupNavigation() {
                 
                 // 初始化Tetris游戏
                 setTimeout(() => {
-                    if (typeof TetrisGame !== 'undefined' && !window.tetrisGameInstance) {
+                    if (typeof TetrisGame !== 'undefined') {
                         try {
+                            // 如果已有实例，先清理
+                            if (window.tetrisGameInstance) {
+                                window.tetrisGameInstance = null;
+                            }
                             window.tetrisGameInstance = new TetrisGame();
                             console.log('✅ Tetris game initialized');
                         } catch (error) {
                             console.error('❌ Tetris initialization failed:', error);
+                            // 尝试重新加载tetris-game.js
+                            const script = document.createElement('script');
+                            script.src = 'tetris-game.js';
+                            script.onload = () => {
+                                try {
+                                    window.tetrisGameInstance = new TetrisGame();
+                                    console.log('✅ Tetris game initialized after reload');
+                                } catch (e) {
+                                    console.error('❌ Tetris still failed after reload:', e);
+                                }
+                            };
+                            document.head.appendChild(script);
                         }
+                    } else {
+                        console.error('❌ TetrisGame class not found, trying to load script...');
+                        // 尝试加载tetris-game.js
+                        const script = document.createElement('script');
+                        script.src = 'tetris-game.js';
+                        script.onload = () => {
+                            setTimeout(() => {
+                                try {
+                                    window.tetrisGameInstance = new TetrisGame();
+                                    console.log('✅ Tetris game initialized after script load');
+                                } catch (e) {
+                                    console.error('❌ Tetris failed after script load:', e);
+                                }
+                            }, 100);
+                        };
+                        document.head.appendChild(script);
                     }
-                }, 500);
+                 }, 500);
             }
         });
         console.log('✅ Games navigation set up');
