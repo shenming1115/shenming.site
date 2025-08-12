@@ -27,44 +27,9 @@ export function initializeUI() {
 }
 
 function initializeNavigation() {
-    const navbar = document.querySelector('.navbar');
-    let lastScrollTop = 0;
-    
-    // Smooth scroll for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
-    
-    // Smart navbar hide/show on scroll
-    window.addEventListener('scroll', function() {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > lastScrollTop && scrollTop > 100) {
-            // Scrolling down
-            navbar.style.transform = 'translateY(-100%)';
-        } else {
-            // Scrolling up
-            navbar.style.transform = 'translateY(0)';
-        }
-        
-        // Add transparency effect
-        if (scrollTop > 50) {
-            navbar.classList.add('transparent');
-        } else {
-            navbar.classList.remove('transparent');
-        }
-        
-        lastScrollTop = scrollTop;
-    });
+    // Navigation is now handled by script.js to avoid conflicts
+    // This function is kept for compatibility but does nothing
+    console.log('🧭 Navigation handled by main script.js');
 }
 
 function initializeThemeToggle() {
@@ -372,13 +337,16 @@ function initializeEyeTracking() {
     });
 }
 
-function initializeStarryNight() {
+window.initializeStarryNight = function initializeStarryNight() {
     const canvas = document.getElementById('starryNightCanvas');
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
     const stars = [];
+    const shootingStars = [];
     const numStars = 200;
+    let starColors = ['255, 255, 255', '255, 200, 200', '200, 200, 255', '255, 255, 200'];
+    let currentColorIndex = 0;
     
     // Set canvas size
     function resizeCanvas() {
@@ -400,9 +368,31 @@ function initializeStarryNight() {
             drift: {
                 x: (Math.random() - 0.5) * 0.2,
                 y: (Math.random() - 0.5) * 0.2
-            }
+            },
+            colorIndex: Math.floor(Math.random() * starColors.length)
         });
     }
+    
+    // Global functions for animation controls
+    window.starryNight = {
+        changeColors: function() {
+            currentColorIndex = (currentColorIndex + 1) % starColors.length;
+            stars.forEach(star => {
+                star.colorIndex = Math.floor(Math.random() * starColors.length);
+            });
+        },
+        addShootingStar: function() {
+            shootingStars.push({
+                x: Math.random() * canvas.width,
+                y: 0,
+                vx: (Math.random() - 0.5) * 4,
+                vy: Math.random() * 3 + 2,
+                length: Math.random() * 80 + 20,
+                opacity: 1,
+                life: 100
+            });
+        }
+    };
     
     function animate() {
         // Clear canvas with dark blue background
@@ -425,20 +415,48 @@ function initializeStarryNight() {
             star.opacity += Math.sin(Date.now() * star.twinkleSpeed) * 0.01;
             star.opacity = Math.max(0.1, Math.min(1, star.opacity));
             
-            // Draw star
+            // Draw star with color
+            const color = starColors[star.colorIndex];
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+            ctx.fillStyle = `rgba(${color}, ${star.opacity})`;
             ctx.fill();
             
             // Add glow effect for brighter stars
             if (star.opacity > 0.7) {
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.radius * 2, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity * 0.1})`;
+                ctx.fillStyle = `rgba(${color}, ${star.opacity * 0.1})`;
                 ctx.fill();
             }
         });
+        
+        // Draw and animate shooting stars
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+            const shootingStar = shootingStars[i];
+            
+            // Update position
+            shootingStar.x += shootingStar.vx;
+            shootingStar.y += shootingStar.vy;
+            shootingStar.life--;
+            shootingStar.opacity = shootingStar.life / 100;
+            
+            // Draw shooting star trail
+            ctx.beginPath();
+            ctx.moveTo(shootingStar.x, shootingStar.y);
+            ctx.lineTo(
+                shootingStar.x - shootingStar.vx * shootingStar.length / 10,
+                shootingStar.y - shootingStar.vy * shootingStar.length / 10
+            );
+            ctx.strokeStyle = `rgba(255, 255, 255, ${shootingStar.opacity})`;
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Remove dead shooting stars
+            if (shootingStar.life <= 0 || shootingStar.y > canvas.height) {
+                shootingStars.splice(i, 1);
+            }
+        }
         
         requestAnimationFrame(animate);
     }

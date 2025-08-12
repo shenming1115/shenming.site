@@ -304,6 +304,10 @@ function initializeMainWebsite() {
 }
 
 function initializeNavigation() {
+    // Navigation is now handled by script.js to avoid conflicts
+    console.log('🧭 Navigation handled by main script.js');
+    return;
+    
     const navLinks = document.querySelectorAll('.navbar a');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {

@@ -23,12 +23,17 @@ window.onTurnstileSuccess = function(token) {
         result.innerHTML = `
             <div style="color: #27AE60; text-align: center; padding: 15px; background: rgba(39,174,96,0.1); border-radius: 8px;">
                 <p style="margin: 0 0 10px 0;">✅ Verification successful!</p>
-                <p style="margin: 0; font-size: 14px; opacity: 0.8;">Click "Verification Complete - Continue" to proceed</p>
+                <p style="margin: 0; font-size: 14px; opacity: 0.8;">Redirecting to main site...</p>
             </div>
         `;
     }
     
     isVerified = true;
+    
+    // 自动进入主页面
+    setTimeout(() => {
+        proceedToMainSite();
+    }, 2000);
 };
 
 // 验证过期回调
@@ -75,12 +80,26 @@ function proceedToMainSite() {
     preVerifyMask.style.opacity = '0';
     preVerifyMask.style.transform = 'scale(0.95)';
     
-    // 1.5秒后隐藏验证页面并显示主内容
+    // 1.5秒后完成验证流程
     setTimeout(() => {
-        preVerifyMask.style.display = 'none';
+        // 添加验证完成类，触发CSS显示主内容
+        document.body.classList.add('verification-complete');
+        
+        // 确保主内容和所有sections都显示
         mainContent.style.display = 'block';
         mainContent.style.opacity = '0';
         mainContent.style.transform = 'translateY(20px)';
+        
+        // 显示home页面和所有sections
+        const homePage = document.querySelector('.home-page');
+        const sections = document.querySelectorAll('.section');
+        
+        if (homePage) {
+            homePage.style.display = 'block';
+        }
+        sections.forEach(section => {
+            section.style.display = 'block';
+        });
         
         // 主内容淡入动画
         setTimeout(() => {
@@ -214,7 +233,7 @@ function updateDateTime() {
 // 更新IP信息
 async function updateIPInfo() {
     try {
-        const response = await fetch('https://api.ipify.org?format=json');
+        const response = await fetch('https://api.ipify.org/?format=json');
         const data = await response.json();
         const ip = data.ip;
         
@@ -250,30 +269,69 @@ async function updateIPInfo() {
 function initializeNavigation() {
     console.log('🧭 Initializing navigation...');
     
+    // Home导航
+    const homeNav = document.querySelector('a[href="#home"]');
+    if (homeNav) {
+        homeNav.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHomePage();
+            updateActiveNav(this);
+        });
+    }
+    
+    // About导航
+    const aboutNav = document.querySelector('a[href="#about"]');
+    if (aboutNav) {
+        aboutNav.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHomePage();
+            setTimeout(() => {
+                document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            updateActiveNav(this);
+        });
+    }
+    
+    // Contact导航
+    const contactNav = document.querySelector('a[href="#contact"]');
+    if (contactNav) {
+        contactNav.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHomePage();
+            setTimeout(() => {
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            updateActiveNav(this);
+        });
+    }
+    
     // Games页面导航
-    const gamesNav = document.getElementById('gamesNav');
+    const gamesNav = document.querySelector('a[href="#games"]');
     if (gamesNav) {
         gamesNav.addEventListener('click', function(e) {
             e.preventDefault();
             showGamesPage();
+            updateActiveNav(this);
         });
     }
     
     // Animation页面导航
-    const animationNav = document.getElementById('animationNav');
+    const animationNav = document.querySelector('a[href="#animation"]');
     if (animationNav) {
         animationNav.addEventListener('click', function(e) {
             e.preventDefault();
             showAnimationPage();
+            updateActiveNav(this);
         });
     }
     
     // Content页面导航
-    const contentNav = document.getElementById('contentNav');
+    const contentNav = document.querySelector('a[href="#content"]');
     if (contentNav) {
         contentNav.addEventListener('click', function(e) {
             e.preventDefault();
             showContentPage();
+            updateActiveNav(this);
         });
     }
     
@@ -283,8 +341,22 @@ function initializeNavigation() {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             showHomePage();
+            updateActiveNav(document.querySelector('a[href="#home"]'));
         });
     });
+}
+
+// 更新活跃导航状态
+function updateActiveNav(activeLink) {
+    // 移除所有活跃状态
+    document.querySelectorAll('.navbar a').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // 添加活跃状态到当前链接
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
 }
 
 // 显示Games页面
@@ -307,8 +379,8 @@ function showAnimationPage() {
         animationPage.style.display = 'block';
         document.body.classList.add('animation-mode');
         // 初始化星空动画
-        if (typeof initStarryNight === 'function') {
-            initStarryNight();
+        if (typeof initializeStarryNight === 'function') {
+            initializeStarryNight();
         }
     }
 }

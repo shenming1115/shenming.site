@@ -262,7 +262,7 @@ body.after-verify-bg #mainContent {
     0 0 0 1px rgba(57, 80, 107, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
   padding: 40px;
-  width: 380px;
+  width: 480px;
   height: auto;
   min-height: 380px;
   max-width: 90vw;
@@ -1282,7 +1282,7 @@ body.games-mode .animation-page {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 20px;
+  padding: 80px 20px 20px 20px;
 }
 
 body.games-mode .games-page {
