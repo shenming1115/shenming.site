@@ -199,7 +199,7 @@
 
       <form action="/validate" method="POST" id="captchaForm" class="verification-form">
         <div class="turnstile-container">
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAABjTIyITvZEz6LO_" data-theme="dark" data-size="normal"
+          <div id="turnstile-container" class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="dark" data-size="normal"
             data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired"
             data-error-callback="onTurnstileError">
           </div>
@@ -643,9 +643,11 @@
     </div>
   </div>
 
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="immediate-fix.js"></script>
   <script src="script.js"></script>
   <script src="tetris-game.js"></script>
+  <script type="module" src="js/main.js"></script>
 
   <script>
     // Service Worker registration
@@ -658,7 +660,6 @@
         });
       });
     }
-  </script>
   </script>
 </body>
 

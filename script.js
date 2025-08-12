@@ -114,7 +114,51 @@ function initializeMainSite() {
     // 初始化交互功能
     initializeInteractions();
     
+    // 初始化滚动显示效果
+    initializeScrollReveal();
+    
     console.log('✅ Main site initialization complete');
+}
+
+// 初始化滚动显示效果
+function initializeScrollReveal() {
+    console.log('🎭 Initializing scroll reveal effects...');
+    
+    // 滚动显示动画
+    function handleScrollReveal() {
+        const revealElements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+        
+        revealElements.forEach(element => {
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < window.innerHeight - elementVisible) {
+                element.classList.add('revealed');
+            }
+        });
+        
+        // 交错动画
+        const staggerContainers = document.querySelectorAll('.projects-grid, .about-details, .skills-grid, .contact-grid, .social-links');
+        staggerContainers.forEach(container => {
+            const containerTop = container.getBoundingClientRect().top;
+            if (containerTop < window.innerHeight - 100) {
+                const staggerItems = container.querySelectorAll('.stagger-item');
+                staggerItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.classList.add('revealed');
+                    }, index * 100);
+                });
+            }
+        });
+    }
+    
+    // 监听滚动事件
+    window.addEventListener('scroll', handleScrollReveal);
+    
+    // 初始检查
+    handleScrollReveal();
+    
+    console.log('✅ Scroll reveal effects initialized');
 }
 
 // 更新时间显示
@@ -326,6 +370,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // 立即开始更新时间和IP
     updateDateTime();
     updateIPInfo();
+    
+    // 初始化导航功能
+    initializeNavigation();
+    
+    // 初始化交互功能
+    initializeInteractions();
     
     // 设置表单提交处理
     const captchaForm = document.getElementById('captchaForm');
