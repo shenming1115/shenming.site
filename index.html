@@ -57,6 +57,72 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/main.css">
 
+  <!-- 紧急修复样式 -->
+  <style>
+    /* 确保主内容可见 */
+    #mainContent {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* 确保home页面可见 */
+    .home-page {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* 确保sections可见 */
+    .section {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* 隐藏验证页面 */
+    #preVerifyMask {
+      display: none !important;
+    }
+
+    /* 确保导航栏可见 */
+    .navbar {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    /* 默认隐藏其他页面 */
+    .games-page,
+    .animation-page,
+    .content-page {
+      display: none !important;
+    }
+
+    /* 当激活时显示对应页面 */
+    body.games-mode .games-page {
+      display: flex !important;
+    }
+
+    body.animation-mode .animation-page {
+      display: block !important;
+    }
+
+    body.content-mode .content-page {
+      display: block !important;
+    }
+
+    /* 当其他模式激活时隐藏home */
+    body.games-mode .home-page,
+    body.games-mode .section,
+    body.animation-mode .home-page,
+    body.animation-mode .section,
+    body.content-mode .home-page,
+    body.content-mode .section {
+      display: none !important;
+    }
+  </style>
+
 
 
   <!-- Preconnect for performance -->
@@ -538,28 +604,38 @@
           </div>
         </div>
 
-        <div class="controls-guide" style="color: #ffffff; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+        <div class="controls-guide"
+          style="color: #ffffff; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
           <h3 style="color: #ffffff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">How to Play</h3>
           <div class="controls-grid">
             <div class="control-item" style="color: #ffffff;">
-              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">←</kbd><kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">→</kbd>
-              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Move Left/Right</span>
+              <kbd
+                style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">←</kbd><kbd
+                style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">→</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Move
+                Left/Right</span>
             </div>
             <div class="control-item" style="color: #ffffff;">
-              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↓</kbd>
+              <kbd
+                style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↓</kbd>
               <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Soft Drop</span>
             </div>
             <div class="control-item" style="color: #ffffff;">
-              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↑</kbd>
-              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Rotate Piece</span>
+              <kbd
+                style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">↑</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Rotate
+                Piece</span>
             </div>
             <div class="control-item" style="color: #ffffff;">
-              <kbd style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Space</kbd>
+              <kbd
+                style="background: #3498DB; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Space</kbd>
               <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Hard Drop</span>
             </div>
             <div class="control-item" style="color: #ffffff;">
-              <kbd style="background: #9B59B6; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Shift</kbd>
-              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Hold Piece</span>
+              <kbd
+                style="background: #9B59B6; color: white; padding: 5px 8px; border-radius: 4px; font-weight: bold;">Shift</kbd>
+              <span style="color: #ffffff; font-weight: 600; text-shadow: 1px 1px 2px rgba(0,0,0,0.7);">Hold
+                Piece</span>
             </div>
           </div>
         </div>
@@ -567,6 +643,7 @@
     </div>
   </div>
 
+  <script src="immediate-fix.js"></script>
   <script src="script.js"></script>
   <script src="tetris-game.js"></script>
 

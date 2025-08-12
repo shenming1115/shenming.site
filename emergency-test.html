@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紧急修复测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .alert {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 2px solid #E74C3C;
+        }
+        .btn {
+            background: #27AE60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2ECC71;
+            transform: translateY(-2px);
+        }
+        .status {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: left;
+        }
+        .countdown {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 紧急修复</h1>
+        <p>检测到网站显示问题，正在应用紧急修复</p>
+        
+        <div class="alert">
+            <h2>🔧 问题诊断</h2>
+            <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>❌ 页面显示空白</li>
+                <li>❌ 导航没有反应</li>
+                <li>❌ Games页面无法访问</li>
+                <li>❌ Animation页面无法访问</li>
+            </ul>
+        </div>
+        
+        <div class="alert">
+            <h2>⚡ 应用的修复</h2>
+            <ul style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>✅ 添加immediate-fix.js强制显示内容</li>
+                <li>✅ 立即隐藏验证页面</li>
+                <li>✅ 强制显示主内容和home页面</li>
+                <li>✅ 重新设置所有导航功能</li>
+                <li>✅ 添加备用定时器确保内容显示</li>
+            </ul>
+        </div>
+        
+        <div class="alert">
+            <h2>⏱️ 自动测试</h2>
+            <div class="countdown" id="countdown">5</div>
+            <p>秒后自动打开主网站测试修复效果</p>
+            <button class="btn" onclick="openSiteNow()">🚀 立即测试</button>
+        </div>
+        
+        <div class="status" id="status">
+            <strong>修复状态:</strong><br>
+            ⏳ 等待测试...
+        </div>
+    </div>
+
+    <script>
+        let countdown = 5;
+        let timer;
+        
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                openSiteNow();
+            } else {
+                countdown--;
+            }
+        }
+        
+        function openSiteNow() {
+            const status = document.getElementById('status');
+            status.innerHTML = `
+                <strong>修复状态:</strong><br>
+                🚀 正在打开主网站...<br>
+                📋 预期结果:<br>
+                • 应该看到完整的home页面内容<br>
+                • 导航链接应该可以点击<br>
+                • Games和Animation页面应该可以访问<br>
+                • 如果还有问题，请检查浏览器控制台
+            `;
+            
+            // 打开主网站
+            window.open('index.html', '_blank');
+            
+            // 显示成功消息
+            setTimeout(() => {
+                status.innerHTML += `<br><br>✅ 主网站已打开，请测试功能是否正常`;
+            }, 2000);
+        }
+        
+        // 页面加载时开始倒计时
+        window.addEventListener('load', function() {
+            console.log('🚨 Emergency test page loaded');
+            console.log('⚡ Applied immediate-fix.js to main site');
+            console.log('🎯 This should force content to display and fix navigation');
+            
+            timer = setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
