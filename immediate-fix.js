@@ -42,8 +42,6 @@ function forceShowMainContent() {
 
 // 设置导航功能
 function setupNavigation() {
-    console.log('🧭 Navigation handled by main script.js');
-    return;
     console.log('🧭 Setting up navigation...');
     
     // Games导航
