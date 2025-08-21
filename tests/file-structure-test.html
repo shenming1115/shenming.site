@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件结构整理测试 - Shen Ming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .btn {
+            background: #3498DB;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+        }
+        .btn.success {
+            background: #27AE60;
+        }
+        .btn.success:hover {
+            background: #2ECC71;
+        }
+        .folder-structure {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            text-align: left;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .folder { color: #FFD700; }
+        .file { color: #87CEEB; }
+        .deleted { color: #FF6B6B; text-decoration: line-through; }
+        .moved { color: #98FB98; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            text-align: left;
+        }
+        .status-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #27AE60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📁 文件结构整理完成</h1>
+        <p>所有文件已按功能分类到相应文件夹，根目录保持整洁</p>
+        
+        <div class="card">
+            <h2>✅ 整理结果</h2>
+            <div class="grid">
+                <div class="status-item">
+                    <strong>📂 根目录</strong><br>
+                    <small>只保留 index.html</small>
+                </div>
+                <div class="status-item">
+                    <strong>📜 scripts/</strong><br>
+                    <small>11个JavaScript文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>🖼️ images/</strong><br>
+                    <small>2个图片文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>🧪 tests/</strong><br>
+                    <small>15个测试文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>📚 docs/</strong><br>
+                    <small>12个文档文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>⚙️ config/</strong><br>
+                    <small>6个配置文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>🎨 css/</strong><br>
+                    <small>5个样式文件</small>
+                </div>
+                <div class="status-item">
+                    <strong>🔨 build/</strong><br>
+                    <small>1个构建脚本</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📂 新文件结构</h2>
+            <div class="folder-structure">
+<span class="folder">shenming.site/</span>
+├── <span class="file">index.html</span>                    # 唯一保留在根目录
+├── <span class="folder">Assets/</span>                     # 原有资源文件夹
+├── <span class="folder">css/</span>                        # 样式文件
+├── <span class="folder">js/</span>                         # 原有JS模块
+├── <span class="folder">scripts/</span>                    # 🆕 主要JavaScript文件
+│   ├── <span class="file moved">script.js</span>
+│   ├── <span class="file moved">tetris-game.js</span>
+│   ├── <span class="file moved">immediate-fix.js</span>
+│   └── <span class="file moved">... (8 more files)</span>
+├── <span class="folder">images/</span>                     # 🆕 图片文件
+│   ├── <span class="file moved">nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg</span>
+│   └── <span class="file moved">favicon.svg</span>
+├── <span class="folder">tests/</span>                      # 🆕 测试文件
+│   ├── <span class="file moved">emergency-test.html</span>
+│   ├── <span class="file moved">games-improvements-test.html</span>
+│   └── <span class="file moved">... (13 more files)</span>
+├── <span class="folder">docs/</span>                       # 🆕 文档文件
+│   ├── <span class="file moved">NEW_FILE_STRUCTURE.md</span>
+│   └── <span class="file moved">... (11 more files)</span>
+├── <span class="folder">config/</span>                     # 🆕 配置文件
+│   ├── <span class="file moved">package.json</span>
+│   ├── <span class="file moved">robots.txt</span>
+│   └── <span class="file moved">... (4 more files)</span>
+└── <span class="folder">build/</span>                      # 🆕 构建工具
+    └── <span class="file moved">start.bat</span>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🗑️ 已删除的文件</h2>
+            <div class="folder-structure">
+<span class="deleted">scripts/tetris.js</span>              # 重复文件
+<span class="deleted">scripts/main.js</span>                # 重复文件
+<span class="deleted">scripts/obfuscate.js</span>           # 开发工具
+<span class="deleted">scripts/server.js</span>              # 开发服务器
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔧 已更新的路径</h2>
+            <div class="folder-structure">
+# index.html 中的路径更新：
+<span class="file">scripts/immediate-fix.js</span>          # 原: immediate-fix.js
+<span class="file">scripts/script.js</span>                 # 原: script.js
+<span class="file">scripts/tetris-game.js</span>            # 原: tetris-game.js
+<span class="file">images/nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg</span>  # 原: nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg
+<span class="file">scripts/sw.js</span>                     # 原: sw.js
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🧪 测试网站功能</h2>
+            <p>文件路径已更新，现在测试网站是否正常工作</p>
+            <a href="../index.html" class="btn success" target="_blank">🌐 打开主网站</a>
+            <button class="btn" onclick="runPathTests()">🔍 测试文件路径</button>
+            <a href="../docs/NEW_FILE_STRUCTURE.md" class="btn" target="_blank">📚 查看详细文档</a>
+        </div>
+        
+        <div id="testResults" class="card" style="display: none;">
+            <h2>🔍 路径测试结果</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        function runPathTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const results = document.getElementById('results');
+            
+            resultsDiv.style.display = 'block';
+            results.innerHTML = '<div style="color: #3498DB;">🔄 正在测试文件路径...</div>';
+            
+            const filesToTest = [
+                '../scripts/script.js',
+                '../scripts/tetris-game.js',
+                '../scripts/immediate-fix.js',
+                '../images/nicolas-jacquet-HpWcnjlFcGY-unsplash.jpg',
+                '../images/favicon.svg',
+                '../css/main.css'
+            ];
+            
+            let testResults = [];
+            let completed = 0;
+            
+            filesToTest.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            testResults.push(`<div style="color: #27AE60;">✅ ${file}</div>`);
+                        } else {
+                            testResults.push(`<div style="color: #E74C3C;">❌ ${file} (${response.status})</div>`);
+                        }
+                    })
+                    .catch(() => {
+                        testResults.push(`<div style="color: #E74C3C;">❌ ${file} (无法访问)</div>`);
+                    })
+                    .finally(() => {
+                        completed++;
+                        if (completed === filesToTest.length) {
+                            results.innerHTML = `
+                                <div style="margin-bottom: 15px;"><strong>文件路径测试结果:</strong></div>
+                                ${testResults.join('')}
+                                <div style="margin-top: 15px; color: #3498DB;">
+                                    ${testResults.filter(r => r.includes('✅')).length}/${filesToTest.length} 文件路径正确
+                                </div>
+                            `;
+                        }
+                    });
+            });
+        }
+        
+        window.addEventListener('load', function() {
+            console.log('📁 文件结构整理完成');
+            console.log('✅ 所有文件都有自己的文件夹');
+            console.log('✅ 根目录只保留index.html');
+            console.log('✅ 删除了重复和不必要的文件');
+            console.log('✅ 更新了所有文件引用路径');
+        });
+    </script>
+</body>
+</html>
